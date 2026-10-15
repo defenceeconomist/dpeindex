@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142f35">
+  <meta name="description" content="Explore directed citations between Defence and Peace Economics articles and rank papers using community, citation count and publication year filters.">
+  <title>Citations · Defence and Peace Economics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../topics.css"><link rel="stylesheet" href="../citations.css">
+  <script src="../vendor/plotly.min.js" defer></script><script src="../citations.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to citation explorer</a>
+  <header class="masthead">
+    <div class="topbar wrap">
+      <a class="wordmark" href="../" aria-label="Defence and Peace Economics index home"><span class="wordmark-icon">D<span>·</span>P<span>·</span>E</span><span class="wordmark-label">ARTICLE INDEX</span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a href="../">Articles</a><a href="../topics/">Topics</a><a href="./" aria-current="page">Citations</a></nav>
+    </div>
+    <div class="hero topics-hero wrap"><div class="hero-copy"><p class="eyebrow">The journal in conversation</p><h1>Follow the<br><em>connections.</em></h1><p class="hero-subtitle">See which papers cite one another, find communities of connected research, and explore the journal’s most connected papers.</p></div><div class="topic-hero-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  </header>
+  <main id="content" class="wrap topics-main">
+    <div id="citation-status" class="topic-notice" role="status" aria-live="polite">Loading the citation explorer…</div>
+    <div id="citation-explorer" hidden>
+      <section id="citation-stats" class="topic-stats" aria-label="Whole-network totals"></section>
+      <div class="model-dateline"><span id="citation-date"></span><a href="#citation-rankings">Paper rankings ↓</a></div>
+      <p id="citation-stale" class="topic-notice stale-notice" hidden>The catalogue has changed. This page retains the last completed citation study.</p>
+      <p class="citation-scope" id="citation-scope"></p>
+      <div class="citation-workspace">
+        <aside class="citation-sidebar" aria-label="Citation communities"><p class="eyebrow">Connected research</p><h2>Citation communities</h2><p class="topic-help">Communities follow citation links. Their membership stays fixed as you filter.</p><div id="citation-communities" class="topic-list"></div></aside>
+        <section class="chart-panel" aria-labelledby="citation-network-title">
+          <div class="chart-heading"><div><p class="eyebrow">Paper to paper</p><h2 id="citation-network-title">A map of the citations</h2></div></div>
+          <p class="chart-description">Each dot is a paper. Arrows point from <strong>citing paper → cited paper</strong>. Larger dots have more links across the whole study. Select a paper to highlight its incoming and outgoing links. Pan and zoom to explore.</p>
+          <div class="citation-chart-actions"><label for="citation-edges">Citation links<select id="citation-edges"><option value="recovered">Verified recovered network</option><option value="baseline">DOI-only baseline</option></select></label><button id="citation-reset" class="text-button" type="button">Reset defaults ↗</button></div>
+          <p id="citation-visible" class="citation-visible" aria-live="polite"></p><div id="citation-network" class="citation-network" role="img" aria-label="Interactive citation network; the ranking table below provides paper selection using the keyboard"></div>
+          <fieldset class="citation-sliders"><legend>Filter the map and rankings</legend>
+            <div class="citation-slider-metric"><label for="citation-count-type">Count citations as</label><select id="citation-count-type" aria-describedby="citation-count-help"><option value="in_degree">Citations in</option><option value="out_degree">Citations out</option><option value="degree">Citations in + out</option></select></div>
+            <div class="citation-slider citation-slider-count"><label id="citation-minimum-label" for="citation-minimum">Minimum citations in</label><output id="citation-minimum-value" for="citation-minimum">3</output><input id="citation-minimum" type="range" min="0" max="100" step="1" value="3" aria-describedby="citation-count-help"></div>
+            <div class="citation-slider"><label for="citation-from">From year</label><output id="citation-from-value" for="citation-from">1997</output><input id="citation-from" type="range" min="1997" max="2026" step="1" value="1997"></div>
+            <div class="citation-slider"><label for="citation-to">To year</label><output id="citation-to-value" for="citation-to">2026</output><input id="citation-to" type="range" min="1997" max="2026" step="1" value="2026"></div>
+            <p id="citation-count-help" class="citation-count-help">Counts use the whole recovered DPE network. The default is at least 3 citations in; set 0 to remove the count limit. Year sliders filter papers by publication year.</p>
+          </fieldset>
+          <p class="chart-footnote">Community colours and positions are fixed. Small disconnected groups are packed at the right; grey dots below have no observed internal links. Their relative placement is arbitrary. Layout distance is not a measure of abstract similarity.</p>
+          <button id="citation-clear-paper" class="text-button" type="button" hidden>Clear paper selection ×</button><div id="citation-selection" class="citation-selection" aria-live="polite"></div>
+        </section>
+      </div>
+      <section id="citation-rankings" class="chart-panel" aria-labelledby="citation-rankings-title">
+        <div class="chart-heading"><div><p class="eyebrow">Explore the selected papers</p><h2 id="citation-rankings-title">Paper rankings</h2></div></div>
+        <p class="chart-description">Rank all papers matching the community, minimum citation count and publication years selected above. Citation counts use the whole recovered study; the citation-links selector controls the map’s edges. Citations in count papers citing an article; citations out count papers it cites. Select a title to highlight its links, or read its abstract in Articles.</p>
+        <div id="citation-ranking-controls" class="citation-ranking-controls" role="group" aria-label="Rank papers by"><button type="button" data-ranking="in_degree" aria-pressed="true">Citations in</button><button type="button" data-ranking="out_degree" aria-pressed="false">Citations out</button><button type="button" data-ranking="degree" aria-pressed="false">Citations in + out</button></div>
+        <div class="citation-pagination">
+          <p id="citation-ranking-status" role="status" aria-live="polite"></p>
+          <label for="citation-page-size">Rows per page<select id="citation-page-size"><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label>
+          <nav class="citation-page-controls" aria-label="Ranking pages">
+            <button id="citation-page-previous" type="button" aria-controls="citation-ranking-rows" disabled>← Previous</button>
+            <label for="citation-page">Page<input id="citation-page" type="number" min="1" max="1" value="1" aria-controls="citation-ranking-rows"><span id="citation-page-total">of 1</span></label>
+            <button id="citation-page-next" type="button" aria-controls="citation-ranking-rows" disabled>Next →</button>
+          </nav>
+        </div>
+        <div class="citation-table-scroll" tabindex="0" role="region" aria-label="Filtered paper rankings"><table class="citation-table"><caption id="citation-ranking-caption">Papers ranked by citations in</caption><thead><tr><th scope="col">Rank</th><th scope="col">Paper</th><th scope="col" data-ranking-column="in_degree" aria-sort="descending">Citations in</th><th scope="col" data-ranking-column="out_degree" aria-sort="none">Citations out</th><th scope="col" data-ranking-column="degree" aria-sort="none">In + out</th></tr></thead><tbody id="citation-ranking-rows"></tbody></table></div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer wrap"><span>Defence and Peace Economics · citation study</span><a href="../">Browse articles by issue ↗</a></footer>
+</body></html>

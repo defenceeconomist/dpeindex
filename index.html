@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142f35">
+  <meta name="description" content="Browse and semantically search Defence and Peace Economics articles by volume and issue.">
+  <title>Defence and Peace Economics · Article Index</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="scroll.css">
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to articles</a>
+  <header class="masthead">
+    <div class="topbar wrap">
+      <a class="wordmark" href="./" aria-label="Defence and Peace Economics index home"><span class="wordmark-icon">D<span>·</span>P<span>·</span>E</span><span class="wordmark-label">ARTICLE INDEX</span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a href="./" aria-current="page">Articles</a><a href="topics/">Topics</a><a href="citations/">Citations</a></nav>
+    </div>
+    <div class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">The journal, article by article</p>
+        <h1>Defence and<br><em>Peace Economics</em></h1>
+        <p class="hero-subtitle">A browsable index of the journal’s RePEc bibliography. Explore an issue, read an abstract, or search across the collection by meaning.</p>
+      </div>
+      <div class="hero-stat" aria-label="Index statistics"><span id="article-count">—</span><small>articles indexed</small><span class="stat-rule"></span><span id="volume-count">—</span><small>volumes</small></div>
+    </div>
+  </header>
+
+  <main id="content" class="wrap">
+    <section class="search-panel" aria-label="Search articles">
+      <div class="search-heading"><div><p class="eyebrow">Find a paper</p><h2>Search the research</h2></div><span class="search-badge">SEMANTIC SEARCH</span></div>
+      <form id="search-form" role="search">
+        <label class="sr-only" for="search-input">Search titles, authors, abstracts and topics</label>
+        <div class="search-row"><span class="search-icon" aria-hidden="true">⌕</span><input id="search-input" name="q" type="search" placeholder="Try “economic effects of civil war”" autocomplete="off" minlength="2"><button type="submit">Search <span aria-hidden="true">↗</span></button></div>
+      </form>
+      <p class="search-help">Search finds related ideas in titles and abstracts, even when the wording differs.</p>
+      <div class="article-filters" aria-label="Filter articles"><div><label for="theme-filter">Research theme</label><select id="theme-filter" disabled><option value="all">All themes</option></select></div><div><label for="year-from">From year</label><select id="year-from" disabled><option value="">Any year</option></select></div><div><label for="year-to">To year</label><select id="year-to" disabled><option value="">Any year</option></select></div><button id="reset-filters" class="text-button" type="button" hidden>Reset filters ×</button></div>
+      <p id="theme-note" class="search-help" role="status">Loading research themes…</p>
+    </section>
+
+    <section class="browser" aria-label="Journal articles">
+      <aside class="volume-panel" aria-label="Volumes"><div class="panel-heading"><p class="eyebrow">The archive</p><h2>Volumes</h2></div><label class="mobile-volume-label" for="volume-select">Choose a volume</label><select id="volume-select" class="volume-select" aria-label="Choose a volume"></select><nav id="volume-list" class="volume-list" aria-label="Volume list"></nav><p class="source-note">Bibliographic data from the publisher’s <a href="ftp://ftp.repec.org/opt/ReDIF/RePEc/taf/defpea/defpea.redif">RePEc ReDIF file</a>. <span id="updated-at"></span></p></aside>
+      <div class="results-panel"><div class="results-heading"><div><p class="eyebrow" id="view-kicker">Browse by issue</p><h2 id="view-title">Loading articles…</h2><p id="view-description"></p></div><button id="clear-search" class="text-button" hidden>Clear search ×</button></div><div id="status" class="status" role="status" aria-live="polite"></div><div id="results"></div></div>
+    </section>
+  </main>
+  <footer class="footer wrap"><span>Defence and Peace Economics · bibliographic index</span><a href="https://ideas.repec.org/getdata.html" target="_blank" rel="noopener noreferrer">About RePEc data ↗</a></footer>
+</body>
+</html>

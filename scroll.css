@@ -1,0 +1,10 @@
+html { scroll-behavior: auto; }
+.issue-shell { scroll-margin-top: 12px; }
+.issue-shell.unloaded { overflow: hidden; }
+.issue-volume { display: block; margin-bottom: 5px; color: var(--accent-dark); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.issue-placeholder { display: grid; gap: 9px; margin-top: 9px; }
+.issue-placeholder span { display: block; height: 91px; border: 1px solid var(--line); border-radius: 9px; background: linear-gradient(100deg, #f8faf8, #fff 45%, #f8faf8 90%); }
+.issue-loading { margin: 10px 0; color: var(--muted); font-size: 12px; }
+.issue-error { padding: 22px; background: #fff; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 13px; }
+.issue-error button { margin-left: 8px; border: 0; background: transparent; color: var(--accent-dark); font: 700 13px "DM Sans", sans-serif; cursor: pointer; text-decoration: underline; }
+@media (max-width: 680px) { .issue-placeholder span { height: 120px; } }
