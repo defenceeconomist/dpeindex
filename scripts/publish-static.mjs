@@ -7,7 +7,11 @@ import {validateStatic, hashFiles} from "./validate-static.mjs";
 const root = resolve(import.meta.dirname, ".."), input = resolve(process.argv[2] || join(root, "dist"));
 process.chdir(root);
 await validateStatic(input);
-const git = (...args) => execFileSync("git", args, {cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"]}).trim();
+// Use the authenticated GitHub CLI without changing the user's global Git
+// configuration or depending on an unlocked macOS login keychain.
+const credentialArgs = spawnSync("gh", ["auth", "status"], {stdio: "ignore"}).status === 0 ?
+  ["-c", "credential.helper=", "-c", "credential.helper=!gh auth git-credential"] : [];
+const git = (...args) => execFileSync("git", [...credentialArgs, ...args], {cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"]}).trim();
 const remote = git("ls-remote", "--heads", "origin", "gh-pages");
 const parent = await mkdtemp(join(tmpdir(), "dpe-pages-")), worktree = join(parent, "site");
 let orphan;
