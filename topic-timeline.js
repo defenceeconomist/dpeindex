@@ -46,7 +46,7 @@ export async function mountTimeline(container, data, colour, onSelect) {
     const shown = topics.filter((topic) => selection === null || selection.has(topic.id));
     $("#timeline-words").innerHTML = shown.map((topic) => {
       const cell = byCell.get(`${period.start}:${topic.id}`);
-      const params = new URLSearchParams({theme: topic.id, run: data.metadata.run_id, year_from: period.start, year_to: period.end});
+      const params = new URLSearchParams({theme: topic.id, run: data.metadata.model_id || data.metadata.run_id, year_from: period.start, year_to: period.end});
       return `<tr><th scope="row"><span class="topic-swatch" style="background:${colour(topic.id)}"></span>${esc(topic.label)}</th><td>${cell.count} / ${period.abstract_count}</td><td>${percent(cell.share)}</td><td>${cell.count ? esc(cell.words.join(" · ") || "No keywords available") : "No assigned abstracts"}</td><td>${cell.count ? `<a href="../?${esc(params.toString())}">Browse papers ↗</a>` : "—"}</td></tr>`;
     }).join("");
   }
