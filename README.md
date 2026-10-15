@@ -87,11 +87,11 @@ Full Python checks, including the final keyword-processing regression, run in th
 docker compose --profile topics run --rm --entrypoint python dpe-topics -m unittest discover -s tests -v
 ```
 
-DOM interaction checks exercise topic/branch/map selection, temporal charts, the main-page abstract reader, theme and year filtering, stale results and API failures. They use a temporary dependency outside the project:
+DOM interaction checks exercise topic/branch/map selection, temporal charts, the main-page abstract reader, theme and year filtering, stale results and API failures. Install the pinned JavaScript dependencies once:
 
 ```sh
-npm install --prefix /tmp/dpe-ui-tests --no-audit --no-fund linkedom
-node --test tests/*ui.test.mjs
+npm ci
+npm test
 ```
 
 ## Themes over time and article filters
@@ -179,3 +179,49 @@ node --test tests/*ui.test.mjs
 ```
 
 `DPE_CITATION_SNAPSHOT=/path/to/run/snapshot.json` enables the full-data citation DOM check. The Python checks cover exact matching, conflicting DOIs, hash-bound review decisions, cached replay, directed degrees, components, reciprocal weights, topic denominators, immutability and failure states. The complete Python suite can also use `NUMBA_CACHE_DIR=/tmp/dpe-numba-tests` when native modelling dependencies need a writable JIT cache.
+
+
+## GitHub Pages deployment
+
+The same website source supports the Mac's FastAPI service and a standalone static deployment at **https://defenceeconomist.github.io/dpeindex/**. `main` maintains both modes; `gh-pages` contains generated publishing output. The public site uses no running Python service, Redis, Qdrant, hosted inference or connection to the Mac. Preparing a new release still happens on the Mac with the shared Redis service available.
+
+Use Node 24 and Python with the base requirements installed. Install dependencies, export the currently published data and build:
+
+```sh
+npm ci
+npm run static:build
+npm run static:preview
+```
+
+The preview serves both `http://localhost:8790/` and `http://localhost:8790/dpeindex/`. Build output is `dist/`; downloaded assets, the frozen dataset and reusable search vectors are retained under `.static-cache/`. Both directories are ignored by Git and Docker. To rebuild assets from the last captured dataset without contacting Redis, use `npm run static:build -- --skip-export`.
+
+`python -m app.export_static --output DIRECTORY` can also export the data independently. It watches the catalogue, source and published model pointers while capturing the full article records and immutable citation archives. A concurrent update retries the capture. Missing records, inconsistent counts, invalid timelines, unreviewed citation archives and corrupt downloads fail the export. Older catalogues without a stored corpus fingerprint use the live API's computed fallback. Exporting does not sync, retrain, collect references or publish analysis. Existing `stale` and `topic_changed` flags remain visible in the exported payloads. The offline retrospective reference is not added to the public interface.
+
+The static data client loads issue files lazily and caches full records for article expansion. It preserves run-scoped theme and inclusive year filters, missing-abstract records, unassigned abstracts and deep links. Static builds replace the API configuration only in their output; the Mac service continues to use its existing API and Qdrant search.
+
+### Browser semantic search
+
+The first search automatically loads the self-hosted quantized BGE-small-en-v1.5 model and its WebAssembly runtime. Inference runs in a worker with one WASM thread; a GPU and special cross-origin headers are unnecessary. Download/startup progress appears in the search status. Versioned model assets use browser caching when available; model loading failures show explicitly labelled keyword results and a retry button. Searches stay on the visitor's device.
+
+Search weights are pinned to immutable Hugging Face revision `ea104dacec62c0de699686887e3f920caeb4f3e3`. The offline and browser encoders share the same tokenizer, q8 model, CLS pooling, normalization, 384 dimensions, 512-token search limit and retrieval prefix. Article text follows the Mac's title/authors/abstract/keywords composition. This search limit is separate from the complete-abstract topic analysis. Search vectors are exported as little-endian float32 values with an ordered handle list; they never replace the Mac's Qdrant vectors. Theme/year filters apply before the semantic top 40, with the existing exact author/title prioritisation.
+
+The initial complete build is approximately 148 MB, including retained citation downloads; browsing does not download all of this. Model weights are approximately 34 MB; the model and WASM runtime together transfer about 46 MB on the first semantic search, before HTTP compression. Local preview checks on 15 October 2026 measured 0.4–1.0 seconds for first search and 55–125 ms for a repeat search on the development Mac. These local timings exclude internet bandwidth and do not predict performance on a visitor's phone. Four representative comparisons against the Mac/Qdrant search returned the same first result in every case, with 7–8 of the top ten results in common; browser/offline query embeddings had cosine agreement above 0.999999.
+
+### Validate and publish
+
+```sh
+npm test
+NUMBA_CACHE_DIR=/tmp/dpe-numba-tests python3 -m unittest discover -s tests -v
+npx playwright install chromium firefox webkit
+npm run test:browser
+npm run static:validate
+npm run static:publish
+```
+
+The browser suite checks real WASM inference in Chromium, Firefox and WebKit, offline/browser encoder agreement, cache availability, failed model loading and retry, rapid queries, both deployment prefixes, article details, filters, chart rendering, citation pagination, downloads and mobile layouts. To exercise the deployed site, use `DPE_PUBLIC_URL=https://defenceeconomist.github.io npm run test:browser`. Build validation checks asset/data/model/download hashes, vector identities and dimensions, relative HTML links, the 1 GB site limit and Git's 100 MiB individual-file limit. The generated bundle includes dependency and model licence information under `licenses/`.
+
+Publishing requires an authenticated Git push to `origin`. The publishing command validates `dist/`, creates a separate temporary Git worktree, preserves all previously published citation download paths, rejects changes to immutable downloads, validates the combined site, then makes a normal commit and pushes it to `gh-pages`. It leaves the source checkout and its untracked files alone. Retained archives are never silently deleted to fit a size limit: an oversized build fails. Publishing is manual; local data refreshes do not change the public website automatically.
+
+In the repository's **Settings → Pages**, select **Deploy from a branch**, branch **gh-pages**, folder **/(root)**. The generated `.nojekyll` file makes GitHub's managed Pages workflow publish the prepared files directly. No custom domain or additional paid service is required.
+
+For rollback, check out the desired earlier `gh-pages` commit into a separate temporary worktree and pass its directory to `npm run static:publish -- /path/to/previous-site`. The publisher restores that release as a new commit while retaining newer immutable citation downloads. Do not reset or force-push the publishing branch.

@@ -4,7 +4,7 @@ import json
 import re
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, RedirectResponse, Response
 
 from .store import issue_from_catalog, load_article, load_catalog, redis_client, semantic_search
@@ -149,6 +149,14 @@ def javascript():
 @app.get("/article-ui.js")
 def article_ui():
     return FileResponse(SITE / "article-ui.js", media_type="text/javascript")
+
+
+@app.get("/data-client.js")
+@app.get("/site-config.js")
+@app.get("/search-ranking.js")
+def shared_module(request: Request):
+    # Explicit routes serve only the shared, dependency-free source modules.
+    return FileResponse(SITE / request.url.path.rsplit("/", 1)[-1], media_type="text/javascript")
 
 
 @app.get("/topics/")

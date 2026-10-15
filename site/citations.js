@@ -1,4 +1,5 @@
 import {escapeHtml} from "./article-ui.js";
+import {dataClient} from "./data-client.js";
 
 const $ = (selector) => document.querySelector(selector);
 const esc = (value) => escapeHtml(String(value ?? ""));
@@ -277,9 +278,7 @@ function bindControls() {
 
 async function load() {
   try {
-    const response = await fetch("../api/citations");
-    if (!response.ok) throw new Error("Citation API unavailable");
-    state.data = await response.json();
+    state.data = await dataClient.getCitations();
     if (state.data.status !== "ready") { $("#citation-status").textContent = "The citation analysis is being prepared. Articles and Topics remain available."; return; }
     renderStudy(); bindControls();
     $("#citation-explorer").hidden = false; $("#citation-status").hidden = true;

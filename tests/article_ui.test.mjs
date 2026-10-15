@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {createRequire} from "node:module";
 import test from "node:test";
 import {fixture, papers} from "./topic_fixture.mjs";
 import {installDomHelpers, settle} from "./dom_helpers.mjs";
 
-const require = createRequire(import.meta.url);
-const {parseHTML} = require(require.resolve("linkedom", {paths: [process.env.DPE_UI_TEST_MODULES || "/tmp/dpe-ui-tests/node_modules"]}));
+import {parseHTML} from "linkedom";
 const html = await readFile(new URL("../site/index.html", import.meta.url), "utf8");
 const all = [...papers, {...papers[1], handle: "no-abstract", title: "A missing abstract", topic: null}];
 const catalog = {count: all.length, volumes: ["37", "36", "35"].map((number) => ({number, years: [all.find((paper) => paper.volume === number).year], issues: [{number: "1", count: all.filter((paper) => paper.volume === number).length}]}))};

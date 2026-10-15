@@ -3,3 +3,8 @@ __pycache__
 .pytest_cache
 data/topic-artifacts
 data/citation-artifacts
+node_modules
+dist
+.static-cache
+test-results
+playwright-report

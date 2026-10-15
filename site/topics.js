@@ -1,5 +1,6 @@
 import {escapeHtml} from "./article-ui.js";
 import {mountTimeline} from "./topic-timeline.js";
+import {dataClient} from "./data-client.js";
 
 const $ = (selector) => document.querySelector(selector);
 const palette = ["#237b7b", "#c66b46", "#758945", "#6d70a3", "#b28530", "#a25778", "#4a8eae", "#9b5f3e", "#4e8c6b", "#b95d56", "#767b39", "#906ca4", "#388f96", "#d18c59", "#6085ad", "#b27996", "#809b72", "#ac944a", "#59757d", "#9b7770"];
@@ -183,9 +184,7 @@ function renderMethod() {
 
 async function init() {
   try {
-    const response = await fetch("../api/topics");
-    if (!response.ok) throw new Error("The topic explorer is temporarily unavailable.");
-    const data = await response.json();
+    const data = await dataClient.getTopics();
     if (data.status === "not_built") {
       $("#page-status").innerHTML = "<strong>The topic explorer is being prepared.</strong><br>Once the first model is built, this page will show the journal’s research themes, a map of its abstracts, and the connections between topics.";
       return;

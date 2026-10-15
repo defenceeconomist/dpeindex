@@ -1,4 +1,4 @@
-const API_BASE = new URL("./api/", import.meta.url);
+import {dataClient} from "./data-client.js";
 export const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
 
 export function articleCard(article, search = false) {
@@ -23,9 +23,7 @@ async function expandArticle(event) {
   if (!details.open || details.dataset.loaded === "true") return;
   const target = details.querySelector(".article-detail");
   try {
-    const response = await fetch(`${API_BASE}article?handle=${encodeURIComponent(details.dataset.handle)}`);
-    if (!response.ok) throw new Error("Article details could not be loaded.");
-    const article = await response.json();
+    const article = await dataClient.getArticle(details.dataset.handle);
     if (!details.isConnected || !details.open) return;
     target.innerHTML = renderDetail(article);
     details.dataset.loaded = "true";

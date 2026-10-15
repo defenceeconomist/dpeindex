@@ -1,0 +1,22 @@
+{
+  "name": "dpe-index",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*ui.test.mjs tests/static*.test.mjs",
+    "test:browser": "playwright test",
+    "static:build": "node scripts/build-static.mjs",
+    "static:preview": "python3 scripts/preview_static.py",
+    "static:validate": "node scripts/validate-static.mjs",
+    "static:publish": "node scripts/publish-static.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "plotly.js-dist-min": "3.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "esbuild": "0.28.2",
+    "linkedom": "0.18.13"
+  }
+}

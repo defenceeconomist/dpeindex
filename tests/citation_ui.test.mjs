@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {createRequire} from "node:module";
 import test from "node:test";
 import {citationFixture} from "./citation_fixture.mjs";
 import {installDomHelpers, settle} from "./dom_helpers.mjs";
 
-const require = createRequire(import.meta.url);
-const {parseHTML} = require(require.resolve("linkedom", {paths: [process.env.DPE_UI_TEST_MODULES || "/tmp/dpe-ui-tests/node_modules"]}));
+import {parseHTML} from "linkedom";
 const html = await readFile(new URL("../site/citations.html", import.meta.url), "utf8");
 let scenario = 0;
 async function mount(data = citationFixture(), {fail = false, mapFail = false, prefix = "/dpe/", frames = {}, renderer = {}} = {}) {
@@ -29,7 +27,7 @@ async function mount(data = citationFixture(), {fail = false, mapFail = false, p
     renderer.active--;
   }};
   globalThis.Plotly = window.Plotly = plotly;
-  globalThis.fetch = async (url) => { renderer.fetches++; assert.equal(new URL(url, `http://example.test${prefix}citations/`).pathname, `${prefix}api/citations`); return {ok: !fail, json: async () => structuredClone(data)}; };
+  globalThis.fetch = async (url) => { renderer.fetches++; assert.ok(new URL(url, `http://example.test${prefix}citations/`).pathname.endsWith("/api/citations")); return {ok: !fail, json: async () => structuredClone(data)}; };
   await import(new URL(`../site/citations.js?scenario=${++scenario}`, import.meta.url)); await settle(); return window.document;
 }
 const plot = (doc) => doc.querySelector("#citation-network");

@@ -1,4 +1,5 @@
 import {articleCard, attachDetails, escapeHtml} from "./article-ui.js";
+import {dataClient} from "./data-client.js";
 
 const state = {
   catalog: null, issues: [], nodes: new Map(), loaded: new Set(), pending: new Map(),
@@ -15,10 +16,6 @@ function filterParams() {
   if (state.yearFrom) params.set("year_from", state.yearFrom);
   if (state.yearTo) params.set("year_to", state.yearTo);
   return params;
-}
-
-async function responseError(response, fallback) {
-  try { return (await response.json()).detail || fallback; } catch { return fallback; }
 }
 
 function updateLocation(extras = {}) {
@@ -99,9 +96,7 @@ async function loadIssue(key) {
   try {
     const params = filterParams();
     params.set("volume", issue.volume); params.set("number", issue.number);
-    const response = await fetch(`api/issue?${params}`, {signal: controller.signal});
-    if (!response.ok) throw new Error(await responseError(response, "Issue could not be loaded."));
-    const data = await response.json();
+    const data = await dataClient.getIssue(params, controller.signal);
     if (sequence !== state.sequence || state.mode !== "browse" || !shell.isConnected) return;
     shell.querySelector(".issue-body").innerHTML = data.articles.map((item) => articleCard(item)).join("");
     shell.classList.remove("unloaded");
@@ -217,7 +212,7 @@ function chooseVolume(number) {
   }
 }
 
-async function runSearch(query) {
+async function runSearch(query, retry = false) {
   state.sequence++;
   const sequence = state.sequence;
   stopBrowse();
@@ -232,11 +227,16 @@ async function runSearch(query) {
   updateLocation({q: query});
   try {
     const params = filterParams(); params.set("q", query);
-    const response = await fetch(`api/search?${params}`);
-    if (!response.ok) throw new Error(await responseError(response, "Search is unavailable right now."));
-    const data = await response.json();
+    const data = await dataClient.search(params, {retry, onProgress(message) {
+      if (sequence === state.sequence) $("#status").textContent = message;
+    }});
     if (sequence !== state.sequence) return;
     $("#status").textContent = "";
+    if (data.mode === "keyword") {
+      $("#view-kicker").textContent = "Keyword search";
+      $("#status").innerHTML = 'Semantic search could not be loaded. Showing keyword results. <button class="text-button" id="retry-semantic" type="button">Retry semantic search</button>';
+      $("#retry-semantic").addEventListener("click", () => runSearch(query, true));
+    }
     $("#results").innerHTML = data.results.length ? `<p class="result-count">Showing ${data.results.length} relevant articles</p>${data.results.map((item) => articleCard(item, true)).join("")}` : `<div class="empty">No articles matched this search. Try a broader topic or a different author name.</div>`;
     attachDetails($("#results"));
   } catch (error) {
@@ -246,9 +246,8 @@ async function runSearch(query) {
 
 async function init() {
   try {
-    const [catalogResponse, sourceResponse, themesResponse] = await Promise.all([fetch("api/catalog"), fetch("api/source"), fetch("api/themes").catch(() => null)]);
-    if (!catalogResponse.ok) throw new Error("The catalog could not be loaded.");
-    state.catalog = await catalogResponse.json();
+    const [catalog, source, availableThemes] = await Promise.all([dataClient.getCatalog(), dataClient.getSource().catch(() => ({})), dataClient.getThemes().catch(() => null)]);
+    state.catalog = catalog;
     if (!state.catalog.count) throw new Error("The article index is being prepared. Please try again shortly.");
     $("#article-count").textContent = state.catalog.count.toLocaleString();
     $("#volume-count").textContent = state.catalog.volumes.length;
@@ -264,13 +263,12 @@ async function init() {
       const retry = event.target.closest("button[data-retry]");
       if (retry) { state.failed.delete(retry.dataset.retry); loadIssue(retry.dataset.retry); }
     });
-    if (sourceResponse.ok) {
-      const source = await sourceResponse.json();
+    if (source) {
       if (source.synced_at) $("#updated-at").textContent = `Updated ${new Date(source.synced_at).toLocaleDateString(undefined, {year:"numeric",month:"long",day:"numeric"})}.`;
     }
     const params = new URLSearchParams(location.search);
     let themes;
-    try { themes = themesResponse?.ok ? await themesResponse.json() : null; } catch { themes = null; }
+    themes = availableThemes;
     if (themes?.status === "ready") {
       state.themes = themes;
       $("#theme-filter").innerHTML = '<option value="all">All themes · includes articles without abstracts</option>' + themes.topics.map((topic) => `<option value="${topic.id}">${escapeHtml(topic.label)} (${topic.count})</option>`).join("") + `<option value="-1">Unassigned abstracts (${themes.articles.filter((article) => article.topic === -1).length})</option>`;

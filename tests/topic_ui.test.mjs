@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {createRequire} from "node:module";
 import test from "node:test";
 import {fixture} from "./topic_fixture.mjs";
 import {installDomHelpers, settle} from "./dom_helpers.mjs";
 
-const require = createRequire(import.meta.url);
-const {parseHTML} = require(require.resolve("linkedom", {paths: [process.env.DPE_UI_TEST_MODULES || "/tmp/dpe-ui-tests/node_modules"]}));
+import {parseHTML} from "linkedom";
 const html = await readFile(new URL("../site/topics.html", import.meta.url), "utf8");
 let scenario = 0;
 
@@ -22,7 +20,7 @@ async function mount(data = fixture, fail = false, mobile = false) {
   }};
   globalThis.Plotly = window.Plotly = plotly;
   globalThis.fetch = async (raw) => {
-    assert.equal(new URL(raw, "http://example.test/dpe/topics/").pathname, "/dpe/api/topics");
+    assert.ok(new URL(raw, "http://example.test/dpe/topics/").pathname.endsWith("/api/topics"));
     return {ok: !fail, json: async () => structuredClone(data)};
   };
   await import(new URL(`../site/topics.js?scenario=${++scenario}`, import.meta.url));
