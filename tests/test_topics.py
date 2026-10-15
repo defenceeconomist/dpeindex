@@ -158,3 +158,15 @@ class OutlierTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TopicPreferenceTests(unittest.TestCase):
+    def test_at_least_ten_topics_preferred_without_upper_cap(self):
+        from app.topics import preferred_finalists
+        trials = [{"metrics": {"topic_count": n}, "score": score} for n, score in [(5, .99), (10, .7), (25, .9), (12, .8), (15, .6)]]
+        self.assertEqual([t["metrics"]["topic_count"] for t in preferred_finalists(trials)], [25, 12, 10])
+
+    def test_smaller_models_are_fallback_only_when_no_preferred_candidate_exists(self):
+        from app.topics import preferred_finalists
+        trials = [{"metrics": {"topic_count": n}, "score": score} for n, score in [(5, .9), (8, .8)]]
+        self.assertEqual(preferred_finalists(trials), trials)

@@ -132,7 +132,9 @@ def train(articles, settings, directory, cache, device, label_seed=None):
     snapshot["metadata"].update(model_id=run_id, trained_at=snapshot["metadata"]["built_at"],
         training_corpus_fingerprint=corpus_fingerprint(articles), training_abstract_count=len(usable),
         update_mode="rebuild", classifier=calibration)
-    if label_seed and label_seed.get("corpus_fingerprint") == snapshot["metadata"]["corpus_fingerprint"]:
+    if label_seed is not None:
+        if label_seed.get("corpus_fingerprint") != snapshot["metadata"]["corpus_fingerprint"]:
+            raise ValueError("Reviewed labels belong to a different training corpus")
         from .topic_labels import apply_display_labels
         manifest = {**label_seed, "run_id": run_id}
         labelled = apply_display_labels(snapshot, manifest, source="inputs/labels.json")

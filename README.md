@@ -23,17 +23,24 @@ Core parsing, file management and export use the Python standard library. Topic 
 
 ```sh
 python -m app.update train --source data/defpea.redif \
-  --exclude 37:5 37:6 --output data/local-artifacts/baseline
+  --exclude 37:5 37:6 --labels data/topic-labels.json \
+  --topic-cache data/local-artifacts/min10-topic-cache \
+  --search-cache data/local-artifacts/min10-search-cache \
+  --output data/local-artifacts/baseline-min10
 python -m app.update refresh --source data/defpea.redif --through 37:5 \
-  --previous data/local-artifacts/baseline/release \
-  --output data/local-artifacts/issue-5
+  --previous data/local-artifacts/baseline-min10/release \
+  --topic-cache data/local-artifacts/min10-topic-cache \
+  --search-cache data/local-artifacts/min10-search-cache \
+  --output data/local-artifacts/issue-5-min10
 ```
 
 The baseline contains 1,207 articles and 1,138 complete abstracts. Issue 37:5 adds seven articles, yielding 1,214 records. Issue 37:6 stays withheld. `inputs/split.json` records exact membership; `inputs/source.redif` preserves the original source. The full source is retained as provenance, but only `inputs/corpus.json` enters topic fitting, vocabulary, calibration and projection. Existing full-corpus settings and labels are not reused.
 
-Training compares 54 UMAP/HDBSCAN configurations using pinned `Qwen/Qwen3-Embedding-0.6B` revision `97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`. Coherence (document NPMI) and original-embedding cosine silhouette have weight 2; keyword diversity and coverage have weight 1. Metrics are normalized over valid trials. The top three candidates are evaluated with seeds 42, 7 and 21; mean score selects the winner and adjusted mutual information breaks ties. No topic-count preference is imposed. The winning parameters are fitted with seed 42. This selects the best tested configuration, not an independently verified ground truth.
+Training compares 54 UMAP/HDBSCAN configurations using pinned `Qwen/Qwen3-Embedding-0.6B` revision `97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`. Coherence (document NPMI) and original-embedding cosine silhouette have weight 2; keyword diversity and coverage have weight 1. Metrics are normalized over valid trials. Candidates with at least 10 topics at seed 42 are preferred, with no upper cap. Their top three configurations are evaluated with seeds 42, 7 and 21; mean score selects the winner and adjusted mutual information breaks ties. Smaller models are considered only if the grid contains no valid model with at least 10 topics. The winning parameters are fitted with seed 42. This selects the best tested configuration, not an independently verified ground truth.
 
 The grid is `n_neighbors=[10,20,40]`, `n_components=[5,10]`, `min_cluster_size=[20,35,50]`, `min_samples=[1,3,5]`. Reports retain the untuned baseline, all trials, finalist stability, representative abstracts, library versions, and quality before and after calibrated outlier reassignment. All abstracts are checked against the encoder limit without truncation. Caches are keyed by full abstract text and encoder identity. Apple Silicon uses MPS automatically; choose `--device cpu` or `--device cuda` explicitly when appropriate.
+
+Human-readable topic and hierarchy names are reviewed against extracted keywords and representative abstracts. `--labels data/topic-labels.json` applies the saved manifest only when its training corpus, keywords, representative papers and hierarchy match; mismatches fail instead of silently reusing names. Future corpora need a newly reviewed label manifest, or omit `--labels` to inspect extracted keywords before naming the new model.
 
 Updates preserve model identity, labels, centroids, hierarchy, historical assignments and map positions. New or corrected abstracts receive a calibrated cosine-centroid assignment and saved UMAP projection. Uncertain matches remain unassigned. Counts, descriptive keywords and temporal representations are refreshed without reclustering. Calibration targets at least 95% agreement with held-out cluster assignments; that is consistency with discovered clusters, not independently measured classification accuracy.
 
@@ -45,7 +52,7 @@ The completed experiment and measured results are documented in [docs/rebuild-ev
 
 ```sh
 python -m app.update refresh --source data/defpea.redif --through 37:6 \
-  --previous data/local-artifacts/issue-5/release \
+  --previous data/local-artifacts/issue-5-min10/release \
   --output data/local-artifacts/issue-6
 python -m app.update status data/local-artifacts/issue-6
 python3 scripts/preview_static.py \
@@ -59,8 +66,8 @@ For later complete RePEc snapshots, use `--fetch` instead of `--source` and omit
 ## Review, resume and rollback
 
 ```sh
-python -m app.update status data/local-artifacts/issue-5
-python -m app.update resume data/local-artifacts/issue-5
+python -m app.update status data/local-artifacts/issue-5-min10
+python -m app.update resume data/local-artifacts/issue-5-min10
 ```
 
 Each workspace has a nonblocking local lock. Completed stages have SHA-256 manifests and are verified on resume; damaged completed artifacts require a new workspace. Failed work does not replace the current local release. Review `review.json` when citation publication stops, correct `inputs/decisions.json`, then resume. Decisions remain editable until citation completion; subsequent changes require a fresh workspace. Reference records are frozen in `inputs/records.json` for replay. Existing verified Crossref deposits are cached; missing deposits are collected through the public API. `CROSSREF_MAILTO` optionally supplies contact information.
@@ -80,7 +87,7 @@ npm run static:validate
 An explicit release can be selected without changing the current pointer:
 
 ```sh
-npm run static:build -- --dataset data/local-artifacts/issue-5/release/dataset \
+npm run static:build -- --dataset data/local-artifacts/issue-5-min10/release/dataset \
   --output dist --cache data/local-artifacts/search-cache
 ```
 
@@ -89,7 +96,7 @@ Browser search uses the existing quantized BGE-small-en-v1.5 model, self-hosted 
 Publishing remains explicit:
 
 ```sh
-npm run static:publish -- data/local-artifacts/issue-5/release/site
+npm run static:publish -- data/local-artifacts/issue-5-min10/release/site
 ```
 
 The existing publisher validates files, preserves earlier immutable citation downloads, and pushes a normal commit to `gh-pages`. It never force-pushes. GitHub Pages should serve `gh-pages` from its root. No publication is performed by training or updating. Roll back by passing an earlier release's site directory to the same publishing command.
@@ -99,8 +106,8 @@ The existing publisher validates files, preserves earlier immutable citation dow
 ```sh
 python -m unittest discover -s tests -v
 npm test
-DPE_PREVIEW_DIR="$PWD/data/local-artifacts/issue-5/release/site" npm run test:browser
-npm run static:validate -- data/local-artifacts/issue-5/release/site
+DPE_PREVIEW_DIR="$PWD/data/local-artifacts/issue-5-min10/release/site" npm run test:browser
+npm run static:validate -- data/local-artifacts/issue-5-min10/release/site
 ```
 
 The tests cover parser/grouping rules, split isolation, calibration and ambiguous assignments, corrections, saved point preservation, integrity failures and resumability, citation evidence and graph consistency, temporal denominators, static filters and deep links, real browser inference and encoder agreement, retry/fallback, mobile layouts and both deployment prefixes. `--skip-browser-tests` is available for development; use the default checked pipeline for a release.

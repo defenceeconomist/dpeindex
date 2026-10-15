@@ -178,7 +178,8 @@ def run(state):
                 snapshot, coverage = incremental(articles, prior, release / 'model', Path(state['topic_cache']), state['device'])
             else:
                 settings = {'model_revision': REVISION}
-                snapshot, coverage = train(articles, settings, release / 'model', Path(state['topic_cache']), state['device'])
+                labels = read(directory / 'inputs/labels.json') if (directory / 'inputs/labels.json').exists() else None
+                snapshot, coverage = train(articles, settings, release / 'model', Path(state['topic_cache']), state['device'], label_seed=labels)
             snapshot.update(status='ready', stale=False)
             snapshot['timeline'] = build_timeline(snapshot, articles)
             validate_snapshot(snapshot)
@@ -237,6 +238,7 @@ def main():
         p.add_argument('--citation-cache', type=Path, default=Path('data/citation-artifacts'))
         p.add_argument('--search-cache', type=Path, default=ARTIFACTS / 'search-cache')
         p.add_argument('--decisions', type=Path, default=Path('data/citation-decisions.json'))
+        p.add_argument('--labels', type=Path, help='Reviewed topic labels bound to training corpus and model evidence')
         p.add_argument('--without-citations', action='store_true')
         p.add_argument('--skip-browser-tests', action='store_true')
     for name in ('resume', 'status'):
@@ -247,6 +249,8 @@ def main():
         if args.operation == 'status':
             print(json.dumps(state, indent=2)); return
         run(state); return
+    if args.labels and args.operation != 'train':
+        parser.error('Use --labels with train; incremental updates inherit frozen labels')
     if args.device == 'auto':
         import torch
         args.device = 'mps' if torch.backends.mps.is_available() else 'cpu'
@@ -271,6 +275,8 @@ def main():
     shutil.copyfile(args.decisions, directory / 'inputs/original-decisions.json')
     write_json(directory / 'inputs/split.json', {'excluded_issues': args.exclude, 'through': args.through,
         'included_handles': [a['handle'] for a in articles], 'withheld_handles': sorted({a['handle'] for a in full} - {a['handle'] for a in articles})})
+    if args.labels:
+        shutil.copyfile(args.labels, directory / 'inputs/labels.json')
     immutable = hashes(directory / 'inputs'); immutable.pop('decisions.json')
     state = {'directory': str(directory), 'operation': args.operation, 'previous': str(previous) if previous else None,
              'source_sha256': hashlib.sha256(raw).hexdigest(), 'device': args.device,

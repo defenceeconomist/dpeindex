@@ -71,6 +71,15 @@ test("compact page removes search and lower panels and puts labelled sliders bel
   assert.match(nodeTraces(doc)[0].customdata[0][1], /&lt;script&gt;/);
 });
 
+test("communities display readable names without provisional markers", async () => {
+  const doc = await mount(citationFixture());
+  assert.doesNotMatch(doc.querySelector("#citation-communities").textContent, /provisional/i);
+  doc.querySelector('[data-community="0"]').click(); await settle();
+  assert.doesNotMatch(doc.querySelector("#citation-selection").textContent, /provisional/i);
+  assert.match(doc.querySelector("#citation-selection").textContent, /Growth/);
+  assert.doesNotMatch(doc.querySelector("#citation-scope").textContent, /provisional/i);
+});
+
 test("all visible links have stronger lines and arrows pointing from citing to cited paper", async () => {
   const data = citationFixture(), doc = await mount(data);
   await input(doc, "#citation-minimum", 0);

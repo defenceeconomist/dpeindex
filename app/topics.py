@@ -209,6 +209,12 @@ def representative_review(model, labels, embeddings, articles):
     return review
 
 
+def preferred_finalists(trials):
+    """Prefer at least ten topics, falling back only if the grid offers none."""
+    preferred = [trial for trial in trials if trial["metrics"]["topic_count"] >= 10]
+    return sorted(preferred or trials, key=lambda trial: trial["score"], reverse=True)[:3]
+
+
 def tune(docs, embeddings, evaluator, articles, run_dir):
     import numpy as np
     from sklearn.metrics import adjusted_mutual_info_score
@@ -232,7 +238,7 @@ def tune(docs, embeddings, evaluator, articles, run_dir):
     bounds = {key: [min(t["metrics"][key] for t in valid), max(t["metrics"][key] for t in valid)] for key in METRICS}
     for trial in valid:
         trial["score"] = score(trial["metrics"], bounds)
-    finalists = sorted(valid, key=lambda t: t["score"], reverse=True)[:3]
+    finalists = preferred_finalists(valid)
     validation = []
     for trial in finalists:
         params, seed_metrics, seed_labels = trial["params"], [], []
@@ -252,7 +258,7 @@ def tune(docs, embeddings, evaluator, articles, run_dir):
     model, labels = fit_model(docs, embeddings, reduced_cache[(params["n_neighbors"], params["n_components"])], params)
     return model, labels, params, {"trials": trials, "finalists": validation,
                                   "metric_weights": METRICS, "metric_bounds": bounds,
-                                  "selection": "Mean weighted normalised score across three seeds; stability breaks ties."}
+                                  "selection": "Prefer at least 10 topics at the final fitting seed (42), with no upper cap; then mean weighted normalised score across three seeds; stability breaks ties. Fall back to smaller models only if no valid candidate has at least 10 topics."}
 
 
 def calibrate_outliers(model, labels, embeddings, docs):

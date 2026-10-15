@@ -7,14 +7,14 @@
       "37:6"
     ],
     "model_revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
-    "model_id": "20261015T190313Z-45e6b98a",
+    "model_id": "20261015T193628Z-55bf275e",
     "params": {
-      "n_neighbors": 20,
+      "n_neighbors": 40,
       "n_components": 5,
-      "min_cluster_size": 35,
+      "min_cluster_size": 20,
       "min_samples": 5
     },
-    "topic_count": 5,
+    "topic_count": 10,
     "report": {
       "trials": [
         {
@@ -993,574 +993,84 @@
       "finalists": [
         {
           "params": {
-            "n_neighbors": 20,
-            "n_components": 5,
-            "min_cluster_size": 35,
-            "min_samples": 5
-          },
-          "seeds": [
-            {
-              "seed": 42,
-              "metrics": {
-                "topic_count": 5,
-                "outliers": 27,
-                "coherence": 0.17949742882974426,
-                "silhouette": 0.11341273039579391,
-                "diversity": 0.96,
-                "coverage": 0.976274165202109
-              }
-            },
-            {
-              "seed": 7,
-              "metrics": {
-                "topic_count": 5,
-                "outliers": 29,
-                "coherence": 0.18151878116606768,
-                "silhouette": 0.11388951539993286,
-                "diversity": 0.96,
-                "coverage": 0.9745166959578208
-              }
-            },
-            {
-              "seed": 21,
-              "metrics": {
-                "topic_count": 5,
-                "outliers": 32,
-                "coherence": 0.1794974288297443,
-                "silhouette": 0.11467810720205307,
-                "diversity": 0.96,
-                "coverage": 0.9718804920913884
-              }
-            }
-          ],
-          "stability_ami": 0.9686342699530851,
-          "mean_score": 0.9201145372604745,
-          "review": [
-            {
-              "topic": 0,
-              "keywords": [
-                "military",
-                "defence",
-                "spending",
-                "defense",
-                "expenditure",
-                "growth",
-                "paper",
-                "economic",
-                "military spending",
-                "countries"
-              ],
-              "count": 659,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
-                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
-                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
-                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
-                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
-                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
-                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
-                }
-              ]
-            },
-            {
-              "topic": 1,
-              "keywords": [
-                "conflict",
-                "war",
-                "civil",
-                "peace",
-                "violence",
-                "conflicts",
-                "civil war",
-                "economic",
-                "model",
-                "armed"
-              ],
-              "count": 210,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
-                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
-                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
-                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
-                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496",
-                  "title": "Battlefields and marketplaces",
-                  "abstract": "Divided societies in the developing world experience wasteful struggles for power. We study the relationship between political stability and resources wasted in the struggle within a model of competitive power contests. The model of power contests is similar in structure to models describing oligopolistic market competition. This analogy helps us in deriving results that are new to the conflict literature. We show, for example, that the Herfindahl-Hirschman index can be interpreted as a measure of power concentration and that a peace treaty between fighting groups has a parallel in tacit collusion between firms in a market."
-                }
-              ]
-            },
-            {
-              "topic": 2,
-              "keywords": [
-                "terrorism",
-                "terrorist",
-                "attacks",
-                "terrorists",
-                "terrorist attacks",
-                "groups",
-                "terrorist groups",
-                "activity",
-                "attack",
-                "suicide"
-              ],
-              "count": 132,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
-                  "title": "TERROR SUPPORT AND RECRUITMENT",
-                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
-                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
-                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
-                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
-                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
-                }
-              ]
-            },
-            {
-              "topic": 3,
-              "keywords": [
-                "veterans",
-                "service",
-                "personnel",
-                "women",
-                "conscription",
-                "reenlistment",
-                "navy",
-                "likely",
-                "military",
-                "civilian"
-              ],
-              "count": 65,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
-                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
-                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
-                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
-                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
-                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
-                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
-                }
-              ]
-            },
-            {
-              "topic": 4,
-              "keywords": [
-                "geopolitical",
-                "geopolitical risk",
-                "gpr",
-                "risk",
-                "stock",
-                "returns",
-                "market",
-                "volatility",
-                "oil",
-                "markets"
-              ],
-              "count": 40,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
-                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
-                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
-                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
-                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
-                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
-                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "params": {
-            "n_neighbors": 10,
-            "n_components": 5,
-            "min_cluster_size": 35,
-            "min_samples": 3
-          },
-          "seeds": [
-            {
-              "seed": 42,
-              "metrics": {
-                "topic_count": 5,
-                "outliers": 58,
-                "coherence": 0.17771445509180858,
-                "silhouette": 0.11620941013097763,
-                "diversity": 0.96,
-                "coverage": 0.9490333919156415
-              }
-            },
-            {
-              "seed": 7,
-              "metrics": {
-                "topic_count": 6,
-                "outliers": 55,
-                "coherence": 0.14361614061694292,
-                "silhouette": 0.10725923627614975,
-                "diversity": 0.9166666666666666,
-                "coverage": 0.9516695957820738
-              }
-            },
-            {
-              "seed": 21,
-              "metrics": {
-                "topic_count": 6,
-                "outliers": 53,
-                "coherence": 0.15587056888966047,
-                "silhouette": 0.1063484475016594,
-                "diversity": 0.9333333333333333,
-                "coverage": 0.953427065026362
-              }
-            }
-          ],
-          "stability_ami": 0.9017989487008421,
-          "mean_score": 0.825432090416908,
-          "review": [
-            {
-              "topic": 0,
-              "keywords": [
-                "military",
-                "defence",
-                "spending",
-                "expenditure",
-                "defense",
-                "growth",
-                "economic",
-                "paper",
-                "countries",
-                "military spending"
-              ],
-              "count": 660,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
-                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
-                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
-                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
-                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
-                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
-                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
-                }
-              ]
-            },
-            {
-              "topic": 1,
-              "keywords": [
-                "conflict",
-                "civil",
-                "war",
-                "violence",
-                "peace",
-                "civil war",
-                "conflicts",
-                "armed",
-                "economic",
-                "democracy"
-              ],
-              "count": 137,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
-                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
-                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:20:y:2009:i:5:p:359-372",
-                  "title": "RAIN, GROWTH, AND CIVIL WAR: THE IMPORTANCE OF LOCATION",
-                  "abstract": "We re-examine the Miguel <italic>et al.</italic> (2004) study of the impact of growth on civil war, using growth in rainfall as an instrument. Miguel <italic>et al</italic>. (2004) - in our view, erroneously - include countries participating in civil wars in other states. Restricting the conflict data to states with conflict on their own territory reduces the estimated impact of economic growth on civil war. We show how spatial correlations in rainfall growth and participation in civil conflicts induce a stronger apparent relationship in the mis-classified data."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
-                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
-                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
-                }
-              ]
-            },
-            {
-              "topic": 2,
-              "keywords": [
-                "terrorism",
-                "terrorist",
-                "attacks",
-                "terrorists",
-                "groups",
-                "terrorist attacks",
-                "terrorist groups",
-                "activity",
-                "attack",
-                "suicide"
-              ],
-              "count": 130,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
-                  "title": "TERROR SUPPORT AND RECRUITMENT",
-                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
-                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
-                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
-                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
-                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
-                }
-              ]
-            },
-            {
-              "topic": 3,
-              "keywords": [
-                "veterans",
-                "service",
-                "personnel",
-                "women",
-                "conscription",
-                "reenlistment",
-                "navy",
-                "civilian",
-                "likely",
-                "military"
-              ],
-              "count": 64,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
-                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
-                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
-                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
-                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
-                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
-                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
-                }
-              ]
-            },
-            {
-              "topic": 4,
-              "keywords": [
-                "conflict",
-                "equilibrium",
-                "game",
-                "intervention",
-                "contest",
-                "players",
-                "model",
-                "group",
-                "agent",
-                "war"
-              ],
-              "count": 56,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400",
-                  "title": "Asymmetric information and third-party intervention in civil wars",
-                  "abstract": "I study a two-period model of conflict with two combatants and a third party who is an ally of one of the combatants. The third party is fully informed about the type of her ally but not about the type of her ally's enemy. In a signaling game, I find that if the third party is unable to give a sufficiently high assistance to her ally, then there exists a unique separating equilibrium in which the third party's <italic>expected</italic> intervention causes her ally's enemy to exert more effort than in the absence of third-party intervention; this worsens the conflict."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:1:p:61-75",
-                  "title": "Why is there so much Peace?",
-                  "abstract": "In this paper we change the structure of the basic conflict model. This makes it possible to found an economic theory of war and peace. Apart from few exceptions there exist no peace equilibria in the related literature of conflict theory. The aim of the paper is to fill this gap, because most parts of the world live in peace. Further we show that negotiations are possible to avoid a war. The main result is that war breaks out only if the distribution of resources and/or the effectiveness of weapons is sufficiently unequal."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:6:p:589-603",
-                  "title": "THE STABILITY OF ANARCHY AND BREAKDOWN OF PRODUCTION",
-                  "abstract": "In Hirshleifer's (1995) model for unitary actors, combined fighting/production abruptly breaks down when inter-group decisiveness of fighting is above a certain value (above one) or income requirements are not met. Accounting for the collective action problem, this article gives the opposite result that fighting/production is stable also for large decisiveness parameters (above one) and strict income requirements for each agent. The stable fighting/production equilibrium gets gradually easier to perturb off balance for high inter-group decisiveness, high costs of fighting, different fighting efficiencies, and equal group sizes. The equilibrium number of groups that can be sustained decreases in the inter-group decisiveness and increases in the cost of fighting."
-                }
-              ]
-            },
-            {
-              "topic": 5,
-              "keywords": [
-                "geopolitical",
-                "geopolitical risk",
-                "gpr",
-                "stock",
-                "risk",
-                "returns",
-                "market",
-                "volatility",
-                "oil",
-                "markets"
-              ],
-              "count": 38,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
-                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
-                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
-                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
-                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
-                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
-                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "params": {
-            "n_neighbors": 20,
+            "n_neighbors": 40,
             "n_components": 10,
-            "min_cluster_size": 35,
-            "min_samples": 5
+            "min_cluster_size": 20,
+            "min_samples": 1
           },
           "seeds": [
             {
               "seed": 42,
               "metrics": {
-                "topic_count": 5,
-                "outliers": 26,
-                "coherence": 0.17384158159256155,
-                "silhouette": 0.1140531376004219,
-                "diversity": 0.94,
-                "coverage": 0.9771528998242531
+                "topic_count": 14,
+                "outliers": 179,
+                "coherence": 0.15749669533789737,
+                "silhouette": 0.0953335240483284,
+                "diversity": 0.9214285714285714,
+                "coverage": 0.8427065026362038
               }
             },
             {
               "seed": 7,
               "metrics": {
-                "topic_count": 4,
-                "outliers": 6,
-                "coherence": 0.05165235339785257,
-                "silhouette": 0.1084427610039711,
-                "diversity": 0.95,
-                "coverage": 0.9947275922671354
+                "topic_count": 15,
+                "outliers": 172,
+                "coherence": 0.1429453478471589,
+                "silhouette": 0.08255378901958466,
+                "diversity": 0.9066666666666666,
+                "coverage": 0.8488576449912126
               }
             },
             {
               "seed": 21,
               "metrics": {
-                "topic_count": 4,
-                "outliers": 53,
-                "coherence": 0.1361570219419414,
-                "silhouette": 0.11366689950227737,
-                "diversity": 0.95,
-                "coverage": 0.953427065026362
+                "topic_count": 13,
+                "outliers": 175,
+                "coherence": 0.12714559325138208,
+                "silhouette": 0.07788047939538956,
+                "diversity": 0.8846153846153846,
+                "coverage": 0.8462214411247804
               }
             }
           ],
-          "stability_ami": 0.8991421716602327,
-          "mean_score": 0.7891801423823909,
+          "stability_ami": 0.8082599942007406,
+          "mean_score": 0.571111862211445,
           "review": [
             {
               "topic": 0,
               "keywords": [
-                "military",
-                "defence",
-                "spending",
-                "expenditure",
-                "defense",
                 "growth",
-                "paper",
+                "economic growth",
+                "spending",
                 "economic",
-                "countries",
-                "military spending"
+                "military",
+                "military spending",
+                "expenditure",
+                "relationship",
+                "military expenditure",
+                "causality"
               ],
-              "count": 664,
+              "count": 148,
               "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
-                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
-                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
-                },
                 {
                   "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
                   "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
                   "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
                 },
                 {
-                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
-                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
-                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193",
+                  "title": "MILITARY EXPENDITURE AND ECONOMIC GROWTH IN DEVELOPING COUNTRIES: EVIDENCE FROM SYSTEM GMM ESTIMATES",
+                  "abstract": "The effect of military expenditure on economic growth in developing countries has been investigated by many empirical literatures. However, there is little consensus of that effect and the diversity seems to come from the use of different models and different estimators. This article applies the Augmented Solow Growth Model to examine the influence of military expenditure on economic growth for 35 developing countries over the period of 1975--2009. By using the system Generalized Method of Moments (GMM) estimators, empirical results indicate that defence has a negative and significant effect on economic growth in the sample countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:27:y:2016:i:1:p:87-104",
+                  "title": "Military expenditures, economic growth and spatial spillovers",
+                  "abstract": "The relationship between economic growth and military expenditure has been the subject of a large literature in defence economics. This study analyses the influence of military expenditures on economic growth in a global perspective for the time period 2000--2010 taking spatial dimension into account. The augmented Solow model is employed to investigate the defence-growth nexus using the cross-sectional data relating to 128 countries. Following a traditional regression analysis, spatial variations in the relationships are examined utilizing different spatial econometric specifications estimated by maximum likelihood. The regressions are compared with each other via likelihood ratio tests, and the spatial Durbin model is found to be the most appropriate one suggesting that the typical least-squares model is misspecified. Empirical evidence indicates that military expenditure has a positive effect on economic growth with a significant spatial dependence for the time period under consideration."
                 }
               ]
             },
             {
               "topic": 1,
-              "keywords": [
-                "conflict",
-                "war",
-                "civil",
-                "peace",
-                "violence",
-                "conflicts",
-                "civil war",
-                "economic",
-                "model",
-                "armed"
-              ],
-              "count": 209,
-              "representatives": [
-                {
-                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
-                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
-                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
-                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
-                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
-                },
-                {
-                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496",
-                  "title": "Battlefields and marketplaces",
-                  "abstract": "Divided societies in the developing world experience wasteful struggles for power. We study the relationship between political stability and resources wasted in the struggle within a model of competitive power contests. The model of power contests is similar in structure to models describing oligopolistic market competition. This analogy helps us in deriving results that are new to the conflict literature. We show, for example, that the Herfindahl-Hirschman index can be interpreted as a measure of power concentration and that a peace treaty between fighting groups has a parallel in tacit collusion between firms in a market."
-                }
-              ]
-            },
-            {
-              "topic": 2,
               "keywords": [
                 "terrorism",
                 "terrorist",
@@ -1593,18 +1103,117 @@
               ]
             },
             {
+              "topic": 2,
+              "keywords": [
+                "defence",
+                "industrial",
+                "industry",
+                "procurement",
+                "rd",
+                "european",
+                "firms",
+                "defense",
+                "policy",
+                "defence industrial"
+              ],
+              "count": 143,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:18:y:2007:i:3:p:199-221",
+                  "title": "DETERMINING THE DEFENCE INDUSTRIAL BASE",
+                  "abstract": "This paper models the determination of the defence industrial base - the number of different military systems a country decides to maintain. High R&D costs means that few countries can afford to produce major weapons systems and the producers also import systems. Non-producers rely on imports and we assume their demand is driven by regional arms races. Military capability is determined by the number of systems and the quantity and quality of each. We examine how the defence industrial base is influenced by military expenditures, R&D costs, export controls, the nature of regional arms races and a variety of other factors."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+                  "title": "EFFECTS OF MILITARY SPENDING ON THE PROFITABILITY OF SPANISH DEFENCE CONTRACTORS",
+                  "abstract": "The traditional view of the defence industry obtaining large profits from contracts with the Ministry of Defence relies on several assumptions. Among these are the use of such arrangements as an instrument of industrial policy, the strong market power enjoyed by prime contractors, and the inefficiency encouraged by the sector. The findings show that defence contracts have a positive effect on profits, as well as the prizes for innovation and the market power enjoyed by some defence subsectors."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
+                  "title": "Small countries and the consolidation of the European defence industry: Portugal as a case study",
+                  "abstract": "In this paper, we analyse the dilemma confronted by a small country in relation to the consolidation taking place in the European defence industry. Assuming that Portugal must maintain its armed forces, and must retain a minor defence industry, this industry must be competitive in small niches. Competitiveness must be based on, amongst other elements, technical efficiency and technological change. We investigate this issue, first characterizing the threats faced by the Portuguese defence industry, then investigating its present efficiency and finally, we discuss its role in the consolidation of the European Industry. We conclude that the Portuguese defence industry has no alternative but to opt for innovation and European partnership, which are complementary policies, but which require the active involvement of the stakeholder (i.e. the Government) in effecting these fundamental shifts in direction and emphasis. If this strategy does not succeed, the defence policy should be based on offsets."
+                }
+              ]
+            },
+            {
               "topic": 3,
+              "keywords": [
+                "conflict",
+                "civil",
+                "war",
+                "violence",
+                "civil war",
+                "peace",
+                "conflicts",
+                "democracy",
+                "wars",
+                "economic"
+              ],
+              "count": 128,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:20:y:2009:i:5:p:359-372",
+                  "title": "RAIN, GROWTH, AND CIVIL WAR: THE IMPORTANCE OF LOCATION",
+                  "abstract": "We re-examine the Miguel <italic>et al.</italic> (2004) study of the impact of growth on civil war, using growth in rainfall as an instrument. Miguel <italic>et al</italic>. (2004) - in our view, erroneously - include countries participating in civil wars in other states. Restricting the conflict data to states with conflict on their own territory reduces the estimated impact of economic growth on civil war. We show how spatial correlations in rainfall growth and participation in civil conflicts induce a stronger apparent relationship in the mis-classified data."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
+                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
+                }
+              ]
+            },
+            {
+              "topic": 4,
+              "keywords": [
+                "nato",
+                "alliance",
+                "burden sharing",
+                "sharing",
+                "burden",
+                "allies",
+                "member",
+                "defense",
+                "defence",
+                "members"
+              ],
+              "count": 81,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249",
+                  "title": "A LONG-RUN ANALYSIS OF DEFENCE SPENDING IN THE NATO COUNTRIES (1960-99)",
+                  "abstract": "This paper analyses the long-run demand for defence output through a homogeneous treatment of 15 NATO member countries between 1960 and 1999. We carry out a progressive study of the interactions between either defence spending or defence burden and their main determinants: income, external threat and allied military spending. To that end, we use time-series analysis with endogenously determined structural breaks. We further consider individual country functions related to one another through a common correlated effects method, in order to take into account explicitly the connections between members of an alliance."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:19:y:2008:i:6:p:449-469",
+                  "title": "NATO DEFENSE EXPENDITURES: COMMON GOALS OR DIVERGING INTERESTS? A STRUCTURAL ANALYSIS",
+                  "abstract": "By testing for structural breaks in defense expenditures, the dates of change in the pattern of defense expenditures for the NATO allies are determined. If NATO members are responding to a common threat, the breaks should be similar, in both direction and dates, for defense expenditures. The breaks should occur during major NATO strategy shifts. The results of the structural analysis tests suggest that NATO allies do not have an integrated response to NATO-specific defense issues. It appears that NATO members, in general, adjusted their defense spending according to economic imperatives, political issues, and ally-specific defense agendas."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:369-383",
+                  "title": "Reconsidering publicness in alliance defence expenditures: NATO expansion and burden sharing",
+                  "abstract": "Over the past several decades, NATO allies have debated the relative burdens and benefits of NATO membership. Recently, this concern surfaced as members debated the magnitude and distribution of NATO expansion costs. This paper presents an economic model of defence alliances to identify the benefits and burdens of alliance membership. It suggests that defence expenditures provide public benefits if alliance members share common interests and mutual commitment; defence expenditures provide private benefits if countries lack common interests and mutual commitment. The model's results are used to discuss NATO's evolving roles and missions, NATO expansion and burden sharing across NATO members."
+                }
+              ]
+            },
+            {
+              "topic": 5,
               "keywords": [
                 "veterans",
                 "service",
                 "personnel",
                 "women",
-                "conscription",
                 "reenlistment",
-                "military",
-                "likely",
+                "conscription",
                 "navy",
-                "civilian"
+                "likely",
+                "job",
+                "soldiers"
               ],
               "count": 66,
               "representatives": [
@@ -1624,6 +1233,1090 @@
                   "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
                 }
               ]
+            },
+            {
+              "topic": 6,
+              "keywords": [
+                "arms",
+                "weapons",
+                "exports",
+                "race",
+                "intelligence",
+                "security",
+                "arms trade",
+                "arms race",
+                "missile",
+                "trade"
+              ],
+              "count": 63,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
+                  "title": "Price competition in a model of arms trade",
+                  "abstract": "This paper presents a model of subsidized military production that examines the relationship between domestic procurement and arms exports. Weapon producers satisfy the defence procurement in their own country and compete in prices in the international market where weapons are imperfect substitutes for each other. Importers are involved in an arms race situation and do not have domestic military production. The model makes explicit the strategic interaction between governments and firms in the export market. We then analyze the effect of a change in the most significant parameters on the equilibrium. The paper suggests an explanation for the evolution of the arms market in the past few years and highlights the important role of the demand and cost structures."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:2:p:137-143",
+                  "title": "Arms Racing and the Costs of Arms Imports: A Stochastic Model",
+                  "abstract": "The paper draws on the demand for arms imports model of Levine and Smith (1995, 1997) using stochastic processes of the birth-death type in steady state. It assumes two antagonistic regional players engaged in an armaments race satisfying their demand for military hardware through imports from the international market. The paper examines the effects that arms imports have on the military balance between the two recipient countries. It constructs a state space of possible outcomes in terms of the military balance/imbalance between the two countries involved. A new variable is introduced which tries to encapsulate the absolute difference in their respective security functions at any moment in time. This variable affects the transition from one state of affairs to the other."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:28:y:2017:i:4:p:457-472",
+                  "title": "Trading Arms and the Demand for Military Expenditures: Empirical Explorations Using New SIPRI-Data",
+                  "abstract": "This paper analyzes the impact of arms imports and exports on national military expenditures. The recent literature on the determinants of military expenditures has mainly focused on countries\u2019 external security environments and their regime type. Based on existing theoretical work, we argue that, in addition to these factors, arms trade flows may have an important role to play. First, we show that rising imports of major conventional weapons do not necessarily translate into higher defense spending. Rather, this relationship depends on political, economic, and contract conditions that influence different choices of financing imports. Therefore, the effect should be very heterogenous. Second, exports may have both a negative or a positive impact depending on regime type and the perceived impact of exports on national security. We empirically test these expectations for 156 countries from 1949 to 2013 using arms trade and new military expenditure data provided by SIPRI. Employing static and dynamic panel data models, we find that the effect of arms imports on defense budgets does indeed differ between regions and time periods. With respect to exports, there is evidence of a strategic substitution effect between military expenditures and arms exports in democratic countries: increases in arms exports are followed by a reduction in military expenditures. For non-democratic societies on the other hand, arms exports do not tend to be associated with lower military spending."
+                }
+              ]
+            },
+            {
+              "topic": 7,
+              "keywords": [
+                "conflict",
+                "equilibrium",
+                "game",
+                "players",
+                "intervention",
+                "contest",
+                "group",
+                "model",
+                "party",
+                "thirdparty"
+              ],
+              "count": 56,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400",
+                  "title": "Asymmetric information and third-party intervention in civil wars",
+                  "abstract": "I study a two-period model of conflict with two combatants and a third party who is an ally of one of the combatants. The third party is fully informed about the type of her ally but not about the type of her ally's enemy. In a signaling game, I find that if the third party is unable to give a sufficiently high assistance to her ally, then there exists a unique separating equilibrium in which the third party's <italic>expected</italic> intervention causes her ally's enemy to exert more effort than in the absence of third-party intervention; this worsens the conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:1:p:61-75",
+                  "title": "Why is there so much Peace?",
+                  "abstract": "In this paper we change the structure of the basic conflict model. This makes it possible to found an economic theory of war and peace. Apart from few exceptions there exist no peace equilibria in the related literature of conflict theory. The aim of the paper is to fill this gap, because most parts of the world live in peace. Further we show that negotiations are possible to avoid a war. The main result is that war breaks out only if the distribution of resources and/or the effectiveness of weapons is sufficiently unequal."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:29:y:2018:i:2:p:147-170",
+                  "title": "A model of dynamic conflict in ethnocracies",
+                  "abstract": "We model an infinitely repeated Tullock contest, over the sharing of some given resource, between two ethnic groups. The resource is allocated by a composite state institution according to relative ethnic control; hence the ethnic groups contest the extent of institutional ethnic bias. The contest yields the per-period relative influence over institutions, which partly spills over into the next period, by affecting relative conflict efficiency. Our model generates non-monotone evolution of both conflict and distribution. Results suggest that external interventions, when effective in reducing current conflict and protecting weaker groups, may end up sowing the seeds of greater future conflict."
+                }
+              ]
+            },
+            {
+              "topic": 8,
+              "keywords": [
+                "cost",
+                "aircraft",
+                "equipment",
+                "cost escalation",
+                "escalation",
+                "costs",
+                "type",
+                "twvs",
+                "unit",
+                "life"
+              ],
+              "count": 31,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
+                  "title": "The Capability Factors as Explanatory Variables of Equipment Unit Cost Growth: A Methodological Proposal",
+                  "abstract": "In clarifying the conceptual and terminological issues of the unit cost growth of military equipment, six recent empirical studies on unit cost growth are reviewed and evaluated in this article. Even though the reported unit cost growth rates differ between equipment type and the individual studies, all of the studies find the unit cost growth rates of each military equipment type exceeding inflation. Various explanations proposed by different authors are reviewed. Unit cost growth studies omit corrections for quality changes of equipment, unlike the standard practice in inflation calculation. By bringing the military capability perspective into the discussion of unit cost growth, this article proposes a new approach to equipment unit cost growth, thereby enabling the collective evaluation of quality change with price change. This approach is demonstrated through a case study involving an armoured personnel carrier (APC). Although the price of the APC had increased sixfold with only a minor improvement in transportation capability, the proposed approach shows that the purchasing decisions of its successive generations may have still been cost-effective. The APC case demonstrated that the proposed approach can be successfully applied and yield meaningful results."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:4:p:434-442",
+                  "title": "Rising Costs: Augustine Revisited",
+                  "abstract": "Rising military equipment costs were famously identified by Norman Augustine with forecasts of a single aircraft air force by 2054. This paper presents and analyses an original data set for UK military aircraft. It provides evidence on cost escalation for various UK aircraft types comprising fighter/strike, bombers, military transports, maritime patrol aircraft, helicopters, trainers and civil aircraft. Continued cost escalation is identified for almost all types but with different cost escalation factors. It is concluded that the specific Augustine hypothesis of costs rising by a factor of four every 10 years might be an under-estimate."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:34:y:2023:i:4:p:512-526",
+                  "title": "Costs and Prices of UK Military Aircraft in War and Peace",
+                  "abstract": "Much of the literature on military aircraft unit costs is based on US data. This article adds to our knowledge by using an original data set for UK military aircraft costs, profits and prices. A distinction is made between unit costs within a generation of aircraft and between generations. Four research questions are addressed. First, is the UK aircraft industry a decreasing cost industry; second, are new entrants higher cost suppliers; third, what is the evidence on profitability in war and peace and between new entrants and original developers; fourth, what is the UK evidence on Augustine-type cost escalation and on the efficiency of aircraft procurement in war and peace? The UK aircraft industry was found to be a decreasing cost industry reflecting both scale and learning economies. Typically, new entrants were higher cost suppliers and profit rates were higher in peace-time. There was substantial Augustine cost escalation for UK combat aircraft and doubts are raised about the efficiency of military aircraft procurement."
+                }
+              ]
+            },
+            {
+              "topic": 9,
+              "keywords": [
+                "greece",
+                "arms race",
+                "race",
+                "turkey",
+                "greekturkish",
+                "region",
+                "arms",
+                "greek",
+                "military",
+                "military spending"
+              ],
+              "count": 28,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:5:p:405-416",
+                  "title": "Asymmetric effects of military expenditure between Turkey and Greece",
+                  "abstract": "One of the major topics of the defense economics literature regarding Turkey and Greece has been the empirical modeling of various aspects of arms racing. However, despite a considerable amount of research, little evidence has been found in favor of an arms race between the two countries. In the literature, this failure of applied studies has been attributed, among other reasons, to the sensitivity of the results to the underlying model specification, to small sample size, and to measurement issues. This study uses novel, nonlinear, models to investigate the possible relationship between the military expenditures of the two countries. It is assumed that if there are two regimes characterizing the low (or negative) and high-growth military expenditure periods, the growth rates of one country's military expenditure may have distinct effects on the military expenditure regimes of the other country or may contribute to the change from one regime to another. The nonlinear models examined are Smooth Transition Regression models (STRs). Strong evidence of nonlinearity for Greece is found, with asymmetry relating to two distinct regimes through lagged Turkish military expenditure changes."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:2:p:85-107",
+                  "title": "Survey and Review of the Defense Economics Literature on Greece and Turkey: What Have We Learned?",
+                  "abstract": "This article contains a critical review of the literature on the economics of military affairs in Greece and Turkey as of December 1999. In particular, I review (a) arms race models; (b) models of the demand for military expenditure; (c) models measuring the economic impact of military expenditure; and (d) literature and issues related to indigenous arms production. I conclude with a number of summary lessons and observations of how future research might improve upon the existing body of work."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:19:y:2008:i:3:p:209-216",
+                  "title": "ARMS RACE BETWEEN GREECE AND TURKEY: A MARKOV SWITCHING APPROACH",
+                  "abstract": "Two NATO allies, Greece and Turkey, have also been considered potential threats to each other. Thus, these countries' military spending has been subject to many academic studies to observe if these potential threats trigger the military spending of both countries. Nonetheless, most regression results of those studies did not find a significant result supporting the arms race between the two countries. The current study provides an additional empirical evaluation of military spending of both countries by using an annual data set running from 1958 to 2004. The study is in spirit of Smith et al. (2000) employing a Markov switching approach, but utilizing a longer period. A Markov switching approach allows estimation of military spending of each country if both sides compete with each other to have higher spending or if they behave independently of each other."
+                }
+              ]
+            },
+            {
+              "topic": 10,
+              "keywords": [
+                "debt",
+                "external debt",
+                "external",
+                "military spending",
+                "spending",
+                "spending external",
+                "default",
+                "deficits",
+                "government debt",
+                "domestic debt"
+              ],
+              "count": 27,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+                  "title": "Military expenditure and debt in small industrialised economies: A panel analysis*",
+                  "abstract": "This paper considers the impact of military spending on debt in a panel of 11 small industrialising economies using panel data methods. It provide estimates for fixed effects and random effects models and then moves on to consider dynamic models. The dynamics are found to be important and the results suggest that military burden does indeed have a positive impact on the share of external debt in GDP."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:28:y:2017:i:5:p:550-567",
+                  "title": "Does military expenditure increase external debt? Evidence from Asia",
+                  "abstract": "This article empirically explores the effect of military spending on external debt, using a sample of ten Asian countries over the years from 1990 to 2011. The Hausman\u2019s test suggests that the random-effects model is preferable; however, both random-effects and fixed-effects models are used in this research. The empirical results show that the effect of military spending on external debt is positive, while the effects of foreign exchange reserves and of economic growth on external debt are negative. For developing countries caught in security dilemma, military expenditure often requires an increase in external debt, which may affect economic development negatively."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:5:p:588-599",
+                  "title": "The Impact of Military Expenditure on External Debt: The Case of 35 Arms Importing Countries",
+                  "abstract": "This study aims to empirically test the effects of military expenditure on external debt of 35 arms importing countries by using the annual panel data from the year 1995 to 2016. The panel was divided into two income classes (upper-middle and lower-middle), and the basic sample was also divided into five different regions (Middle-East and North Africa, South and East Asia, Latin America, Europe and Central Asia, and Sub-Saharan Africa) to achieve further robustness in the study. The empirical results of pooled mean group estimators suggest that military expenditure generally increases the external debt burden in the studied countries. More specifically, it was noted that military expenditure decreases external debt in Europe and Central Asia. Moreover, it was found that the interaction term of military expenditure and growth rate is positive and significant in all of the sub-samples, except upper-middle class, the Middle East and North Africa, and Latin American regions. Thus, it may be concluded that military expenditure often increases external debt burden in countries where the debt management system is weak. Countries with weaker debt management systems need to devise economic policies that curtail their military expenditure, reduce their external debt and improve their economic condition."
+                }
+              ]
+            },
+            {
+              "topic": 11,
+              "keywords": [
+                "geopolitical",
+                "geopolitical risk",
+                "gpr",
+                "risk",
+                "geopolitical risks",
+                "oil",
+                "op",
+                "volatility",
+                "risks",
+                "returns"
+              ],
+              "count": 24,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
+                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
+                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
+                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
+                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
+                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
+                }
+              ]
+            },
+            {
+              "topic": 12,
+              "keywords": [
+                "inequality",
+                "income inequality",
+                "income",
+                "military",
+                "expenditures",
+                "welfare",
+                "military spending",
+                "expenditure",
+                "military expenditures",
+                "democracy"
+              ],
+              "count": 22,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:1:p:46-67",
+                  "title": "Military Expenditures and Income Inequality Evidence from a Panel of Transition Countries (1990-2015)",
+                  "abstract": "This paper contributes to the literature on military spending by analyzing the relationship between military spending and income inequality in a panel of transition economies over the period 1990\u20132015. In particular, we exploit three different measures of military expenditures: (i) military spending in absolute terms; (ii) military expenditures per capita; (iii) military burden, namely the ratio between military expenditure and GDP. Findings highlight a positive relationship between military expenditures and income inequality captured by means of three different measures of inequality. Results are also confirmed after we performed a variety of robustness tests. Other results are worth noting and somehow puzzling. For example, military conscription appears to have a redistributional effect and when considering a non-linearity the results show that there could be a concave relationship between military spending and income inequality. In addition, when testing for the \u2018crowding-out argument\u2019 results show that expenditures for subsidies are negatively influenced by military spending so confirming the crowding-out argument but there is no significant evidence when considering education and health expenditures."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:26:y:2015:i:1:p:49-74",
+                  "title": "Military Expenditures, Income Inequality, Welfare and Political Regimes: A Dynamic Panel Data Analysis",
+                  "abstract": "The goal of this paper is to investigate the relationship between type of welfare regimes and military expenditures. There is a sizeable empirical literature on the development of the welfare state and on the typology of the welfare regimes. There appear to be, however, no empirical studies that examine welfare regimes with special attention to military spending. This study aims at providing a comprehensive analysis on the topic by considering several different welfare regime typologies. To do so, we use dynamic panel data analysis for 37 countries for the period of 1988-2003 by considering a wide range of control variables such as inequality measures, number of terrorist events, and size of the armed forces. We also replicate the same analyses for the political regimes. Our findings, in line with the literature, show that there is a positive relationship between income inequality and share of military expenditures in the central government budget, and that the number of terrorist events is a significant factor that affects both the level of military expenditure and inequality. Also, the paper reveals a significant negative relationship between social democratic welfare regimes and military expenditures."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:18:y:2007:i:6:p:519-535",
+                  "title": "MILITARY EXPENDITURES AND INEQUALITY: EMPIRICAL EVIDENCE FROM GLOBAL DATA",
+                  "abstract": "A substantial body of literature has uncovered a robust relationship between institutions including unionization and political democracy and economic inequality. This paper examines the effect of military spending on inequality, controlling for the size of the armed forces, GDP growth, per capita income, and other possible determinants. Using a panel regression with country level observations from 1987-1997, we obtained consistent estimates that there is a positive effect of military expenditure on pay inequality. This relationship is robust across variable definitions and model specifications. Given the close relationship between pay and income, this result suggests that a country's increases in military spending could increase income inequality."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seeds": [
+            {
+              "seed": 42,
+              "metrics": {
+                "topic_count": 10,
+                "outliers": 220,
+                "coherence": 0.15847919201315416,
+                "silhouette": 0.08950579911470413,
+                "diversity": 0.95,
+                "coverage": 0.8066783831282952
+              }
+            },
+            {
+              "seed": 7,
+              "metrics": {
+                "topic_count": 11,
+                "outliers": 255,
+                "coherence": 0.1686077334514447,
+                "silhouette": 0.0979318842291832,
+                "diversity": 0.9363636363636364,
+                "coverage": 0.7759226713532513
+              }
+            },
+            {
+              "seed": 21,
+              "metrics": {
+                "topic_count": 12,
+                "outliers": 281,
+                "coherence": 0.13783589672957405,
+                "silhouette": 0.10745631158351898,
+                "diversity": 0.9416666666666667,
+                "coverage": 0.7530755711775043
+              }
+            }
+          ],
+          "stability_ami": 0.7887982648968982,
+          "mean_score": 0.6611419945919984,
+          "review": [
+            {
+              "topic": 0,
+              "keywords": [
+                "growth",
+                "economic growth",
+                "spending",
+                "military",
+                "military spending",
+                "expenditure",
+                "economic",
+                "relationship",
+                "military expenditure",
+                "causality"
+              ],
+              "count": 169,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
+                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193",
+                  "title": "MILITARY EXPENDITURE AND ECONOMIC GROWTH IN DEVELOPING COUNTRIES: EVIDENCE FROM SYSTEM GMM ESTIMATES",
+                  "abstract": "The effect of military expenditure on economic growth in developing countries has been investigated by many empirical literatures. However, there is little consensus of that effect and the diversity seems to come from the use of different models and different estimators. This article applies the Augmented Solow Growth Model to examine the influence of military expenditure on economic growth for 35 developing countries over the period of 1975--2009. By using the system Generalized Method of Moments (GMM) estimators, empirical results indicate that defence has a negative and significant effect on economic growth in the sample countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456",
+                  "title": "Military Spending and Economic Growth in the Middle East Countries: Bootstrap Panel Causality Test",
+                  "abstract": "This study revisits the causal relationship between military spending and economic growth in 10 Middle East countries via a panel causality analysis that accounts for cross-sectional dependence and heterogeneity across countries. Our results indicate unidirectional causality from military spending to growth for Turkey; one-way causality from economic growth to military spending for Egypt, Kuwait, Lebanon, and Syria; bidirectional causality for Israel; and no causality in either direction for Jordan, Oman, and Saudi Arabia. The empirical evidence does not provide consistent results regarding the causal relationship between defense expenditure and economic growth in these countries."
+                }
+              ]
+            },
+            {
+              "topic": 1,
+              "keywords": [
+                "terrorism",
+                "terrorist",
+                "attacks",
+                "attack",
+                "terrorist attacks",
+                "terrorists",
+                "terror",
+                "activity",
+                "groups",
+                "terrorist groups"
+              ],
+              "count": 143,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+                  "title": "TERROR SUPPORT AND RECRUITMENT",
+                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
+                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
+                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
+                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
+                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
+                }
+              ]
+            },
+            {
+              "topic": 2,
+              "keywords": [
+                "defence",
+                "industrial",
+                "industry",
+                "european",
+                "procurement",
+                "firms",
+                "defence industrial",
+                "european defence",
+                "rd",
+                "policy"
+              ],
+              "count": 113,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:18:y:2007:i:3:p:199-221",
+                  "title": "DETERMINING THE DEFENCE INDUSTRIAL BASE",
+                  "abstract": "This paper models the determination of the defence industrial base - the number of different military systems a country decides to maintain. High R&D costs means that few countries can afford to produce major weapons systems and the producers also import systems. Non-producers rely on imports and we assume their demand is driven by regional arms races. Military capability is determined by the number of systems and the quantity and quality of each. We examine how the defence industrial base is influenced by military expenditures, R&D costs, export controls, the nature of regional arms races and a variety of other factors."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
+                  "title": "Small countries and the consolidation of the European defence industry: Portugal as a case study",
+                  "abstract": "In this paper, we analyse the dilemma confronted by a small country in relation to the consolidation taking place in the European defence industry. Assuming that Portugal must maintain its armed forces, and must retain a minor defence industry, this industry must be competitive in small niches. Competitiveness must be based on, amongst other elements, technical efficiency and technological change. We investigate this issue, first characterizing the threats faced by the Portuguese defence industry, then investigating its present efficiency and finally, we discuss its role in the consolidation of the European Industry. We conclude that the Portuguese defence industry has no alternative but to opt for innovation and European partnership, which are complementary policies, but which require the active involvement of the stakeholder (i.e. the Government) in effecting these fundamental shifts in direction and emphasis. If this strategy does not succeed, the defence policy should be based on offsets."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+                  "title": "EFFECTS OF MILITARY SPENDING ON THE PROFITABILITY OF SPANISH DEFENCE CONTRACTORS",
+                  "abstract": "The traditional view of the defence industry obtaining large profits from contracts with the Ministry of Defence relies on several assumptions. Among these are the use of such arrangements as an instrument of industrial policy, the strong market power enjoyed by prime contractors, and the inefficiency encouraged by the sector. The findings show that defence contracts have a positive effect on profits, as well as the prizes for innovation and the market power enjoyed by some defence subsectors."
+                }
+              ]
+            },
+            {
+              "topic": 3,
+              "keywords": [
+                "conflict",
+                "civil",
+                "war",
+                "civil war",
+                "conflicts",
+                "violence",
+                "democracy",
+                "wars",
+                "economic",
+                "armed"
+              ],
+              "count": 101,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:20:y:2009:i:5:p:359-372",
+                  "title": "RAIN, GROWTH, AND CIVIL WAR: THE IMPORTANCE OF LOCATION",
+                  "abstract": "We re-examine the Miguel <italic>et al.</italic> (2004) study of the impact of growth on civil war, using growth in rainfall as an instrument. Miguel <italic>et al</italic>. (2004) - in our view, erroneously - include countries participating in civil wars in other states. Restricting the conflict data to states with conflict on their own territory reduces the estimated impact of economic growth on civil war. We show how spatial correlations in rainfall growth and participation in civil conflicts induce a stronger apparent relationship in the mis-classified data."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:451-464",
+                  "title": "Civil wars and economic growth: A regional comparison",
+                  "abstract": "The paper examines the impact of civil wars on income per-capita growth at home and in neighbors for four regional groupings of countries: Africa, Asia, Latin America, and a pooled Asian and Latin American sample. Both macroeconomic and civil-war influences on growth differ by region. With the use of a distance measure, we demonstrate that the spatial reach from the negative consequences of a civil war are region and time period specific. Generally, there was less dispersion in Africa than in Asia and Latin America. Moreover, Africa demonstrates a greater ability to recover from the adverse effects of civil wars than the other regions tested."
+                }
+              ]
+            },
+            {
+              "topic": 4,
+              "keywords": [
+                "veterans",
+                "service",
+                "personnel",
+                "women",
+                "conscription",
+                "reenlistment",
+                "navy",
+                "likely",
+                "job",
+                "soldiers"
+              ],
+              "count": 67,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
+                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
+                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
+                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
+                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
+                }
+              ]
+            },
+            {
+              "topic": 5,
+              "keywords": [
+                "nato",
+                "burden sharing",
+                "sharing",
+                "alliance",
+                "allies",
+                "burden",
+                "member",
+                "defense",
+                "members",
+                "alliances"
+              ],
+              "count": 50,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:369-383",
+                  "title": "Reconsidering publicness in alliance defence expenditures: NATO expansion and burden sharing",
+                  "abstract": "Over the past several decades, NATO allies have debated the relative burdens and benefits of NATO membership. Recently, this concern surfaced as members debated the magnitude and distribution of NATO expansion costs. This paper presents an economic model of defence alliances to identify the benefits and burdens of alliance membership. It suggests that defence expenditures provide public benefits if alliance members share common interests and mutual commitment; defence expenditures provide private benefits if countries lack common interests and mutual commitment. The model's results are used to discuss NATO's evolving roles and missions, NATO expansion and burden sharing across NATO members."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:35:y:2024:i:3:p:265-280",
+                  "title": "NATO Security Burden Sharing, 1991\u20132020",
+                  "abstract": "In contrast to much of the extant literature, the paper devises a composite security burden measure for the NATO alliance that accounts for three different contributions by allies to their collective security: namely, military expenditure (ME), foreign assistance, and UN peacekeeping spending. Generally, NATO defense burden sharing and free riding are judged solely based on ME even though foreign assistance and peacekeeping promote world prosperity, stabilize regimes, and quell conflicts that affect NATO\u2019s collective security. Our parametric tests for free riding apply a spatial-lag panel model, which addresses the interdependency issues, to a broader security-spending measure that accounts for allies\u2019 membership, contiguity, and inverse distance. In all spatial models, we uncover robust evidence of free riding where allies decrease their aggregate security spending in response to increases in the collective security spending of other allies. We apply a panel generalized method of moments (GMM) estimator to adjust for endogeneity concerns."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249",
+                  "title": "A LONG-RUN ANALYSIS OF DEFENCE SPENDING IN THE NATO COUNTRIES (1960-99)",
+                  "abstract": "This paper analyses the long-run demand for defence output through a homogeneous treatment of 15 NATO member countries between 1960 and 1999. We carry out a progressive study of the interactions between either defence spending or defence burden and their main determinants: income, external threat and allied military spending. To that end, we use time-series analysis with endogenously determined structural breaks. We further consider individual country functions related to one another through a common correlated effects method, in order to take into account explicitly the connections between members of an alliance."
+                }
+              ]
+            },
+            {
+              "topic": 6,
+              "keywords": [
+                "conflict",
+                "equilibrium",
+                "intervention",
+                "contest",
+                "players",
+                "game",
+                "group",
+                "model",
+                "thirdparty",
+                "party"
+              ],
+              "count": 49,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400",
+                  "title": "Asymmetric information and third-party intervention in civil wars",
+                  "abstract": "I study a two-period model of conflict with two combatants and a third party who is an ally of one of the combatants. The third party is fully informed about the type of her ally but not about the type of her ally's enemy. In a signaling game, I find that if the third party is unable to give a sufficiently high assistance to her ally, then there exists a unique separating equilibrium in which the third party's <italic>expected</italic> intervention causes her ally's enemy to exert more effort than in the absence of third-party intervention; this worsens the conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:29:y:2018:i:2:p:147-170",
+                  "title": "A model of dynamic conflict in ethnocracies",
+                  "abstract": "We model an infinitely repeated Tullock contest, over the sharing of some given resource, between two ethnic groups. The resource is allocated by a composite state institution according to relative ethnic control; hence the ethnic groups contest the extent of institutional ethnic bias. The contest yields the per-period relative influence over institutions, which partly spills over into the next period, by affecting relative conflict efficiency. Our model generates non-monotone evolution of both conflict and distribution. Results suggest that external interventions, when effective in reducing current conflict and protecting weaker groups, may end up sowing the seeds of greater future conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:6:p:389-400",
+                  "title": "Conflict and third-party intervention",
+                  "abstract": "The paper looks at various scenarios of possible concern for intervening third parties when two factions are engaged in a conflict and act strategically against one another. A standard conflict model is used to determine appropriate intervention strategies in order to lower the overall level of conflict. Choosing a suitable strategy in such a setting, the third party must not only take into account the direct impact of its efforts but also the indirect impacts that result from the strategic interaction among the parties involved."
+                }
+              ]
+            },
+            {
+              "topic": 7,
+              "keywords": [
+                "arms",
+                "exports",
+                "weapons",
+                "arms trade",
+                "intelligence",
+                "race",
+                "security",
+                "transfers",
+                "arms race",
+                "trade"
+              ],
+              "count": 47,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
+                  "title": "Price competition in a model of arms trade",
+                  "abstract": "This paper presents a model of subsidized military production that examines the relationship between domestic procurement and arms exports. Weapon producers satisfy the defence procurement in their own country and compete in prices in the international market where weapons are imperfect substitutes for each other. Importers are involved in an arms race situation and do not have domestic military production. The model makes explicit the strategic interaction between governments and firms in the export market. We then analyze the effect of a change in the most significant parameters on the equilibrium. The paper suggests an explanation for the evolution of the arms market in the past few years and highlights the important role of the demand and cost structures."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:2:p:137-143",
+                  "title": "Arms Racing and the Costs of Arms Imports: A Stochastic Model",
+                  "abstract": "The paper draws on the demand for arms imports model of Levine and Smith (1995, 1997) using stochastic processes of the birth-death type in steady state. It assumes two antagonistic regional players engaged in an armaments race satisfying their demand for military hardware through imports from the international market. The paper examines the effects that arms imports have on the military balance between the two recipient countries. It constructs a state space of possible outcomes in terms of the military balance/imbalance between the two countries involved. A new variable is introduced which tries to encapsulate the absolute difference in their respective security functions at any moment in time. This variable affects the transition from one state of affairs to the other."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:30:y:2019:i:1:p:2-26",
+                  "title": "The Gravity of Arms",
+                  "abstract": "The aim of this paper is to investigate the determinants of international arms transfers in a gravity model framework. By distinguishing between the decision to export arms (extensive margin) and the value of the arms exported (intensive margin), while also considering its interdependence, is what differentiates this paper from previous research. A theoretically justified gravity model of trade augmented with political and security motives is estimated using a two-stage panel data approach for 104 exporting countries over the period from 1950 to 2007. In addition to the usual gravity variables related to the economic mass of the trading countries and the trade cost factors, the model is extended with political and security factors. The level of democracy in both trading partners, political differences between trading partners and voting similarity with the United States in the UN General Assembly of the countries engaged in trade are the main political factors, whereas the existence of conflicts, military pacts, and embargoes are taken as security motives. The key result indicates that both political and security motives are an important determinant of an arms trade, but their effects on the extensive margin of exports (the decision to order a transfer) differs from their effect on the intensive margin (average value of exports). Moreover, the relative importance of the factors under study has changed since 1989. In the post-cold war period, countries that are less democratic are more likely to export arms, military pacts are less relevant and embargoes play a role."
+                }
+              ]
+            },
+            {
+              "topic": 8,
+              "keywords": [
+                "greece",
+                "greek",
+                "race",
+                "turkey",
+                "arms race",
+                "turkish",
+                "cyprus",
+                "expenditures",
+                "greekturkish",
+                "demand"
+              ],
+              "count": 34,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:6:p:437-445",
+                  "title": "Domestic political and external security determinants of the demand for greek military expenditure",
+                  "abstract": "By European Union and NATO standards, Greece consistently allocates substantial human and material resources to defence. The Greek defence burden (i.e. military expenditure as a share of GDP) has invariably been appreciably higher than the EU and NATO averages. The paper applies an autoregressive distributed lag model (ARDL) to present cointegrated estimates of the demand function for Greek military expenditure, in which domestic political factors and external security determinants are incorporated. Our empirical findings suggest that Greek defence spending over the period 1960-1998 has been influenced by both external security concerns, namely Turkey, as well as changes in the domestic political scene."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:5:p:405-416",
+                  "title": "Asymmetric effects of military expenditure between Turkey and Greece",
+                  "abstract": "One of the major topics of the defense economics literature regarding Turkey and Greece has been the empirical modeling of various aspects of arms racing. However, despite a considerable amount of research, little evidence has been found in favor of an arms race between the two countries. In the literature, this failure of applied studies has been attributed, among other reasons, to the sensitivity of the results to the underlying model specification, to small sample size, and to measurement issues. This study uses novel, nonlinear, models to investigate the possible relationship between the military expenditures of the two countries. It is assumed that if there are two regimes characterizing the low (or negative) and high-growth military expenditure periods, the growth rates of one country's military expenditure may have distinct effects on the military expenditure regimes of the other country or may contribute to the change from one regime to another. The nonlinear models examined are Smooth Transition Regression models (STRs). Strong evidence of nonlinearity for Greece is found, with asymmetry relating to two distinct regimes through lagged Turkish military expenditure changes."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:2:p:85-107",
+                  "title": "Survey and Review of the Defense Economics Literature on Greece and Turkey: What Have We Learned?",
+                  "abstract": "This article contains a critical review of the literature on the economics of military affairs in Greece and Turkey as of December 1999. In particular, I review (a) arms race models; (b) models of the demand for military expenditure; (c) models measuring the economic impact of military expenditure; and (d) literature and issues related to indigenous arms production. I conclude with a number of summary lessons and observations of how future research might improve upon the existing body of work."
+                }
+              ]
+            },
+            {
+              "topic": 9,
+              "keywords": [
+                "cost",
+                "aircraft",
+                "equipment",
+                "cost escalation",
+                "escalation",
+                "costs",
+                "type",
+                "twvs",
+                "unit",
+                "life"
+              ],
+              "count": 31,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
+                  "title": "The Capability Factors as Explanatory Variables of Equipment Unit Cost Growth: A Methodological Proposal",
+                  "abstract": "In clarifying the conceptual and terminological issues of the unit cost growth of military equipment, six recent empirical studies on unit cost growth are reviewed and evaluated in this article. Even though the reported unit cost growth rates differ between equipment type and the individual studies, all of the studies find the unit cost growth rates of each military equipment type exceeding inflation. Various explanations proposed by different authors are reviewed. Unit cost growth studies omit corrections for quality changes of equipment, unlike the standard practice in inflation calculation. By bringing the military capability perspective into the discussion of unit cost growth, this article proposes a new approach to equipment unit cost growth, thereby enabling the collective evaluation of quality change with price change. This approach is demonstrated through a case study involving an armoured personnel carrier (APC). Although the price of the APC had increased sixfold with only a minor improvement in transportation capability, the proposed approach shows that the purchasing decisions of its successive generations may have still been cost-effective. The APC case demonstrated that the proposed approach can be successfully applied and yield meaningful results."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:4:p:434-442",
+                  "title": "Rising Costs: Augustine Revisited",
+                  "abstract": "Rising military equipment costs were famously identified by Norman Augustine with forecasts of a single aircraft air force by 2054. This paper presents and analyses an original data set for UK military aircraft. It provides evidence on cost escalation for various UK aircraft types comprising fighter/strike, bombers, military transports, maritime patrol aircraft, helicopters, trainers and civil aircraft. Continued cost escalation is identified for almost all types but with different cost escalation factors. It is concluded that the specific Augustine hypothesis of costs rising by a factor of four every 10 years might be an under-estimate."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:34:y:2023:i:4:p:512-526",
+                  "title": "Costs and Prices of UK Military Aircraft in War and Peace",
+                  "abstract": "Much of the literature on military aircraft unit costs is based on US data. This article adds to our knowledge by using an original data set for UK military aircraft costs, profits and prices. A distinction is made between unit costs within a generation of aircraft and between generations. Four research questions are addressed. First, is the UK aircraft industry a decreasing cost industry; second, are new entrants higher cost suppliers; third, what is the evidence on profitability in war and peace and between new entrants and original developers; fourth, what is the UK evidence on Augustine-type cost escalation and on the efficiency of aircraft procurement in war and peace? The UK aircraft industry was found to be a decreasing cost industry reflecting both scale and learning economies. Typically, new entrants were higher cost suppliers and profit rates were higher in peace-time. There was substantial Augustine cost escalation for UK combat aircraft and doubts are raised about the efficiency of military aircraft procurement."
+                }
+              ]
+            },
+            {
+              "topic": 10,
+              "keywords": [
+                "debt",
+                "external debt",
+                "external",
+                "military spending",
+                "spending external",
+                "spending",
+                "default",
+                "deficits",
+                "domestic debt",
+                "expenditures"
+              ],
+              "count": 27,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+                  "title": "Military expenditure and debt in small industrialised economies: A panel analysis*",
+                  "abstract": "This paper considers the impact of military spending on debt in a panel of 11 small industrialising economies using panel data methods. It provide estimates for fixed effects and random effects models and then moves on to consider dynamic models. The dynamics are found to be important and the results suggest that military burden does indeed have a positive impact on the share of external debt in GDP."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:28:y:2017:i:5:p:550-567",
+                  "title": "Does military expenditure increase external debt? Evidence from Asia",
+                  "abstract": "This article empirically explores the effect of military spending on external debt, using a sample of ten Asian countries over the years from 1990 to 2011. The Hausman\u2019s test suggests that the random-effects model is preferable; however, both random-effects and fixed-effects models are used in this research. The empirical results show that the effect of military spending on external debt is positive, while the effects of foreign exchange reserves and of economic growth on external debt are negative. For developing countries caught in security dilemma, military expenditure often requires an increase in external debt, which may affect economic development negatively."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:5:p:588-599",
+                  "title": "The Impact of Military Expenditure on External Debt: The Case of 35 Arms Importing Countries",
+                  "abstract": "This study aims to empirically test the effects of military expenditure on external debt of 35 arms importing countries by using the annual panel data from the year 1995 to 2016. The panel was divided into two income classes (upper-middle and lower-middle), and the basic sample was also divided into five different regions (Middle-East and North Africa, South and East Asia, Latin America, Europe and Central Asia, and Sub-Saharan Africa) to achieve further robustness in the study. The empirical results of pooled mean group estimators suggest that military expenditure generally increases the external debt burden in the studied countries. More specifically, it was noted that military expenditure decreases external debt in Europe and Central Asia. Moreover, it was found that the interaction term of military expenditure and growth rate is positive and significant in all of the sub-samples, except upper-middle class, the Middle East and North Africa, and Latin American regions. Thus, it may be concluded that military expenditure often increases external debt burden in countries where the debt management system is weak. Countries with weaker debt management systems need to devise economic policies that curtail their military expenditure, reduce their external debt and improve their economic condition."
+                }
+              ]
+            },
+            {
+              "topic": 11,
+              "keywords": [
+                "geopolitical",
+                "geopolitical risk",
+                "gpr",
+                "risk",
+                "geopolitical risks",
+                "oil",
+                "op",
+                "volatility",
+                "risks",
+                "returns"
+              ],
+              "count": 26,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
+                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
+                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
+                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:5:p:550-564",
+                  "title": "How Do Geopolitical Risks Affect Government Investment? An Empirical Investigation",
+                  "abstract": "The paper examines the effects of geopolitical risks, measured by a new index for geopolitical risk, on general government investment (gross fixed capital formation). It uses panel data for 18 countries for the period from 1985 to 2015. Using panel fixed-effects and the corrected least squares dummy variable estimators, results indicate that geopolitical risks seem to exert a positive effect on government investment."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seeds": [
+            {
+              "seed": 42,
+              "metrics": {
+                "topic_count": 13,
+                "outliers": 278,
+                "coherence": 0.16830097211806064,
+                "silhouette": 0.0897156372666359,
+                "diversity": 0.9461538461538461,
+                "coverage": 0.7557117750439367
+              }
+            },
+            {
+              "seed": 7,
+              "metrics": {
+                "topic_count": 15,
+                "outliers": 229,
+                "coherence": 0.15680889094844086,
+                "silhouette": 0.08724606037139893,
+                "diversity": 0.9066666666666666,
+                "coverage": 0.7987697715289982
+              }
+            },
+            {
+              "seed": 21,
+              "metrics": {
+                "topic_count": 11,
+                "outliers": 261,
+                "coherence": 0.12520882339274816,
+                "silhouette": 0.10155902057886124,
+                "diversity": 0.9545454545454546,
+                "coverage": 0.7706502636203867
+              }
+            }
+          ],
+          "stability_ami": 0.777713747182816,
+          "mean_score": 0.6142964758852514,
+          "review": [
+            {
+              "topic": 0,
+              "keywords": [
+                "growth",
+                "economic growth",
+                "spending",
+                "military",
+                "expenditure",
+                "military spending",
+                "economic",
+                "military expenditure",
+                "relationship",
+                "expenditures"
+              ],
+              "count": 173,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
+                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456",
+                  "title": "Military Spending and Economic Growth in the Middle East Countries: Bootstrap Panel Causality Test",
+                  "abstract": "This study revisits the causal relationship between military spending and economic growth in 10 Middle East countries via a panel causality analysis that accounts for cross-sectional dependence and heterogeneity across countries. Our results indicate unidirectional causality from military spending to growth for Turkey; one-way causality from economic growth to military spending for Egypt, Kuwait, Lebanon, and Syria; bidirectional causality for Israel; and no causality in either direction for Jordan, Oman, and Saudi Arabia. The empirical evidence does not provide consistent results regarding the causal relationship between defense expenditure and economic growth in these countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193",
+                  "title": "MILITARY EXPENDITURE AND ECONOMIC GROWTH IN DEVELOPING COUNTRIES: EVIDENCE FROM SYSTEM GMM ESTIMATES",
+                  "abstract": "The effect of military expenditure on economic growth in developing countries has been investigated by many empirical literatures. However, there is little consensus of that effect and the diversity seems to come from the use of different models and different estimators. This article applies the Augmented Solow Growth Model to examine the influence of military expenditure on economic growth for 35 developing countries over the period of 1975--2009. By using the system Generalized Method of Moments (GMM) estimators, empirical results indicate that defence has a negative and significant effect on economic growth in the sample countries."
+                }
+              ]
+            },
+            {
+              "topic": 1,
+              "keywords": [
+                "terrorism",
+                "terrorist",
+                "attacks",
+                "attack",
+                "terrorist attacks",
+                "terrorists",
+                "terror",
+                "activity",
+                "groups",
+                "terrorist groups"
+              ],
+              "count": 144,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+                  "title": "TERROR SUPPORT AND RECRUITMENT",
+                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
+                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
+                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
+                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
+                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
+                }
+              ]
+            },
+            {
+              "topic": 2,
+              "keywords": [
+                "defence",
+                "industrial",
+                "industry",
+                "procurement",
+                "european",
+                "rd",
+                "firms",
+                "defense",
+                "policy",
+                "european defence"
+              ],
+              "count": 126,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:18:y:2007:i:3:p:199-221",
+                  "title": "DETERMINING THE DEFENCE INDUSTRIAL BASE",
+                  "abstract": "This paper models the determination of the defence industrial base - the number of different military systems a country decides to maintain. High R&D costs means that few countries can afford to produce major weapons systems and the producers also import systems. Non-producers rely on imports and we assume their demand is driven by regional arms races. Military capability is determined by the number of systems and the quantity and quality of each. We examine how the defence industrial base is influenced by military expenditures, R&D costs, export controls, the nature of regional arms races and a variety of other factors."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
+                  "title": "Small countries and the consolidation of the European defence industry: Portugal as a case study",
+                  "abstract": "In this paper, we analyse the dilemma confronted by a small country in relation to the consolidation taking place in the European defence industry. Assuming that Portugal must maintain its armed forces, and must retain a minor defence industry, this industry must be competitive in small niches. Competitiveness must be based on, amongst other elements, technical efficiency and technological change. We investigate this issue, first characterizing the threats faced by the Portuguese defence industry, then investigating its present efficiency and finally, we discuss its role in the consolidation of the European Industry. We conclude that the Portuguese defence industry has no alternative but to opt for innovation and European partnership, which are complementary policies, but which require the active involvement of the stakeholder (i.e. the Government) in effecting these fundamental shifts in direction and emphasis. If this strategy does not succeed, the defence policy should be based on offsets."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+                  "title": "EFFECTS OF MILITARY SPENDING ON THE PROFITABILITY OF SPANISH DEFENCE CONTRACTORS",
+                  "abstract": "The traditional view of the defence industry obtaining large profits from contracts with the Ministry of Defence relies on several assumptions. Among these are the use of such arrangements as an instrument of industrial policy, the strong market power enjoyed by prime contractors, and the inefficiency encouraged by the sector. The findings show that defence contracts have a positive effect on profits, as well as the prizes for innovation and the market power enjoyed by some defence subsectors."
+                }
+              ]
+            },
+            {
+              "topic": 3,
+              "keywords": [
+                "conflict",
+                "civil",
+                "war",
+                "civil war",
+                "violence",
+                "conflicts",
+                "peace",
+                "democracy",
+                "wars",
+                "economic"
+              ],
+              "count": 114,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:20:y:2009:i:5:p:359-372",
+                  "title": "RAIN, GROWTH, AND CIVIL WAR: THE IMPORTANCE OF LOCATION",
+                  "abstract": "We re-examine the Miguel <italic>et al.</italic> (2004) study of the impact of growth on civil war, using growth in rainfall as an instrument. Miguel <italic>et al</italic>. (2004) - in our view, erroneously - include countries participating in civil wars in other states. Restricting the conflict data to states with conflict on their own territory reduces the estimated impact of economic growth on civil war. We show how spatial correlations in rainfall growth and participation in civil conflicts induce a stronger apparent relationship in the mis-classified data."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:27:y:2016:i:4:p:453-479",
+                  "title": "Growth recovery after civil conflict: a fractional integration approach",
+                  "abstract": "Using recent econometric techniques based on fractional integration, we find that developing countries recover their economic growth faster than developed countries in response to a shock. Following this methodology, we find that longer civil conflicts are associated with a faster recovery process. We further investigate this issue by exploring correlations with components of GDP, military spending, institutions and aid and find heterogeneous effects of these channels by duration of conflict. Higher government spending is correlated with faster recoveries post longer conflicts, and higher consumption spending is linked to faster recoveries following shorter conflicts. Military spending appears to be driving the government expenditure that makes countries recover from longer conflicts. More democratic institutions are associated with faster recoveries post short wars but slower recoveries following long wars."
+                }
+              ]
+            },
+            {
+              "topic": 4,
+              "keywords": [
+                "nato",
+                "alliance",
+                "burden sharing",
+                "sharing",
+                "allies",
+                "burden",
+                "member",
+                "states",
+                "defense",
+                "members"
+              ],
+              "count": 66,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249",
+                  "title": "A LONG-RUN ANALYSIS OF DEFENCE SPENDING IN THE NATO COUNTRIES (1960-99)",
+                  "abstract": "This paper analyses the long-run demand for defence output through a homogeneous treatment of 15 NATO member countries between 1960 and 1999. We carry out a progressive study of the interactions between either defence spending or defence burden and their main determinants: income, external threat and allied military spending. To that end, we use time-series analysis with endogenously determined structural breaks. We further consider individual country functions related to one another through a common correlated effects method, in order to take into account explicitly the connections between members of an alliance."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:369-383",
+                  "title": "Reconsidering publicness in alliance defence expenditures: NATO expansion and burden sharing",
+                  "abstract": "Over the past several decades, NATO allies have debated the relative burdens and benefits of NATO membership. Recently, this concern surfaced as members debated the magnitude and distribution of NATO expansion costs. This paper presents an economic model of defence alliances to identify the benefits and burdens of alliance membership. It suggests that defence expenditures provide public benefits if alliance members share common interests and mutual commitment; defence expenditures provide private benefits if countries lack common interests and mutual commitment. The model's results are used to discuss NATO's evolving roles and missions, NATO expansion and burden sharing across NATO members."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:35:y:2024:i:3:p:265-280",
+                  "title": "NATO Security Burden Sharing, 1991\u20132020",
+                  "abstract": "In contrast to much of the extant literature, the paper devises a composite security burden measure for the NATO alliance that accounts for three different contributions by allies to their collective security: namely, military expenditure (ME), foreign assistance, and UN peacekeeping spending. Generally, NATO defense burden sharing and free riding are judged solely based on ME even though foreign assistance and peacekeeping promote world prosperity, stabilize regimes, and quell conflicts that affect NATO\u2019s collective security. Our parametric tests for free riding apply a spatial-lag panel model, which addresses the interdependency issues, to a broader security-spending measure that accounts for allies\u2019 membership, contiguity, and inverse distance. In all spatial models, we uncover robust evidence of free riding where allies decrease their aggregate security spending in response to increases in the collective security spending of other allies. We apply a panel generalized method of moments (GMM) estimator to adjust for endogeneity concerns."
+                }
+              ]
+            },
+            {
+              "topic": 5,
+              "keywords": [
+                "veterans",
+                "service",
+                "personnel",
+                "women",
+                "conscription",
+                "reenlistment",
+                "navy",
+                "likely",
+                "job",
+                "soldiers"
+              ],
+              "count": 66,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
+                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
+                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
+                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
+                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
+                }
+              ]
+            },
+            {
+              "topic": 6,
+              "keywords": [
+                "arms",
+                "exports",
+                "weapons",
+                "race",
+                "intelligence",
+                "security",
+                "arms race",
+                "arms trade",
+                "missile",
+                "transfers"
+              ],
+              "count": 57,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
+                  "title": "Price competition in a model of arms trade",
+                  "abstract": "This paper presents a model of subsidized military production that examines the relationship between domestic procurement and arms exports. Weapon producers satisfy the defence procurement in their own country and compete in prices in the international market where weapons are imperfect substitutes for each other. Importers are involved in an arms race situation and do not have domestic military production. The model makes explicit the strategic interaction between governments and firms in the export market. We then analyze the effect of a change in the most significant parameters on the equilibrium. The paper suggests an explanation for the evolution of the arms market in the past few years and highlights the important role of the demand and cost structures."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:2:p:137-143",
+                  "title": "Arms Racing and the Costs of Arms Imports: A Stochastic Model",
+                  "abstract": "The paper draws on the demand for arms imports model of Levine and Smith (1995, 1997) using stochastic processes of the birth-death type in steady state. It assumes two antagonistic regional players engaged in an armaments race satisfying their demand for military hardware through imports from the international market. The paper examines the effects that arms imports have on the military balance between the two recipient countries. It constructs a state space of possible outcomes in terms of the military balance/imbalance between the two countries involved. A new variable is introduced which tries to encapsulate the absolute difference in their respective security functions at any moment in time. This variable affects the transition from one state of affairs to the other."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:11:y:2000:i:1:p:45-54",
+                  "title": "Arms Races",
+                  "abstract": "Recent developments in arms races and their theoretical analysis are treated, including the changing nature of arms races and their impacts on arms expenditure and international stability. The dominant East-West arms race of the Cold War has ended, but arms races still exist, and it is likely that even greater instabilities exist after the Cold War. Future analyses must take account of both increasing returns to scale in production and sophisticated projections of weapons levels. Recent results from the theory of repeated games, including rational learning, may provide the needed foundation for a new paradigm for the arms race."
+                }
+              ]
+            },
+            {
+              "topic": 7,
+              "keywords": [
+                "conflict",
+                "equilibrium",
+                "intervention",
+                "game",
+                "contest",
+                "players",
+                "model",
+                "group",
+                "thirdparty",
+                "parties"
+              ],
+              "count": 51,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400",
+                  "title": "Asymmetric information and third-party intervention in civil wars",
+                  "abstract": "I study a two-period model of conflict with two combatants and a third party who is an ally of one of the combatants. The third party is fully informed about the type of her ally but not about the type of her ally's enemy. In a signaling game, I find that if the third party is unable to give a sufficiently high assistance to her ally, then there exists a unique separating equilibrium in which the third party's <italic>expected</italic> intervention causes her ally's enemy to exert more effort than in the absence of third-party intervention; this worsens the conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:29:y:2018:i:2:p:147-170",
+                  "title": "A model of dynamic conflict in ethnocracies",
+                  "abstract": "We model an infinitely repeated Tullock contest, over the sharing of some given resource, between two ethnic groups. The resource is allocated by a composite state institution according to relative ethnic control; hence the ethnic groups contest the extent of institutional ethnic bias. The contest yields the per-period relative influence over institutions, which partly spills over into the next period, by affecting relative conflict efficiency. Our model generates non-monotone evolution of both conflict and distribution. Results suggest that external interventions, when effective in reducing current conflict and protecting weaker groups, may end up sowing the seeds of greater future conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:22:y:2011:i:5:p:471-492",
+                  "title": "Dynamic Winner-Take-All Conflict",
+                  "abstract": "We develop a model of repeated conflict that features probabilistic winner-take-all outcomes and compare its dynamics to the dynamics generated by a similar deterministic model in which combatants divide the conflict spoils. While these models generate the same behavior in a one-shot game, in a repeated setting the winner-take-all model generates richer dynamics than the dynamics generated by the deterministic model, which are new to the economics literature on conflict. As in real-world conflicts, the winner-take-all model generates changes in the relative dominance of combatants, full mobilization of fighting resources, and endogenous surrender. We evaluate the implications for the literature."
+                }
+              ]
+            },
+            {
+              "topic": 8,
+              "keywords": [
+                "cost",
+                "aircraft",
+                "equipment",
+                "cost escalation",
+                "escalation",
+                "costs",
+                "unit",
+                "life",
+                "defence equipment",
+                "cost growth"
+              ],
+              "count": 30,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
+                  "title": "The Capability Factors as Explanatory Variables of Equipment Unit Cost Growth: A Methodological Proposal",
+                  "abstract": "In clarifying the conceptual and terminological issues of the unit cost growth of military equipment, six recent empirical studies on unit cost growth are reviewed and evaluated in this article. Even though the reported unit cost growth rates differ between equipment type and the individual studies, all of the studies find the unit cost growth rates of each military equipment type exceeding inflation. Various explanations proposed by different authors are reviewed. Unit cost growth studies omit corrections for quality changes of equipment, unlike the standard practice in inflation calculation. By bringing the military capability perspective into the discussion of unit cost growth, this article proposes a new approach to equipment unit cost growth, thereby enabling the collective evaluation of quality change with price change. This approach is demonstrated through a case study involving an armoured personnel carrier (APC). Although the price of the APC had increased sixfold with only a minor improvement in transportation capability, the proposed approach shows that the purchasing decisions of its successive generations may have still been cost-effective. The APC case demonstrated that the proposed approach can be successfully applied and yield meaningful results."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:4:p:434-442",
+                  "title": "Rising Costs: Augustine Revisited",
+                  "abstract": "Rising military equipment costs were famously identified by Norman Augustine with forecasts of a single aircraft air force by 2054. This paper presents and analyses an original data set for UK military aircraft. It provides evidence on cost escalation for various UK aircraft types comprising fighter/strike, bombers, military transports, maritime patrol aircraft, helicopters, trainers and civil aircraft. Continued cost escalation is identified for almost all types but with different cost escalation factors. It is concluded that the specific Augustine hypothesis of costs rising by a factor of four every 10 years might be an under-estimate."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:34:y:2023:i:4:p:512-526",
+                  "title": "Costs and Prices of UK Military Aircraft in War and Peace",
+                  "abstract": "Much of the literature on military aircraft unit costs is based on US data. This article adds to our knowledge by using an original data set for UK military aircraft costs, profits and prices. A distinction is made between unit costs within a generation of aircraft and between generations. Four research questions are addressed. First, is the UK aircraft industry a decreasing cost industry; second, are new entrants higher cost suppliers; third, what is the evidence on profitability in war and peace and between new entrants and original developers; fourth, what is the UK evidence on Augustine-type cost escalation and on the efficiency of aircraft procurement in war and peace? The UK aircraft industry was found to be a decreasing cost industry reflecting both scale and learning economies. Typically, new entrants were higher cost suppliers and profit rates were higher in peace-time. There was substantial Augustine cost escalation for UK combat aircraft and doubts are raised about the efficiency of military aircraft procurement."
+                }
+              ]
+            },
+            {
+              "topic": 9,
+              "keywords": [
+                "debt",
+                "external debt",
+                "external",
+                "military spending",
+                "spending",
+                "spending external",
+                "default",
+                "deficits",
+                "government debt",
+                "domestic debt"
+              ],
+              "count": 26,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+                  "title": "Military expenditure and debt in small industrialised economies: A panel analysis*",
+                  "abstract": "This paper considers the impact of military spending on debt in a panel of 11 small industrialising economies using panel data methods. It provide estimates for fixed effects and random effects models and then moves on to consider dynamic models. The dynamics are found to be important and the results suggest that military burden does indeed have a positive impact on the share of external debt in GDP."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:28:y:2017:i:5:p:550-567",
+                  "title": "Does military expenditure increase external debt? Evidence from Asia",
+                  "abstract": "This article empirically explores the effect of military spending on external debt, using a sample of ten Asian countries over the years from 1990 to 2011. The Hausman\u2019s test suggests that the random-effects model is preferable; however, both random-effects and fixed-effects models are used in this research. The empirical results show that the effect of military spending on external debt is positive, while the effects of foreign exchange reserves and of economic growth on external debt are negative. For developing countries caught in security dilemma, military expenditure often requires an increase in external debt, which may affect economic development negatively."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:5:p:588-599",
+                  "title": "The Impact of Military Expenditure on External Debt: The Case of 35 Arms Importing Countries",
+                  "abstract": "This study aims to empirically test the effects of military expenditure on external debt of 35 arms importing countries by using the annual panel data from the year 1995 to 2016. The panel was divided into two income classes (upper-middle and lower-middle), and the basic sample was also divided into five different regions (Middle-East and North Africa, South and East Asia, Latin America, Europe and Central Asia, and Sub-Saharan Africa) to achieve further robustness in the study. The empirical results of pooled mean group estimators suggest that military expenditure generally increases the external debt burden in the studied countries. More specifically, it was noted that military expenditure decreases external debt in Europe and Central Asia. Moreover, it was found that the interaction term of military expenditure and growth rate is positive and significant in all of the sub-samples, except upper-middle class, the Middle East and North Africa, and Latin American regions. Thus, it may be concluded that military expenditure often increases external debt burden in countries where the debt management system is weak. Countries with weaker debt management systems need to devise economic policies that curtail their military expenditure, reduce their external debt and improve their economic condition."
+                }
+              ]
+            },
+            {
+              "topic": 10,
+              "keywords": [
+                "geopolitical",
+                "geopolitical risk",
+                "gpr",
+                "risk",
+                "geopolitical risks",
+                "oil",
+                "op",
+                "volatility",
+                "risks",
+                "returns"
+              ],
+              "count": 24,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
+                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
+                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
+                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
+                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
+                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
+                }
+              ]
             }
           ]
         }
@@ -1637,22 +2330,22 @@
         "coverage": 0.7873462214411248
       },
       "selected_before_reassignment": {
-        "topic_count": 5,
-        "outliers": 27,
-        "coherence": 0.17949742882974426,
-        "silhouette": 0.11341273039579391,
-        "diversity": 0.96,
-        "coverage": 0.976274165202109
+        "topic_count": 10,
+        "outliers": 220,
+        "coherence": 0.15847919201315416,
+        "silhouette": 0.08950579911470413,
+        "diversity": 0.95,
+        "coverage": 0.8066783831282952
       },
       "outliers": {
         "minimum_agreement": 0.95,
-        "validation_count": 208,
-        "threshold": 0.4000000000000001,
+        "validation_count": 120,
+        "threshold": 0.47500000000000014,
         "margin": 0.02,
-        "agreement": 0.9789473684210527,
-        "accepted_validation": 190,
-        "before": 27,
-        "after": 12
+        "agreement": 0.9741379310344828,
+        "accepted_validation": 116,
+        "before": 220,
+        "after": 80
       },
       "rebuild_from": null,
       "metric_weights": {
@@ -1679,14 +2372,14 @@
           1.0
         ]
       },
-      "selection": "Mean weighted normalised score across three seeds; stability breaks ties.",
+      "selection": "Prefer at least 10 topics at the final fitting seed (42), with no upper cap; then mean weighted normalised score across three seeds; stability breaks ties. Fall back to smaller models only if no valid candidate has at least 10 topics.",
       "selected_after_reassignment": {
-        "topic_count": 5,
-        "outliers": 12,
-        "coherence": 0.1852670044477327,
-        "silhouette": 0.1119082123041153,
-        "diversity": 0.96,
-        "coverage": 0.9894551845342706
+        "topic_count": 10,
+        "outliers": 80,
+        "coherence": 0.1381546157979681,
+        "silhouette": 0.07697978615760803,
+        "diversity": 0.93,
+        "coverage": 0.929701230228471
       }
     },
     "classifier": {
@@ -1695,17 +2388,74 @@
         1,
         2,
         3,
-        4
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
       ],
-      "threshold": 0.4000000000000001,
+      "threshold": 0.47500000000000014,
       "margin": 0.02,
       "minimum_agreement": 0.95,
-      "validation_count": 208,
-      "accepted_validation": 189,
-      "agreement": 0.9788359788359788,
+      "validation_count": 120,
+      "accepted_validation": 116,
+      "agreement": 0.9568965517241379,
       "ready": true,
       "basis": "Held-out agreement with discovered baseline assignments; not independent accuracy."
-    }
+    },
+    "labels": [
+      {
+        "id": 0,
+        "label": "Conflict, war and peace",
+        "keyword_label": "conflict \u00b7 war \u00b7 civil"
+      },
+      {
+        "id": 1,
+        "label": "Military spending and economic growth",
+        "keyword_label": "spending \u00b7 growth \u00b7 military"
+      },
+      {
+        "id": 2,
+        "label": "Terrorism and counterterrorism",
+        "keyword_label": "terrorism \u00b7 terrorist \u00b7 attacks"
+      },
+      {
+        "id": 3,
+        "label": "Defence industries and procurement",
+        "keyword_label": "defence \u00b7 industry \u00b7 industrial"
+      },
+      {
+        "id": 4,
+        "label": "Defence spending and alliances",
+        "keyword_label": "nato \u00b7 defence \u00b7 defense"
+      },
+      {
+        "id": 5,
+        "label": "Military personnel, recruitment and veterans",
+        "keyword_label": "veterans \u00b7 service \u00b7 personnel"
+      },
+      {
+        "id": 6,
+        "label": "Arms trade and arms races",
+        "keyword_label": "arms \u00b7 weapons \u00b7 exports"
+      },
+      {
+        "id": 7,
+        "label": "Geopolitical risk and financial markets",
+        "keyword_label": "geopolitical \u00b7 gpr \u00b7 risk"
+      },
+      {
+        "id": 8,
+        "label": "Military equipment costs",
+        "keyword_label": "cost \u00b7 aircraft \u00b7 equipment"
+      },
+      {
+        "id": 9,
+        "label": "Military spending and public debt",
+        "keyword_label": "debt \u00b7 external \u00b7 military spending"
+      }
+    ]
   },
   "update": {
     "issue": "37:5",
@@ -1731,9 +2481,9 @@
       "cache_hits": 1207,
       "corrupt_entries": 0,
       "article_count": 1214,
-      "elapsed_seconds": 0.86943325,
-      "release_id": "d9366da651fa88501ea1",
-      "bytes": 103561426
+      "elapsed_seconds": 0.9037700829999998,
+      "release_id": "961c903141af29820a44",
+      "bytes": 103717275
     },
     "preserved": 1138,
     "assignments": [
@@ -1749,11 +2499,11 @@
         "year": "2026",
         "pages": "669-686",
         "doi": "10.1080/10242694.2026.2647243",
-        "topic": 0,
+        "topic": -1,
         "original_topic": -1,
-        "reassigned": true,
-        "similarity": 0.6242482662200928,
-        "margin": 0.14667156338691711,
+        "reassigned": false,
+        "similarity": 0.6373551487922668,
+        "margin": 0.008106410503387451,
         "assignment_method": "frozen_centroid",
         "x": 9.792219161987305,
         "y": 12.206558227539062
@@ -1769,11 +2519,11 @@
         "year": "2026",
         "pages": "687-705",
         "doi": "10.1080/10242694.2025.2606890",
-        "topic": 1,
+        "topic": 0,
         "original_topic": -1,
         "reassigned": true,
-        "similarity": 0.6502282619476318,
-        "margin": 0.10963773727416992,
+        "similarity": 0.6467849016189575,
+        "margin": 0.1097748875617981,
         "assignment_method": "frozen_centroid",
         "x": 5.059234142303467,
         "y": 9.81679916381836
@@ -1790,11 +2540,11 @@
         "year": "2026",
         "pages": "706-730",
         "doi": "10.1080/10242694.2025.2556353",
-        "topic": 1,
+        "topic": 0,
         "original_topic": -1,
         "reassigned": true,
-        "similarity": 0.5997975468635559,
-        "margin": 0.1167404055595398,
+        "similarity": 0.602231502532959,
+        "margin": 0.10671672224998474,
         "assignment_method": "frozen_centroid",
         "x": 5.034510135650635,
         "y": 9.745577812194824
@@ -1811,11 +2561,11 @@
         "year": "2026",
         "pages": "731-760",
         "doi": "10.1080/10242694.2025.2559009",
-        "topic": 1,
+        "topic": 0,
         "original_topic": -1,
         "reassigned": true,
-        "similarity": 0.48915812373161316,
-        "margin": 0.07618081569671631,
+        "similarity": 0.4899623692035675,
+        "margin": 0.03780826926231384,
         "assignment_method": "frozen_centroid",
         "x": 4.15358829498291,
         "y": 9.789642333984375
@@ -1833,11 +2583,11 @@
         "year": "2026",
         "pages": "761-796",
         "doi": "10.1080/10242694.2025.2568839",
-        "topic": -1,
+        "topic": 1,
         "original_topic": -1,
-        "reassigned": false,
-        "similarity": 0.43609946966171265,
-        "margin": 0.017154335975646973,
+        "reassigned": true,
+        "similarity": 0.49507105350494385,
+        "margin": 0.08123353123664856,
         "assignment_method": "frozen_centroid",
         "x": 6.927960395812988,
         "y": 13.404714584350586
@@ -1857,11 +2607,11 @@
         "year": "2026",
         "pages": "797-821",
         "doi": "10.1080/10242694.2025.2569771",
-        "topic": 4,
+        "topic": -1,
         "original_topic": -1,
-        "reassigned": true,
-        "similarity": 0.6493006348609924,
-        "margin": 0.027076363563537598,
+        "reassigned": false,
+        "similarity": 0.6444222331047058,
+        "margin": 0.013625860214233398,
         "assignment_method": "frozen_centroid",
         "x": 3.721524238586426,
         "y": 10.063271522521973
@@ -1880,22 +2630,22 @@
         "year": "2026",
         "pages": "822-847",
         "doi": "10.1080/10242694.2025.2571755",
-        "topic": 1,
+        "topic": 0,
         "original_topic": -1,
         "reassigned": true,
-        "similarity": 0.5415583252906799,
-        "margin": 0.07106053829193115,
+        "similarity": 0.5450745820999146,
+        "margin": 0.07570341229438782,
         "assignment_method": "frozen_centroid",
         "x": 4.133360862731934,
         "y": 9.534025192260742
       }
     ],
     "stage_seconds": {
-      "topics": 12.079218875151128,
-      "citations": 15.631560374982655,
-      "dataset": 0.15288562513887882,
-      "website": 1.1717824158258736,
-      "browsers": 15.84278216585517
+      "topics": 11.919434416107833,
+      "citations": 15.726375041995198,
+      "dataset": 0.1539067910052836,
+      "website": 1.204193166922778,
+      "browsers": 15.515867749694735
     },
     "citation_nodes_before": 1129,
     "citation_nodes_after": 1136,
@@ -1904,31 +2654,23 @@
   },
   "validation": {
     "baseline_browsers": {
-      "startTime": "2026-10-15T19:03:56.743Z",
-      "duration": 17095.535,
+      "startTime": "2026-10-15T19:37:09.927Z",
+      "duration": 15941.369,
       "expected": 12,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
     },
     "issue5_browsers": {
-      "startTime": "2026-10-15T19:05:02.565Z",
-      "duration": 15591.178,
+      "startTime": "2026-10-15T19:38:03.768Z",
+      "duration": 15262.089,
       "expected": 12,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
     },
-    "unchanged_replay": "Zero document encodings; verified and reused the completed Issue 5 release.",
-    "python_tests_passed": 45,
-    "javascript_tests_passed": 25,
-    "optional_citation_free_browsers": {
-      "startTime": "2026-10-15T19:10:43.815Z",
-      "duration": 14487.384,
-      "expected": 12,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    }
+    "python_tests_passed": 47,
+    "javascript_tests_passed": 26,
+    "unchanged_replay": "Resume verified the completed Issue 5 release and reported zero document encodings."
   }
 }

@@ -1,7 +1,7 @@
 {
-  "run_id": "20261015T112751Z-f48f8afb",
-  "corpus_fingerprint": "8fbc178755a8095efffc2b3c0f8cc0eaf2f08fcccca494987657d1c2add28852",
-  "basis": "Descriptive summaries of the extracted keywords and all three representative abstracts per topic. Display names do not alter topic assignments or hierarchy distances.",
+  "run_id": "20261015T193511Z-96d9ceec",
+  "corpus_fingerprint": "89ad207d27bfa5ef54a8a8172408ccf011c68f4a1a023c70265572b8caaaa041",
+  "basis": "Descriptive names reviewed against the ten topics’ extracted keywords and all three complete representative abstracts per topic. Hierarchy names summarize their member topics. Names do not alter assignments, keywords or distances.",
   "topics": [
     {
       "id": 0,
@@ -10,12 +10,12 @@
         "conflict",
         "war",
         "civil",
+        "sanctions",
         "peace",
         "violence",
         "conflicts",
         "civil war",
         "economic",
-        "armed",
         "model"
       ],
       "representatives": [
@@ -26,23 +26,23 @@
     },
     {
       "id": 1,
-      "label": "Military spending and growth",
+      "label": "Military spending and economic growth",
       "keywords": [
         "spending",
-        "military",
         "growth",
+        "military",
+        "economic growth",
         "expenditure",
         "military spending",
-        "economic growth",
         "military expenditure",
         "economic",
-        "expenditures",
-        "relationship"
+        "relationship",
+        "expenditures"
       ],
       "representatives": [
         "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
         "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456",
-        "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59"
+        "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193"
       ]
     },
     {
@@ -52,13 +52,13 @@
         "terrorism",
         "terrorist",
         "attacks",
+        "terrorists",
+        "terrorist attacks",
         "groups",
         "terrorist groups",
-        "terrorist attacks",
-        "terrorists",
         "activity",
         "attack",
-        "political"
+        "suicide"
       ],
       "representatives": [
         "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
@@ -68,7 +68,7 @@
     },
     {
       "id": 3,
-      "label": "Defence industry and procurement",
+      "label": "Defence industries and procurement",
       "keywords": [
         "defence",
         "industry",
@@ -77,19 +77,40 @@
         "procurement",
         "european",
         "rd",
-        "defense",
-        "policy",
-        "defence industry"
+        "defence industry",
+        "market",
+        "defense"
       ],
       "representatives": [
-        "RePEc:taf:defpea:v:18:y:2007:i:3:p:199-221",
+        "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
         "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
-        "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192"
+        "RePEc:taf:defpea:v:18:y:2007:i:3:p:199-221"
       ]
     },
     {
       "id": 4,
-      "label": "Military personnel and veterans",
+      "label": "Defence spending and alliances",
+      "keywords": [
+        "nato",
+        "defence",
+        "defense",
+        "allies",
+        "alliance",
+        "budget",
+        "security",
+        "burden sharing",
+        "states",
+        "sharing"
+      ],
+      "representatives": [
+        "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249",
+        "RePEc:taf:defpea:v:19:y:2008:i:6:p:449-469",
+        "RePEc:taf:defpea:v:33:y:2022:i:8:p:938-955"
+      ]
+    },
+    {
+      "id": 5,
+      "label": "Military personnel, recruitment and veterans",
       "keywords": [
         "veterans",
         "service",
@@ -99,34 +120,13 @@
         "reenlistment",
         "labor",
         "navy",
-        "likely",
-        "soldiers"
+        "job",
+        "likely"
       ],
       "representatives": [
         "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
         "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
         "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565"
-      ]
-    },
-    {
-      "id": 5,
-      "label": "Alliances and burden sharing",
-      "keywords": [
-        "nato",
-        "alliance",
-        "burden sharing",
-        "sharing",
-        "allies",
-        "member",
-        "burden",
-        "defense",
-        "public",
-        "states"
-      ],
-      "representatives": [
-        "RePEc:taf:defpea:v:35:y:2024:i:3:p:265-280",
-        "RePEc:taf:defpea:v:14:y:2003:i:5:p:369-383",
-        "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249"
       ]
     },
     {
@@ -138,11 +138,11 @@
         "exports",
         "race",
         "arms race",
+        "security",
         "trade",
         "arms trade",
         "intelligence",
-        "security",
-        "imports"
+        "transfers"
       ],
       "representatives": [
         "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
@@ -152,60 +152,60 @@
     },
     {
       "id": 7,
-      "label": "Military equipment costs",
-      "keywords": [
-        "cost",
-        "aircraft",
-        "costs",
-        "equipment",
-        "cost escalation",
-        "escalation",
-        "unit",
-        "type",
-        "twvs",
-        "defence"
-      ],
-      "representatives": [
-        "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
-        "RePEc:taf:defpea:v:15:y:2004:i:3:p:259-273",
-        "RePEc:taf:defpea:v:31:y:2020:i:4:p:434-442"
-      ]
-    },
-    {
-      "id": 8,
-      "label": "Geopolitical risk and markets",
+      "label": "Geopolitical risk and financial markets",
       "keywords": [
         "geopolitical",
         "geopolitical risk",
         "gpr",
-        "stock",
         "risk",
-        "volatility",
+        "stock",
         "returns",
+        "volatility",
         "market",
         "markets",
         "oil"
       ],
       "representatives": [
-        "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
         "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+        "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
         "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706"
       ]
     },
     {
+      "id": 8,
+      "label": "Military equipment costs",
+      "keywords": [
+        "cost",
+        "aircraft",
+        "equipment",
+        "costs",
+        "cost escalation",
+        "escalation",
+        "type",
+        "unit",
+        "twvs",
+        "life"
+      ],
+      "representatives": [
+        "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
+        "RePEc:taf:defpea:v:31:y:2020:i:4:p:434-442",
+        "RePEc:taf:defpea:v:34:y:2023:i:4:p:512-526"
+      ]
+    },
+    {
       "id": 9,
-      "label": "Military spending and debt",
+      "label": "Military spending and public debt",
       "keywords": [
         "debt",
         "external debt",
         "external",
         "military spending",
-        "spending",
         "spending external",
+        "spending",
         "default",
         "deficits",
-        "military",
-        "government debt"
+        "government debt",
+        "domestic debt"
       ],
       "representatives": [
         "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
@@ -236,26 +236,20 @@
         1,
         2,
         3,
+        4,
         5,
         6,
-        8,
+        7,
         9
       ],
-      "label": "Defence and security economics"
+      "label": "Security, defence and the economy"
     },
     {
       "topics": [
-        8,
+        7,
         9
       ],
-      "label": "Geopolitical risk and public debt"
-    },
-    {
-      "topics": [
-        4,
-        7
-      ],
-      "label": "Military personnel and equipment"
+      "label": "Financial risks and public debt"
     },
     {
       "topics": [
@@ -263,25 +257,37 @@
         1,
         2,
         3,
+        4,
         5,
         6
       ],
-      "label": "Defence, conflict and security"
+      "label": "Conflict and defence policy"
+    },
+    {
+      "topics": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "label": "Conflict, military spending and armaments"
     },
     {
       "topics": [
         3,
-        5,
+        4,
         6
       ],
-      "label": "Defence industry, arms and alliances"
+      "label": "Defence industries, alliances and arms trade"
     },
     {
       "topics": [
         3,
-        6
+        4
       ],
-      "label": "Defence industry and arms trade"
+      "label": "Defence industries and alliances"
     },
     {
       "topics": [
@@ -289,7 +295,7 @@
         1,
         2
       ],
-      "label": "Conflict, terrorism and spending"
+      "label": "Conflict, terrorism and military spending"
     },
     {
       "topics": [
