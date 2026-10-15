@@ -8,7 +8,7 @@ from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 
-from redis.exceptions import RedisError
+
 
 REFERENCE = Path(__file__).resolve().parent.parent / "data" / "retrospectives.json"
 RELATIONSHIPS = {"close", "broader", "narrower", "partial", "not_resolved"}
@@ -135,15 +135,14 @@ def load_comparison(active: dict, client=None) -> dict:
         if same_model:
             snapshot = active
         else:
-            from .store import redis_client
-            client = client or redis_client()
-            raw = client.get("dpe:topics:run:" + binding["run_id"])
+            path = Path("data/topic-artifacts/review") / binding["run_id"] / "snapshot.json"
+            raw = client.get("dpe:topics:run:" + binding["run_id"]) if client else (path.read_text() if path.exists() else None)
             if not raw:
                 return {"status": "unavailable", "links_enabled": False, "audited_model": binding,
                         "message": "The archived model for this comparison is unavailable. The current topic explorer remains available."}
             snapshot = json.loads(raw)
         return build_comparison(snapshot, reference, active)
-    except (OSError, RedisError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError):
         logger.exception("Retrospective comparison evidence could not be validated")
         return {"status": "unavailable", "links_enabled": False,
                 "message": "The retrospective comparison is temporarily unavailable. The current topic explorer remains available."}

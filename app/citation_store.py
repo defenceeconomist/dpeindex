@@ -1,16 +1,12 @@
 """Immutable citation snapshots and downloads; no analysis or network calls on reads."""
 from __future__ import annotations
 
-import base64
-import hashlib
 import json
 import math
 import re
 
-from .topic_store import FINGERPRINT, corpus_fingerprint, read_corpus
 
-CURRENT = "dpe:citations:current"
-RUN_PREFIX = "dpe:citations:run:"
+
 RUN_PATTERN = r"[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}"
 DOWNLOADS = {
     "nodes.csv": "text/csv", "edges.csv": "text/csv", "baseline-edges.csv": "text/csv",
@@ -61,66 +57,3 @@ def validate_snapshot(snapshot):
     if sum(row["eligible"] for row in snapshot["coverage"]) != len(nodes):
         raise ValueError("Coverage years do not reconcile")
     json.dumps(snapshot, allow_nan=False)
-
-
-def publish_snapshot(snapshot, files, client=None, *, lock=None):
-    from .store import redis_client
-    validate_snapshot(snapshot)
-    if snapshot["review"]["pending_count"] or not snapshot["review"].get("doi_sample"):
-        raise ValueError("Review recovered links, identities, eligibility and DOI samples before publication")
-    if set(files) != set(DOWNLOADS):
-        raise ValueError("Citation exports are incomplete")
-    for name, payload in files.items():
-        if hashlib.sha256(payload).hexdigest() != snapshot["downloads"][name]["sha256"]:
-            raise ValueError("Citation export hash mismatch")
-    client = client or redis_client()
-    run_key = RUN_PREFIX + snapshot["metadata"]["run_id"]
-    encoded = json.dumps(snapshot, ensure_ascii=False, allow_nan=False)
-    with client.pipeline() as pipe:
-        watched = [run_key, FINGERPRINT, "dpe:catalog"]
-        if lock is not None:
-            watched.append(lock.name)
-        pipe.watch(*watched)
-        if pipe.exists(run_key):
-            raise ValueError("Citation runs are immutable; create a new run")
-        fingerprint = pipe.get(FINGERPRINT)
-        if not fingerprint:
-            fingerprint = corpus_fingerprint(read_corpus(client))
-        if fingerprint != snapshot["metadata"]["corpus_fingerprint"]:
-            raise ValueError("Catalogue changed during analysis; rebuild before publishing")
-        if lock is not None and not lock.owned():
-            raise RuntimeError("Citation build lease lost")
-        pipe.multi()
-        pipe.set(run_key, encoded)
-        pipe.hset(run_key + ":downloads", mapping={name: base64.b64encode(payload).decode() for name, payload in files.items()})
-        pipe.set(CURRENT, snapshot["metadata"]["run_id"])
-        pipe.execute()
-
-
-def load_citations(client=None):
-    from .store import redis_client
-    client = client or redis_client()
-    pipe = client.pipeline(transaction=True)
-    pipe.get(CURRENT)
-    pipe.get(FINGERPRINT)
-    pipe.get("dpe:topics:current")
-    run, fingerprint, topic_raw = pipe.execute()
-    if not run:
-        return {"status": "not_built", "message": "The citation analysis is being prepared."}
-    raw = client.get(RUN_PREFIX + run)
-    if not raw:
-        raise ValueError("Published citation archive is missing")
-    snapshot = json.loads(raw)
-    if not fingerprint:
-        fingerprint = corpus_fingerprint(read_corpus(client))
-    topic_run = json.loads(topic_raw)["metadata"]["run_id"] if topic_raw else None
-    return {**snapshot, "status": "ready", "stale": fingerprint != snapshot["metadata"]["corpus_fingerprint"],
-            "topic_changed": topic_run != snapshot["comparison"].get("topic_run_id")}
-
-
-def load_download(run, name, client=None):
-    from .store import redis_client
-    if not re.fullmatch(RUN_PATTERN, run) or name not in DOWNLOADS:
-        return None
-    raw = (client or redis_client()).hget(RUN_PREFIX + run + ":downloads", name)
-    return base64.b64decode(raw) if raw else None

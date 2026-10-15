@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 from app.citation_data import (build_edges, cache_path, digest, eligibility, fetch_record,
                                identity_matches, match_reference, normalize, normalize_doi, write_json)
 from app.citations import build_snapshot, graph_for, graph_summary, partition, projection, theme_comparison
-from app.citation_store import DOWNLOADS, load_citations, load_download, publish_snapshot, validate_snapshot
+from app.citation_store import DOWNLOADS, validate_snapshot
 from app.topic_store import corpus_fingerprint
 
 
@@ -160,51 +160,7 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(sum(c["share"] for c in comparison["rows"][0]["cells"]), 100)
         self.assertEqual(theme_comparison([], topics, "changed")["status"], "unavailable")
 
-    def test_atomic_immutable_publication_and_failed_review(self):
-        a, records = fixture()
-        snapshot, _, _ = build_snapshot(a, records, {}, None, "20261015T120000Z-abcd1234")
-        files = {name: name.encode() for name in DOWNLOADS}
-        snapshot["downloads"] = {name: {"sha256": hashlib.sha256(payload).hexdigest()} for name, payload in files.items()}
-        client = MagicMock(); pipe = client.pipeline.return_value.__enter__.return_value
-        with self.assertRaisesRegex(ValueError, "Review"):
-            publish_snapshot(snapshot, files, client)
-        snapshot["review"]["doi_sample"] = [{"reviewed": True}]
-        pipe.exists.return_value = False; pipe.get.return_value = snapshot["metadata"]["corpus_fingerprint"]
-        publish_snapshot(snapshot, files, client)
-        pipe.multi.assert_called_once(); pipe.execute.assert_called_once()
-        pipe.reset_mock(); pipe.exists.return_value = True
-        with self.assertRaisesRegex(ValueError, "immutable"):
-            publish_snapshot(snapshot, files, client)
-        pipe.execute.assert_not_called()
-        pipe.exists.return_value = False; pipe.get.return_value = "changed"
-        with self.assertRaisesRegex(ValueError, "Catalogue changed"):
-            publish_snapshot(snapshot, files, client)
-        pipe.get.return_value = None
-        with patch("app.citation_store.read_corpus", return_value=a):
-            publish_snapshot(snapshot, files, client)
 
-    def test_api_failure_paths_download_allowlist_and_run_binding(self):
-        from fastapi.testclient import TestClient
-        from app.main import app
-        with TestClient(app) as client:
-            with patch("app.main.load_citations", return_value={"status": "not_built"}):
-                self.assertEqual(client.get("/api/citations").json()["status"], "not_built")
-            with patch("app.main.load_citations", side_effect=ValueError("broken archive")):
-                self.assertEqual(client.get("/api/citations").status_code, 503)
-            self.assertEqual(client.get("/api/citations/bad/download/network.svg").status_code, 404)
-            self.assertEqual(client.get("/citations", follow_redirects=False).headers["location"], "citations/")
-            with patch("app.main.load_download", return_value=b"csv"):
-                response = client.get("/api/citations/20261015T120000Z-abcd1234/download/nodes.csv")
-                self.assertEqual(response.content, b"csv")
-                self.assertIn("immutable", response.headers["cache-control"])
-        self.assertIsNone(load_download("../../", "report.html", MagicMock()))
-        self.assertIsNone(load_download("20261015T120000Z-abcd1234", "secret.txt", MagicMock()))
-        articles, records = fixture()
-        snapshot, _, _ = build_snapshot(articles, records, {}, None, "20261015T120000Z-abcd1234")
-        redis = MagicMock(); redis.pipeline.return_value.execute.return_value = [snapshot["metadata"]["run_id"], "changed", json.dumps({"metadata": {"run_id": "different-topic"}})]
-        redis.get.return_value = json.dumps(snapshot)
-        loaded = load_citations(redis)
-        self.assertTrue(loaded["stale"]); self.assertTrue(loaded["topic_changed"])
 
 
 if __name__ == "__main__":

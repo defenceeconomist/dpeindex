@@ -1,3 +1,4 @@
+import {dataClient, createDataClient} from "../site/data-client.js";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import test from "node:test";
@@ -27,7 +28,8 @@ async function mount(data = citationFixture(), {fail = false, mapFail = false, p
     renderer.active--;
   }};
   globalThis.Plotly = window.Plotly = plotly;
-  globalThis.fetch = async (url) => { renderer.fetches++; assert.ok(new URL(url, `http://example.test${prefix}citations/`).pathname.endsWith("/api/citations")); return {ok: !fail, json: async () => structuredClone(data)}; };
+  globalThis.fetch = async (url) => { renderer.fetches++; assert.ok(new URL(url, `http://example.test${prefix}citations/`).pathname.endsWith("/data/citations.json")); return {ok: !fail, json: async () => structuredClone(data)}; };
+  Object.assign(dataClient, createDataClient({datasetBase: "releases/test/", modelBase: "models/test/"}));
   await import(new URL(`../site/citations.js?scenario=${++scenario}`, import.meta.url)); await settle(); return window.document;
 }
 const plot = (doc) => doc.querySelector("#citation-network");

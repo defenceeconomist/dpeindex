@@ -279,7 +279,7 @@ function bindControls() {
 async function load() {
   try {
     state.data = await dataClient.getCitations();
-    if (state.data.status !== "ready") { $("#citation-status").textContent = "The citation analysis is being prepared. Articles and Topics remain available."; return; }
+    if (state.data.status !== "ready") { $("#citation-status").textContent = (state.data.message || "The citation analysis is being prepared.") + " Articles and Topics remain available."; return; }
     renderStudy(); bindControls();
     $("#citation-explorer").hidden = false; $("#citation-status").hidden = true;
     render();

@@ -1,21 +1,17 @@
 """Explicit, local-only BERTopic builds. No hosted inference or generative labels."""
 from __future__ import annotations
 
-import argparse
 import gc
 import hashlib
 import itertools
 import json
 import os
-import signal
-import threading
 import time
-import uuid
-from collections import Counter, defaultdict
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .topic_store import SUMMARY_FIELDS, corpus_fingerprint, publish_snapshot, read_corpus, validate_snapshot
+from .topic_store import SUMMARY_FIELDS, corpus_fingerprint
 
 MODEL = "Qwen/Qwen3-Embedding-0.6B"
 SEEDS = [42, 7, 21]
@@ -236,8 +232,7 @@ def tune(docs, embeddings, evaluator, articles, run_dir):
     bounds = {key: [min(t["metrics"][key] for t in valid), max(t["metrics"][key] for t in valid)] for key in METRICS}
     for trial in valid:
         trial["score"] = score(trial["metrics"], bounds)
-    preferred = [trial for trial in valid if 10 <= trial["metrics"]["topic_count"] <= 20]
-    finalists = sorted(preferred or valid, key=lambda t: t["score"], reverse=True)[:3]
+    finalists = sorted(valid, key=lambda t: t["score"], reverse=True)[:3]
     validation = []
     for trial in finalists:
         params, seed_metrics, seed_labels = trial["params"], [], []
@@ -257,7 +252,7 @@ def tune(docs, embeddings, evaluator, articles, run_dir):
     model, labels = fit_model(docs, embeddings, reduced_cache[(params["n_neighbors"], params["n_components"])], params)
     return model, labels, params, {"trials": trials, "finalists": validation,
                                   "metric_weights": METRICS, "metric_bounds": bounds,
-                                  "selection": "Prefer 10–20 topics, then mean weighted normalised score across three seeds; stability breaks ties."}
+                                  "selection": "Mean weighted normalised score across three seeds; stability breaks ties."}
 
 
 def calibrate_outliers(model, labels, embeddings, docs):
@@ -378,143 +373,3 @@ def write_json(path, value):
     temporary = path.with_suffix(".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
     temporary.replace(path)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    operation = parser.add_mutually_exclusive_group(required=True)
-    operation.add_argument("--tune", action="store_true", help="Run the 54-candidate parameter search and publish the best validated model")
-    operation.add_argument("--rebuild", action="store_true", help="Refit the last successful parameters and model revision")
-    operation.add_argument("--publish-run", help="Publish a completed, reviewed run from the artifact volume")
-    operation.add_argument("--timeline", action="store_true", help="Calculate topics over time for the current assignments without rebuilding the model")
-    parser.add_argument("--no-publish", action="store_true", help="Save a complete run for review without replacing the live model")
-    parser.add_argument("--device", default="cpu")
-    parser.add_argument("--batch-size", type=int, default=8)
-    args = parser.parse_args()
-    if args.batch_size < 1:
-        parser.error("--batch-size must be positive")
-    from .store import redis_client
-    client = redis_client()
-    lock = client.lock("dpe:topics:build-lock", timeout=300, blocking=False, thread_local=False)
-    if not lock.acquire(blocking=False):
-        raise RuntimeError("Another topic build is already running.")
-    stop_renewal, lost_lock = threading.Event(), threading.Event()
-
-    def renew_lock():
-        while not stop_renewal.wait(60):
-            try:
-                lock.reacquire()
-            except Exception:
-                lost_lock.set()
-                log("Build lease lost; this process will not replace the live model.")
-                return
-
-    def interrupted(signum, frame):
-        raise KeyboardInterrupt
-
-    signal.signal(signal.SIGTERM, interrupted)
-    renewal = threading.Thread(target=renew_lock, daemon=True)
-    renewal.start()
-    try:
-        artifacts = Path(os.getenv("TOPIC_ARTIFACTS_DIR", "data/topic-artifacts"))
-        artifacts.mkdir(parents=True, exist_ok=True)
-        config_path = artifacts / "selected.json"
-        if args.timeline:
-            from .topic_store import load_topics
-            from .topic_timeline import build_timeline, publish_timeline
-            snapshot = load_topics(client)
-            if snapshot.get("status") != "ready":
-                raise ValueError("Publish a topic model before building its timeline.")
-            timeline = build_timeline(snapshot, read_corpus(client))
-            run_dir = artifacts / "runs" / snapshot["metadata"]["run_id"]
-            run_dir.mkdir(parents=True, exist_ok=True)
-            write_json(run_dir / "timeline.json", timeline)
-            if not args.no_publish:
-                if lost_lock.is_set() or not lock.owned():
-                    raise RuntimeError("Build lease lost; the timeline was not published.")
-                publish_timeline(timeline, snapshot, client)
-            log(f"{'Saved' if args.no_publish else 'Published'} topics over time for {timeline['run_id']}")
-            return
-        if args.publish_run:
-            import re
-            if args.no_publish or not re.fullmatch(r"[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}", args.publish_run):
-                raise ValueError("Invalid publish-run ID or conflicting --no-publish option")
-            snapshot = json.loads((artifacts / "runs" / args.publish_run / "snapshot.json").read_text())
-            publish_snapshot(snapshot, client)
-            meta = snapshot["metadata"]
-            write_json(config_path, {"params": meta["params"], "revision": meta["model_revision"], "run_id": meta["run_id"]})
-            log(f"Published reviewed run {meta['run_id']}")
-            return
-        from huggingface_hub import HfApi
-        saved = json.loads(config_path.read_text()) if args.rebuild and config_path.exists() else None
-        if args.rebuild and not saved:
-            raise RuntimeError("No saved settings. Run --tune first.")
-        revision = saved["revision"] if saved else os.getenv("TOPIC_MODEL_REVISION") or HfApi().model_info(MODEL).sha
-        all_articles = read_corpus(client)
-        articles = [a for a in all_articles if a["abstract"].strip()]
-        if len(articles) < 60:
-            raise RuntimeError("At least 60 abstracts are required for this tuning grid.")
-        run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
-        run_dir = artifacts / "runs" / run_id
-        run_dir.mkdir(parents=True)
-        log(f"Run {run_id}: {len(articles)} full abstracts; {len(all_articles) - len(articles)} records excluded without abstracts")
-        started = time.monotonic()
-        embeddings, token_coverage = encode_abstracts(articles, revision, artifacts, args.device, args.batch_size)
-        write_json(run_dir / "token-coverage.json", token_coverage)
-        docs = [a["abstract"] for a in articles]
-        evaluator = Evaluator(docs, embeddings)
-        # Hold keyword processing constant: compare parameter tuning, not stopword policies.
-        baseline_params = {"n_neighbors": 15, "n_components": 5, "min_cluster_size": 10, "min_samples": 10}
-        baseline, baseline_labels = fit_model(docs, embeddings, projection(embeddings, baseline_params, 42), baseline_params)
-        baseline_metrics = evaluator.measure(baseline, baseline_labels)
-        log(f"Untuned baseline: {baseline_metrics}")
-        del baseline
-        if args.tune:
-            model, original, params, tuning_report = tune(docs, embeddings, evaluator, articles, run_dir)
-        else:
-            params = saved["params"]
-            model, original = fit_model(docs, embeddings, projection(embeddings, params, 42), params)
-            tuning_report = {"rebuild_from": saved["run_id"], "trials": [], "finalists": []}
-        before_metrics = evaluator.measure(model, original)
-        final, similarities, outliers = calibrate_outliers(model, original, embeddings, docs)
-        if len(set(final) - {-1}) < 2:
-            raise RuntimeError("The selected model has fewer than two topics.")
-        review = representative_review(model, final, embeddings, articles)
-        report = {**tuning_report, "baseline": baseline_metrics, "selected_before_reassignment": before_metrics,
-                  "outliers": outliers, "token_coverage": token_coverage, "review": review}
-        from importlib.metadata import version
-        report["library_versions"] = {name: version(name) for name in
-                                      ("bertopic", "sentence-transformers", "transformers", "torch", "umap-learn", "hdbscan", "scikit-learn", "numpy")}
-        report["encoding"] = {"device": args.device, "dtype": "float32", "normalised": True, "batch_size": args.batch_size}
-        snapshot = make_snapshot(model, articles, all_articles, embeddings, original, final, similarities,
-                                 params, token_coverage, revision, run_id, report)
-        report["review"] = representative_review(model, final, embeddings, articles)
-        report["selected_after_reassignment"] = evaluator.measure(model, final)
-        report["elapsed_seconds"] = round(time.monotonic() - started, 2)
-        from .topic_timeline import build_timeline
-        snapshot["timeline"] = build_timeline(snapshot, all_articles)
-        # Compact API report; full audit with representative abstracts stays in the artifact volume.
-        snapshot["report"].update(selected_after_reassignment=report["selected_after_reassignment"], elapsed_seconds=report["elapsed_seconds"])
-        validate_snapshot(snapshot)
-        write_json(run_dir / "report.json", report)
-        write_json(run_dir / "snapshot.json", snapshot)
-        write_json(run_dir / "timeline.json", snapshot["timeline"])
-        model.save(str(run_dir / "model"), serialization="safetensors", save_ctfidf=True, save_embedding_model=MODEL)
-        if not args.no_publish:
-            if lost_lock.is_set() or not lock.owned():
-                raise RuntimeError("Build lease lost. Complete artifacts were saved for review; the live model is unchanged.")
-            publish_snapshot(snapshot, client)
-            write_json(config_path, {"params": params, "revision": revision, "run_id": run_id})
-        log(f"{'Saved for review' if args.no_publish else 'Published'} {run_id}: {len(snapshot['topics'])} topics; outliers {outliers['before']} -> {outliers['after']}; "
-            f"{report['elapsed_seconds']} seconds. Audit: {run_dir}")
-    finally:
-        stop_renewal.set()
-        renewal.join(timeout=1)
-        try:
-            lock.release()
-        except Exception:
-            pass
-
-
-if __name__ == "__main__":
-    main()

@@ -17,15 +17,21 @@ const {values: options} = parseArgs({options: {
 const started = performance.now();
 const cache = resolve(options.cache || ".static-cache");
 await mkdir(cache, {recursive: true});
-const dataset = resolve(options.dataset || ".static-cache/export");
+const current = !options.dataset && !options["skip-export"] ? JSON.parse(await readFile("data/local-artifacts/current.json")) : null;
+const dataset = resolve(options.dataset || (current ? join(current.release, "dataset") : ".static-cache/export"));
 const output = resolve(options.output || "dist");
 if (output === root || dataset === output || dataset.startsWith(output + "/") || cache === output || cache.startsWith(output + "/")) throw new Error("Unsafe output directory");
 if (output === join(root, ".git") || output.startsWith(join(root, ".git") + "/") ||
     (output.startsWith(root + "/") && execFileSync("git", ["ls-files", "-z", "--", relative(root, output)]).length)) {
   throw new Error("Unsafe output directory: would replace tracked source files");
 }
-if (!options["skip-export"] && !options.dataset) execFileSync(process.env.PYTHON || "python3", ["-m", "app.export_static", "--output", dataset], {stdio: "inherit"});
+
 const manifest = JSON.parse(await readFile(join(dataset, "data/manifest.json")));
+const inputFiles = await hashFiles(dataset);
+for (const [path, expected] of Object.entries(manifest.files)) {
+  const actual = inputFiles[path];
+  if (!actual || actual.sha256 !== expected.sha256 || actual.bytes !== expected.bytes) throw new Error(`Corrupt input dataset: ${path}`);
+}
 const modelRoot = join(cache, "models", SEARCH_MODEL.revision);
 const modelDir = join(modelRoot, SEARCH_MODEL.id);
 const modelFiles = ["config.json", "tokenizer.json", "tokenizer_config.json", "special_tokens_map.json", "vocab.txt", "onnx/model_quantized.onnx"];
@@ -89,7 +95,7 @@ try {
     html = html.replace(/\s*<a class="portal-link"[^>]*>.*?<\/a>/g, "");
     await writeFile(path, html);
   }
-  await writeFile(join(staged, "site-config.js"), `export default ${JSON.stringify({mode: "static", datasetBase: `releases/${release}/`, modelBase: `models/${SEARCH_MODEL.revision}/`})};\n`);
+  await writeFile(join(staged, "site-config.js"), `export default ${JSON.stringify({datasetBase: `releases/${release}/`, modelBase: `models/${SEARCH_MODEL.revision}/`})};\n`);
   await cp(modelRoot, join(staged, "models", SEARCH_MODEL.revision), {recursive: true});
   await mkdir(join(staged, "vendor/onnx"), {recursive: true});
   for (const file of await readdir("node_modules/onnxruntime-web/dist")) {

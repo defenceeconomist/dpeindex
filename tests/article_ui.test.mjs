@@ -1,3 +1,4 @@
+import {dataClient, createDataClient} from "../site/data-client.js";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import test from "node:test";
@@ -7,7 +8,7 @@ import {installDomHelpers, settle} from "./dom_helpers.mjs";
 import {parseHTML} from "linkedom";
 const html = await readFile(new URL("../site/index.html", import.meta.url), "utf8");
 const all = [...papers, {...papers[1], handle: "no-abstract", title: "A missing abstract", topic: null}];
-const catalog = {count: all.length, volumes: ["37", "36", "35"].map((number) => ({number, years: [all.find((paper) => paper.volume === number).year], issues: [{number: "1", count: all.filter((paper) => paper.volume === number).length}]}))};
+const catalog = {articles: all, count: all.length, volumes: ["37", "36", "35"].map((number) => ({number, years: [all.find((paper) => paper.volume === number).year], issues: [{number: "1", count: all.filter((paper) => paper.volume === number).length}]}))};
 const themes = {status: "ready", run_id: "test-run", stale: false, topics: fixture.topics, articles: all};
 let scenario = 0;
 
@@ -21,22 +22,17 @@ async function mount(query = "", options = {}) {
   const requests = [];
   globalThis.fetch = async (raw) => {
     const url = new URL(raw, globalThis.location); requests.push(url);
-    const path = url.pathname.split("/api/")[1];
+    const path = url.pathname.split("/data/")[1];
     const json = (data, ok = true) => ({ok, json: async () => structuredClone(data)});
-    if (path === "catalog") return json(catalog);
-    if (path === "source") return json({});
-    if (path === "themes") return json(options.themes || themes, !options.failThemes);
-    if (path === "article") {
-      const paper = all.find((item) => item.handle === url.searchParams.get("handle"));
-      return json({...paper, abstract: "Complete original abstract, including its FINAL WORDS.", journal: "DPE"});
-    }
-    let selected = all.filter((paper) => (!url.searchParams.has("theme") || paper.topic === Number(url.searchParams.get("theme"))) &&
-      (!url.searchParams.has("year_from") || Number(paper.year) >= Number(url.searchParams.get("year_from"))) &&
-      (!url.searchParams.has("year_to") || Number(paper.year) <= Number(url.searchParams.get("year_to"))));
-    if (path === "issue") return json({articles: selected.filter((paper) => paper.volume === url.searchParams.get("volume"))});
-    if (path === "search") return json({results: selected});
+    if (path === "catalog.json") return json(catalog);
+    if (path === "source.json") return json({});
+    if (path === "themes.json") return json(options.themes || themes, !options.failThemes);
+    if (path === "manifest.json") return json({issues: Object.fromEntries(["37", "36", "35"].map(v => [v + ":1", "data/issues/" + v + ".json"])), search: {dimensions: 2}});
+    if (path === "search.json") return json(all);
+    if (path?.startsWith("issues/")) return json({articles: all.filter(p => path === "issues/" + p.volume + ".json").map(p => ({...p, abstract: "Complete original abstract, including its FINAL WORDS.", journal: "DPE"}))});
     throw new Error(`Unexpected request ${url}`);
   };
+  Object.assign(dataClient, createDataClient({datasetBase: "releases/test/", modelBase: "models/test/"}));
   await import(new URL(`../site/app.js?scenario=${++scenario}`, import.meta.url)); await settle();
   return {doc: window.document, requests};
 }
@@ -53,11 +49,10 @@ test("theme filters browse and semantic search, with explicit unassigned and all
   assert.equal(doc.querySelectorAll(".article-card").length, 1);
   assert.match(doc.querySelector("#view-description").textContent, /arms · trade/);
   assert.equal(doc.querySelector('[data-volume="37"]').disabled, true);
-  assert.equal(requests.filter((url) => url.pathname.endsWith("/api/issue")).at(-1).searchParams.get("run"), "test-run");
-  doc.querySelector("#search-input").value = "military spending";
+  assert.ok(requests.some(url => url.pathname.includes("/data/issues/")));
+  doc.querySelector("#search-input").value = "Author";
   doc.querySelector("#search-form").dispatchEvent(new window.Event("submit", {cancelable: true})); await settle();
-  const search = requests.findLast((url) => url.pathname.endsWith("/api/search"));
-  assert.equal(search.searchParams.get("theme"), "1");
+  assert.ok(requests.some(url => url.pathname.endsWith("/data/search.json")));
   assert.equal(doc.querySelectorAll(".article-card").length, 1);
   change(doc, "#theme-filter", "-1"); await settle();
   assert.equal(doc.querySelector(".article-card").dataset.handle, "paper-c");

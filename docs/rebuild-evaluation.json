@@ -1,0 +1,1934 @@
+{
+  "training": {
+    "articles": 1207,
+    "abstracts": 1138,
+    "withheld": [
+      "37:5",
+      "37:6"
+    ],
+    "model_revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+    "model_id": "20261015T190313Z-45e6b98a",
+    "params": {
+      "n_neighbors": 20,
+      "n_components": 5,
+      "min_cluster_size": 35,
+      "min_samples": 5
+    },
+    "topic_count": 5,
+    "report": {
+      "trials": [
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 18,
+            "outliers": 268,
+            "coherence": 0.10166788730485513,
+            "silhouette": 0.0690443366765976,
+            "diversity": 0.8388888888888889,
+            "coverage": 0.7644991212653779
+          },
+          "score": 0.3021175502559222
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 17,
+            "outliers": 277,
+            "coherence": 0.14350903628157896,
+            "silhouette": 0.06065221130847931,
+            "diversity": 0.8058823529411765,
+            "coverage": 0.7565905096660809
+          },
+          "score": 0.2984555625866122
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 14,
+            "outliers": 263,
+            "coherence": 0.13498807875468172,
+            "silhouette": 0.07987649738788605,
+            "diversity": 0.8928571428571429,
+            "coverage": 0.7688927943760984
+          },
+          "score": 0.4735840159028723
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 6,
+            "outliers": 96,
+            "coherence": 0.1290009636189953,
+            "silhouette": 0.11125022172927856,
+            "diversity": 0.9666666666666667,
+            "coverage": 0.9156414762741653
+          },
+          "score": 0.7844101127634677
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 5,
+            "outliers": 58,
+            "coherence": 0.17771445509180858,
+            "silhouette": 0.11620941013097763,
+            "diversity": 0.96,
+            "coverage": 0.9490333919156415
+          },
+          "score": 0.9135155564699448
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 6,
+            "outliers": 100,
+            "coherence": 0.1290732845408333,
+            "silhouette": 0.1118123009800911,
+            "diversity": 0.95,
+            "coverage": 0.9121265377855887
+          },
+          "score": 0.770403765413751
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 95,
+            "coherence": 0.12537992792730263,
+            "silhouette": 0.11613205075263977,
+            "diversity": 0.95,
+            "coverage": 0.9165202108963093
+          },
+          "score": 0.7896374984744409
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 96,
+            "coherence": 0.12537992792730263,
+            "silhouette": 0.11637453734874725,
+            "diversity": 0.95,
+            "coverage": 0.9156414762741653
+          },
+          "score": 0.7904515202998873
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 117,
+            "coherence": 0.12537992792730263,
+            "silhouette": 0.11900695413351059,
+            "diversity": 0.95,
+            "coverage": 0.8971880492091389
+          },
+          "score": 0.7941806907703318
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 16,
+            "outliers": 190,
+            "coherence": 0.1081042246170369,
+            "silhouette": 0.05943998321890831,
+            "diversity": 0.8625,
+            "coverage": 0.8330404217926186
+          },
+          "score": 0.3224824720007818
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 15,
+            "outliers": 217,
+            "coherence": 0.10464654565729962,
+            "silhouette": 0.06250374764204025,
+            "diversity": 0.8733333333333333,
+            "coverage": 0.8093145869947276
+          },
+          "score": 0.329076169346123
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 13,
+            "outliers": 232,
+            "coherence": 0.1338782255786444,
+            "silhouette": 0.08485347777605057,
+            "diversity": 0.8923076923076924,
+            "coverage": 0.7961335676625659
+          },
+          "score": 0.5137052922023745
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 11,
+            "outliers": 206,
+            "coherence": 0.13642500627215065,
+            "silhouette": 0.07707592844963074,
+            "diversity": 0.9272727272727272,
+            "coverage": 0.8189806678383128
+          },
+          "score": 0.5210389956197728
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 10,
+            "outliers": 272,
+            "coherence": 0.15694150333166426,
+            "silhouette": 0.08031585812568665,
+            "diversity": 0.92,
+            "coverage": 0.7609841827768014
+          },
+          "score": 0.5363118884886073
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 9,
+            "outliers": 309,
+            "coherence": 0.13212504060203945,
+            "silhouette": 0.12078800052404404,
+            "diversity": 0.9888888888888889,
+            "coverage": 0.7284710017574693
+          },
+          "score": 0.7549347558538467
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 9,
+            "outliers": 282,
+            "coherence": 0.10325160357604113,
+            "silhouette": 0.075422003865242,
+            "diversity": 0.9,
+            "coverage": 0.7521968365553603
+          },
+          "score": 0.38827253189691047
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 2,
+            "outliers": 0,
+            "coherence": -0.0012026764713554386,
+            "silhouette": 0.08116572350263596,
+            "diversity": 0.95,
+            "coverage": 1.0
+          },
+          "score": 0.4159630803248136
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 2,
+            "outliers": 0,
+            "coherence": -0.0012026764713554386,
+            "silhouette": 0.08116572350263596,
+            "diversity": 0.95,
+            "coverage": 1.0
+          },
+          "score": 0.4159630803248136
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 13,
+            "outliers": 137,
+            "coherence": 0.17098923383935252,
+            "silhouette": 0.06535182148218155,
+            "diversity": 0.8461538461538461,
+            "coverage": 0.8796133567662566
+          },
+          "score": 0.4814215371620166
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 13,
+            "outliers": 172,
+            "coherence": 0.15962737331324095,
+            "silhouette": 0.07261621206998825,
+            "diversity": 0.8384615384615385,
+            "coverage": 0.8488576449912126
+          },
+          "score": 0.47548270024773215
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 13,
+            "outliers": 228,
+            "coherence": 0.1583961414863458,
+            "silhouette": 0.07323326170444489,
+            "diversity": 0.8692307692307693,
+            "coverage": 0.7996485061511424
+          },
+          "score": 0.4764080939646138
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 12,
+            "outliers": 214,
+            "coherence": 0.15103534969372584,
+            "silhouette": 0.07403405755758286,
+            "diversity": 0.875,
+            "coverage": 0.81195079086116
+          },
+          "score": 0.4795997365488458
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 11,
+            "outliers": 193,
+            "coherence": 0.15031450113058892,
+            "silhouette": 0.07611814141273499,
+            "diversity": 0.8818181818181818,
+            "coverage": 0.8304042179261862
+          },
+          "score": 0.5063885654359881
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 5,
+            "outliers": 27,
+            "coherence": 0.17949742882974426,
+            "silhouette": 0.11341273039579391,
+            "diversity": 0.96,
+            "coverage": 0.976274165202109
+          },
+          "score": 0.9171901828935874
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 67,
+            "coherence": 0.12760864509972225,
+            "silhouette": 0.11435679346323013,
+            "diversity": 0.95,
+            "coverage": 0.9411247803163445
+          },
+          "score": 0.7981666985913991
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 65,
+            "coherence": 0.12760864509972225,
+            "silhouette": 0.11366863548755646,
+            "diversity": 0.95,
+            "coverage": 0.9428822495606327
+          },
+          "score": 0.7954346541247009
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 27,
+            "coherence": 0.05357701975425276,
+            "silhouette": 0.10961832851171494,
+            "diversity": 0.95,
+            "coverage": 0.976274165202109
+          },
+          "score": 0.6571570253399691
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 12,
+            "outliers": 122,
+            "coherence": 0.16446771155364667,
+            "silhouette": 0.06570739299058914,
+            "diversity": 0.9083333333333333,
+            "coverage": 0.8927943760984183
+          },
+          "score": 0.5356062415148505
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 12,
+            "outliers": 199,
+            "coherence": 0.16716587765188953,
+            "silhouette": 0.0753992423415184,
+            "diversity": 0.875,
+            "coverage": 0.8251318101933216
+          },
+          "score": 0.5240731479327585
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 12,
+            "outliers": 219,
+            "coherence": 0.17941205042031025,
+            "silhouette": 0.08243968337774277,
+            "diversity": 0.9083333333333333,
+            "coverage": 0.8075571177504394
+          },
+          "score": 0.6050122304973922
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 8,
+            "outliers": 126,
+            "coherence": 0.15886373234024637,
+            "silhouette": 0.09450200945138931,
+            "diversity": 0.975,
+            "coverage": 0.8892794376098418
+          },
+          "score": 0.740511739616792
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 8,
+            "outliers": 168,
+            "coherence": 0.16043937147404172,
+            "silhouette": 0.10119540989398956,
+            "diversity": 0.975,
+            "coverage": 0.8523725834797891
+          },
+          "score": 0.7586140262611988
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 5,
+            "outliers": 26,
+            "coherence": 0.17384158159256155,
+            "silhouette": 0.1140531376004219,
+            "diversity": 0.94,
+            "coverage": 0.9771528998242531
+          },
+          "score": 0.8926144834011477
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 6,
+            "outliers": 173,
+            "coherence": 0.11533736697318821,
+            "silhouette": 0.0883006826043129,
+            "diversity": 0.95,
+            "coverage": 0.8479789103690686
+          },
+          "score": 0.5807734370416376
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 19,
+            "coherence": 0.06655037131263766,
+            "silhouette": 0.10915457457304001,
+            "diversity": 0.925,
+            "coverage": 0.9833040421792618
+          },
+          "score": 0.6596259066560758
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 24,
+            "coherence": 0.057538574183518716,
+            "silhouette": 0.11022024601697922,
+            "diversity": 0.925,
+            "coverage": 0.9789103690685413
+          },
+          "score": 0.6464159573759455
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 12,
+            "outliers": 215,
+            "coherence": 0.17444537232030977,
+            "silhouette": 0.08348318189382553,
+            "diversity": 0.9166666666666666,
+            "coverage": 0.8110720562390158
+          },
+          "score": 0.6112013603248457
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 11,
+            "outliers": 222,
+            "coherence": 0.1508011482759859,
+            "silhouette": 0.07740641385316849,
+            "diversity": 0.9090909090909091,
+            "coverage": 0.804920913884007
+          },
+          "score": 0.524513897694825
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 10,
+            "outliers": 220,
+            "coherence": 0.15847919201315416,
+            "silhouette": 0.08950579911470413,
+            "diversity": 0.95,
+            "coverage": 0.8066783831282952
+          },
+          "score": 0.6425624188628437
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 1,
+            "coherence": 0.18104566386341006,
+            "silhouette": 0.08492472022771835,
+            "diversity": 0.975,
+            "coverage": 0.9991212653778558
+          },
+          "score": 0.7919851862879269
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 6,
+            "outliers": 43,
+            "coherence": 0.137433128337916,
+            "silhouette": 0.10224035382270813,
+            "diversity": 0.95,
+            "coverage": 0.9622144112478032
+          },
+          "score": 0.7623858770527209
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 5,
+            "outliers": 33,
+            "coherence": 0.16192316726073344,
+            "silhouette": 0.11523983627557755,
+            "diversity": 0.96,
+            "coverage": 0.9710017574692443
+          },
+          "score": 0.8919531490356505
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 3,
+            "outliers": 0,
+            "coherence": 0.006030555294243654,
+            "silhouette": 0.08652901649475098,
+            "diversity": 0.9666666666666667,
+            "coverage": 1.0
+          },
+          "score": 0.4735126317308736
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 5,
+            "outliers": 39,
+            "coherence": 0.028283940979157113,
+            "silhouette": 0.09600703418254852,
+            "diversity": 0.94,
+            "coverage": 0.9657293497363796
+          },
+          "score": 0.5217896705184334
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 5,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 27,
+            "coherence": 0.03160919279298924,
+            "silhouette": 0.11111892759799957,
+            "diversity": 0.95,
+            "coverage": 0.976274165202109
+          },
+          "score": 0.625131212734274
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 14,
+            "outliers": 179,
+            "coherence": 0.15749669533789737,
+            "silhouette": 0.0953335240483284,
+            "diversity": 0.9214285714285714,
+            "coverage": 0.8427065026362038
+          },
+          "score": 0.6670543669868926
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 13,
+            "outliers": 278,
+            "coherence": 0.16830097211806064,
+            "silhouette": 0.0897156372666359,
+            "diversity": 0.9461538461538461,
+            "coverage": 0.7557117750439367
+          },
+          "score": 0.6289594884749108
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 20,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 10,
+            "outliers": 331,
+            "coherence": 0.09999861595145393,
+            "silhouette": 0.10205980390310287,
+            "diversity": 0.96,
+            "coverage": 0.7091388400702988
+          },
+          "score": 0.5570289465006578
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 10,
+            "outliers": 219,
+            "coherence": 0.10610804526148014,
+            "silhouette": 0.08003152906894684,
+            "diversity": 0.92,
+            "coverage": 0.8075571177504394
+          },
+          "score": 0.4684790925094869
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 9,
+            "outliers": 295,
+            "coherence": 0.10612434765334833,
+            "silhouette": 0.08265335112810135,
+            "diversity": 0.9,
+            "coverage": 0.7407732864674869
+          },
+          "score": 0.4262723711930649
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 3,
+            "outliers": 10,
+            "coherence": 0.006030555294243647,
+            "silhouette": 0.08852650225162506,
+            "diversity": 0.9666666666666667,
+            "coverage": 0.9912126537785588
+          },
+          "score": 0.47933068743918233
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 1
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 9,
+            "outliers": 219,
+            "coherence": 0.09140681945139968,
+            "silhouette": 0.0796307772397995,
+            "diversity": 0.9111111111111111,
+            "coverage": 0.8075571177504394
+          },
+          "score": 0.43131774439780446
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 3
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 4,
+            "outliers": 35,
+            "coherence": 0.02308245461614367,
+            "silhouette": 0.11196129769086838,
+            "diversity": 0.95,
+            "coverage": 0.9692442882249561
+          },
+          "score": 0.6100845614185106
+        },
+        {
+          "params": {
+            "n_neighbors": 40,
+            "n_components": 10,
+            "min_cluster_size": 50,
+            "min_samples": 5
+          },
+          "seed": 42,
+          "metrics": {
+            "topic_count": 3,
+            "outliers": 10,
+            "coherence": 0.006030555294243647,
+            "silhouette": 0.08852650225162506,
+            "diversity": 0.9666666666666667,
+            "coverage": 0.9912126537785588
+          },
+          "score": 0.47933068743918233
+        }
+      ],
+      "finalists": [
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seeds": [
+            {
+              "seed": 42,
+              "metrics": {
+                "topic_count": 5,
+                "outliers": 27,
+                "coherence": 0.17949742882974426,
+                "silhouette": 0.11341273039579391,
+                "diversity": 0.96,
+                "coverage": 0.976274165202109
+              }
+            },
+            {
+              "seed": 7,
+              "metrics": {
+                "topic_count": 5,
+                "outliers": 29,
+                "coherence": 0.18151878116606768,
+                "silhouette": 0.11388951539993286,
+                "diversity": 0.96,
+                "coverage": 0.9745166959578208
+              }
+            },
+            {
+              "seed": 21,
+              "metrics": {
+                "topic_count": 5,
+                "outliers": 32,
+                "coherence": 0.1794974288297443,
+                "silhouette": 0.11467810720205307,
+                "diversity": 0.96,
+                "coverage": 0.9718804920913884
+              }
+            }
+          ],
+          "stability_ami": 0.9686342699530851,
+          "mean_score": 0.9201145372604745,
+          "review": [
+            {
+              "topic": 0,
+              "keywords": [
+                "military",
+                "defence",
+                "spending",
+                "defense",
+                "expenditure",
+                "growth",
+                "paper",
+                "economic",
+                "military spending",
+                "countries"
+              ],
+              "count": 659,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
+                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
+                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
+                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
+                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
+                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
+                }
+              ]
+            },
+            {
+              "topic": 1,
+              "keywords": [
+                "conflict",
+                "war",
+                "civil",
+                "peace",
+                "violence",
+                "conflicts",
+                "civil war",
+                "economic",
+                "model",
+                "armed"
+              ],
+              "count": 210,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
+                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496",
+                  "title": "Battlefields and marketplaces",
+                  "abstract": "Divided societies in the developing world experience wasteful struggles for power. We study the relationship between political stability and resources wasted in the struggle within a model of competitive power contests. The model of power contests is similar in structure to models describing oligopolistic market competition. This analogy helps us in deriving results that are new to the conflict literature. We show, for example, that the Herfindahl-Hirschman index can be interpreted as a measure of power concentration and that a peace treaty between fighting groups has a parallel in tacit collusion between firms in a market."
+                }
+              ]
+            },
+            {
+              "topic": 2,
+              "keywords": [
+                "terrorism",
+                "terrorist",
+                "attacks",
+                "terrorists",
+                "terrorist attacks",
+                "groups",
+                "terrorist groups",
+                "activity",
+                "attack",
+                "suicide"
+              ],
+              "count": 132,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+                  "title": "TERROR SUPPORT AND RECRUITMENT",
+                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
+                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
+                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
+                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
+                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
+                }
+              ]
+            },
+            {
+              "topic": 3,
+              "keywords": [
+                "veterans",
+                "service",
+                "personnel",
+                "women",
+                "conscription",
+                "reenlistment",
+                "navy",
+                "likely",
+                "military",
+                "civilian"
+              ],
+              "count": 65,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
+                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
+                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
+                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
+                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
+                }
+              ]
+            },
+            {
+              "topic": 4,
+              "keywords": [
+                "geopolitical",
+                "geopolitical risk",
+                "gpr",
+                "risk",
+                "stock",
+                "returns",
+                "market",
+                "volatility",
+                "oil",
+                "markets"
+              ],
+              "count": 40,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
+                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
+                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
+                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
+                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
+                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "params": {
+            "n_neighbors": 10,
+            "n_components": 5,
+            "min_cluster_size": 35,
+            "min_samples": 3
+          },
+          "seeds": [
+            {
+              "seed": 42,
+              "metrics": {
+                "topic_count": 5,
+                "outliers": 58,
+                "coherence": 0.17771445509180858,
+                "silhouette": 0.11620941013097763,
+                "diversity": 0.96,
+                "coverage": 0.9490333919156415
+              }
+            },
+            {
+              "seed": 7,
+              "metrics": {
+                "topic_count": 6,
+                "outliers": 55,
+                "coherence": 0.14361614061694292,
+                "silhouette": 0.10725923627614975,
+                "diversity": 0.9166666666666666,
+                "coverage": 0.9516695957820738
+              }
+            },
+            {
+              "seed": 21,
+              "metrics": {
+                "topic_count": 6,
+                "outliers": 53,
+                "coherence": 0.15587056888966047,
+                "silhouette": 0.1063484475016594,
+                "diversity": 0.9333333333333333,
+                "coverage": 0.953427065026362
+              }
+            }
+          ],
+          "stability_ami": 0.9017989487008421,
+          "mean_score": 0.825432090416908,
+          "review": [
+            {
+              "topic": 0,
+              "keywords": [
+                "military",
+                "defence",
+                "spending",
+                "expenditure",
+                "defense",
+                "growth",
+                "economic",
+                "paper",
+                "countries",
+                "military spending"
+              ],
+              "count": 660,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
+                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
+                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
+                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
+                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
+                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
+                }
+              ]
+            },
+            {
+              "topic": 1,
+              "keywords": [
+                "conflict",
+                "civil",
+                "war",
+                "violence",
+                "peace",
+                "civil war",
+                "conflicts",
+                "armed",
+                "economic",
+                "democracy"
+              ],
+              "count": 137,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
+                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:20:y:2009:i:5:p:359-372",
+                  "title": "RAIN, GROWTH, AND CIVIL WAR: THE IMPORTANCE OF LOCATION",
+                  "abstract": "We re-examine the Miguel <italic>et al.</italic> (2004) study of the impact of growth on civil war, using growth in rainfall as an instrument. Miguel <italic>et al</italic>. (2004) - in our view, erroneously - include countries participating in civil wars in other states. Restricting the conflict data to states with conflict on their own territory reduces the estimated impact of economic growth on civil war. We show how spatial correlations in rainfall growth and participation in civil conflicts induce a stronger apparent relationship in the mis-classified data."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                }
+              ]
+            },
+            {
+              "topic": 2,
+              "keywords": [
+                "terrorism",
+                "terrorist",
+                "attacks",
+                "terrorists",
+                "groups",
+                "terrorist attacks",
+                "terrorist groups",
+                "activity",
+                "attack",
+                "suicide"
+              ],
+              "count": 130,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+                  "title": "TERROR SUPPORT AND RECRUITMENT",
+                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
+                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
+                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
+                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
+                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
+                }
+              ]
+            },
+            {
+              "topic": 3,
+              "keywords": [
+                "veterans",
+                "service",
+                "personnel",
+                "women",
+                "conscription",
+                "reenlistment",
+                "navy",
+                "civilian",
+                "likely",
+                "military"
+              ],
+              "count": 64,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
+                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
+                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
+                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
+                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
+                }
+              ]
+            },
+            {
+              "topic": 4,
+              "keywords": [
+                "conflict",
+                "equilibrium",
+                "game",
+                "intervention",
+                "contest",
+                "players",
+                "model",
+                "group",
+                "agent",
+                "war"
+              ],
+              "count": 56,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400",
+                  "title": "Asymmetric information and third-party intervention in civil wars",
+                  "abstract": "I study a two-period model of conflict with two combatants and a third party who is an ally of one of the combatants. The third party is fully informed about the type of her ally but not about the type of her ally's enemy. In a signaling game, I find that if the third party is unable to give a sufficiently high assistance to her ally, then there exists a unique separating equilibrium in which the third party's <italic>expected</italic> intervention causes her ally's enemy to exert more effort than in the absence of third-party intervention; this worsens the conflict."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:1:p:61-75",
+                  "title": "Why is there so much Peace?",
+                  "abstract": "In this paper we change the structure of the basic conflict model. This makes it possible to found an economic theory of war and peace. Apart from few exceptions there exist no peace equilibria in the related literature of conflict theory. The aim of the paper is to fill this gap, because most parts of the world live in peace. Further we show that negotiations are possible to avoid a war. The main result is that war breaks out only if the distribution of resources and/or the effectiveness of weapons is sufficiently unequal."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:6:p:589-603",
+                  "title": "THE STABILITY OF ANARCHY AND BREAKDOWN OF PRODUCTION",
+                  "abstract": "In Hirshleifer's (1995) model for unitary actors, combined fighting/production abruptly breaks down when inter-group decisiveness of fighting is above a certain value (above one) or income requirements are not met. Accounting for the collective action problem, this article gives the opposite result that fighting/production is stable also for large decisiveness parameters (above one) and strict income requirements for each agent. The stable fighting/production equilibrium gets gradually easier to perturb off balance for high inter-group decisiveness, high costs of fighting, different fighting efficiencies, and equal group sizes. The equilibrium number of groups that can be sustained decreases in the inter-group decisiveness and increases in the cost of fighting."
+                }
+              ]
+            },
+            {
+              "topic": 5,
+              "keywords": [
+                "geopolitical",
+                "geopolitical risk",
+                "gpr",
+                "stock",
+                "risk",
+                "returns",
+                "market",
+                "volatility",
+                "oil",
+                "markets"
+              ],
+              "count": 38,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:32:y:2021:i:4:p:468-488",
+                  "title": "Oil-stock Nexus in an Oil-rich Country: Does Geopolitical Risk Matter in Terms of Investment Horizons?",
+                  "abstract": "In this paper, we attempt to delineate the relevance of geopolitical risk in the oil-stock nexus in a time-frequency domain. We resort to various wavelet coherence methods to capture the influence of geopolitical risk on the dynamic association between oil and stock prices in Saudi Arabia as a rich oil-exporting country in a region with high geopolitical risk. We primarily show that the role of geopolitical risk in the oil-stock interplay varies through timescales and investment horizons. News regarding geopolitical tensions affects the stock market in high frequency bands, while oil impacts are manifested more on longer time-horizons. Geopolitical risk weakens oil-stock connectedness in the short term. Interestingly, geopolitical incidents significantly lower the oil-stock magnitude and volatility correlation. These results offer prominent insights for investors and policy makers, which may be beneficial when responding to future geopolitical tensions in terms of risk management and the identification of investment opportunities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:36:y:2025:i:8:p:1131-1152",
+                  "title": "Geopolitical risk and the volatility of GCC stock markets around the war on the Gaza Strip",
+                  "abstract": "We investigate the short- and long-term interconnectedness between geopolitical risk (GPR) and the volatility of six Gulf Cooperation Council (GCC) stock markets during the recent war on the Gaza Strip (GS). Applying a frequency-based connectedness approach to daily data from July 2022 to January 2024, we reveal that during this war period, GPR-stock volatility interconnectedness has strengthened, with GPR being the net transmitter of shocks. The volatility in GCC markets is more sensitive to GPR shocks than oil implied volatility (OVX) shocks. The total connectedness is mainly driven by the short-term component, reflecting the transitory shift impact of the war on investors\u2019 expectations resulting in heightened stock uncertainty. These results withstand the application of the extended joint connectedness model and have valuable implications for traders, investors, regulators, and policymakers."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:31:y:2020:i:6:p:692-706",
+                  "title": "Time-Varying Impact of Geopolitical Risks on Oil Prices",
+                  "abstract": "This paper analyses the dynamic impact of geopolitical risks (GPRs) on real oil returns for the period February 1974 to August 2017, using a time-varying parameter structural vector autoregressive (TVP-SVAR) model. Besides the two variables of concern, the model also includes growth in world oil production, global economic activity (to capture oil-demand), and world stock returns. We show that GPRs (based on a tally of newspaper articles covering geopolitical tensions), in general, has a significant negative impact on oil returns, primarily due to the decline in oil demand captured by the global economic activity. Our results, thus, highlight the risk of associating all GPRs with oil supply shocks driven by geopolitical tensions in the Middle East, and hence, ending up suggesting that higher GPRs drive up oil prices."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "params": {
+            "n_neighbors": 20,
+            "n_components": 10,
+            "min_cluster_size": 35,
+            "min_samples": 5
+          },
+          "seeds": [
+            {
+              "seed": 42,
+              "metrics": {
+                "topic_count": 5,
+                "outliers": 26,
+                "coherence": 0.17384158159256155,
+                "silhouette": 0.1140531376004219,
+                "diversity": 0.94,
+                "coverage": 0.9771528998242531
+              }
+            },
+            {
+              "seed": 7,
+              "metrics": {
+                "topic_count": 4,
+                "outliers": 6,
+                "coherence": 0.05165235339785257,
+                "silhouette": 0.1084427610039711,
+                "diversity": 0.95,
+                "coverage": 0.9947275922671354
+              }
+            },
+            {
+              "seed": 21,
+              "metrics": {
+                "topic_count": 4,
+                "outliers": 53,
+                "coherence": 0.1361570219419414,
+                "silhouette": 0.11366689950227737,
+                "diversity": 0.95,
+                "coverage": 0.953427065026362
+              }
+            }
+          ],
+          "stability_ami": 0.8991421716602327,
+          "mean_score": 0.7891801423823909,
+          "review": [
+            {
+              "topic": 0,
+              "keywords": [
+                "military",
+                "defence",
+                "spending",
+                "expenditure",
+                "defense",
+                "growth",
+                "paper",
+                "economic",
+                "countries",
+                "military spending"
+              ],
+              "count": 664,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59",
+                  "title": "The impact of defence spending on the economic growth of developing countries: A cross-section study",
+                  "abstract": "This study analyses the defence-growth relationship for 64 developing economies using cross-section data. It analyses the impact of military expenditure on economic growth with a demand and supply side model using simultaneous equation methodologies (2SLS and 3SLS). The empirical results, bearing in mind the possible inaccuracies of the data set and given the chosen model, suggest that defence spending has a negative impact on both the rate of economic growth and the savings-income ratio. Yet it also indicates that the effect is greater for middle-income nations which may have less to gain from defence sector spill-overs. The results also indicate that strategic factors, as much as economic constraints, determine defence spending in developing countries."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+                  "title": "Endogenous Growth and Defense Expenditures: A New Explanation of the Benoit Hypothesis",
+                  "abstract": "This paper develops an endogenous growth model to examine the linkage between military expenditures and economic growth. We adopt the modeling strategy where both the supply side and the demand side effects of national defense are taken into considerations. Our result finds that a rise in military spending tends to stimulate the sustained growth rate, confirming Benoit's famous empirical findings."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:24:y:2013:i:3:p:247-259",
+                  "title": "OPPORTUNITY COST OF DEFENSE: AN EVALUATION IN THE CASE OF FRANCE",
+                  "abstract": "The aim of this article is to explore the defense--growth relationship in France. In particular, in the context of the crisis, we would like to compare the effects of military and nonmilitary spending on growth. Our results reveal that this is a complex relationship with a bidirectional causality. In the long run, defense expenditure exerts a positive influence and outperforms the impact of nondefense expenditure. However, an opportunity cost arises in the short run."
+                }
+              ]
+            },
+            {
+              "topic": 1,
+              "keywords": [
+                "conflict",
+                "war",
+                "civil",
+                "peace",
+                "violence",
+                "conflicts",
+                "civil war",
+                "economic",
+                "model",
+                "armed"
+              ],
+              "count": 209,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+                  "title": "BUTTER, GUNS AND ICE-CREAM THEORY AND EVIDENCE FROM SUB-SAHARAN AFRICA",
+                  "abstract": "This paper is intended to complement the existing literature on civil wars. First, it presents a simple theoretical model of conflict that defines a two-sector economy. In a contested sector, two agents struggle to appropriate the maximum possible fraction of a contestable output. In an uncontested sector, they hold secure property rights over the production of some goods. Agents split their resource endowment between 'butter', 'guns' and 'ice-cream'. Following the theoretical insights the empirical analysis focuses on the relationship between civil wars and different sectors of the economy. In particular, a panel probit specification shows that the incidence of a civil war decreases in the size of manufacturing sector."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+                  "title": "AID, Policy and Peace: Reducing the risks of civil conflict",
+                  "abstract": "We analyze theoretically and empirically the effects of economic policy and the receipt of foreign aid on the risk of civil war. We find that aid and policy do not have direct effects upon conflict risk. However, both directly affect the growth rate and the extent of dependence upon primary commodity exports, and these in turn affect the risk of conflict. Simulating the effect of a package of policy reform and increased aid on the average aid recipient country, we find that after five years the risk of conflict is reduced by nearly 30%."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496",
+                  "title": "Battlefields and marketplaces",
+                  "abstract": "Divided societies in the developing world experience wasteful struggles for power. We study the relationship between political stability and resources wasted in the struggle within a model of competitive power contests. The model of power contests is similar in structure to models describing oligopolistic market competition. This analogy helps us in deriving results that are new to the conflict literature. We show, for example, that the Herfindahl-Hirschman index can be interpreted as a measure of power concentration and that a peace treaty between fighting groups has a parallel in tacit collusion between firms in a market."
+                }
+              ]
+            },
+            {
+              "topic": 2,
+              "keywords": [
+                "terrorism",
+                "terrorist",
+                "attacks",
+                "attack",
+                "terrorist attacks",
+                "terrorists",
+                "terror",
+                "activity",
+                "groups",
+                "terrorist groups"
+              ],
+              "count": 146,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+                  "title": "TERROR SUPPORT AND RECRUITMENT",
+                  "abstract": "We analyse a dynamic model linking terrorist activities to popular support through a recruitment mechanism. It is shown that anti-terrorism policies focusing on liberal ideals (reducing repression, increasing economic opportunity) are effective at abating recruitment, thereby affecting the dynamic stability of terrorist attacks. In contrast, deterrence's comparative advantage is in counteracting hard-core members, implying that terror eradication itself requires an emphasis on hard-core membership, rather than popular support for terror activities."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341",
+                  "title": "AN EMPIRICAL ANALYSIS OF TERRORISM: DEPRIVATION, ISLAMISM AND GEOPOLITICAL FACTORS",
+                  "abstract": "This paper analyses the number of terrorist attacks and their outcomes in the period 1997-2004. We investigate the hypotheses that deprivation is the underlying cause of terrorism and that geopolitical contexts cannot be ignored. The results from econometric OLS cross-country testing of these hypotheses with data for two large regions of Eurasia seem to confirm our hypotheses, given that the determinants of terrorism differ in the two geopolitical areas and the number of terrorist incidents is negatively associated with the level of development, the literacy level and ethnic fractionalization, being positively related to mineral reserves, non-democratic political regimes and participation in international organizations."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:17:y:2006:i:2:p:73-93",
+                  "title": "IN SEARCH OF THE AVERAGE TRANSNATIONAL TERRORIST ATTACK VENUE",
+                  "abstract": "In this paper we develop an empirical model for transnational terrorist activity for a panel consisting of 139 countries over the period 1985-1998. Essentially, we attempt to sketch the profile of the average terrorist attack venue. Our findings suggest that the terrorist attack venue is, on average, characterized by low economic openness, high demographic stress, and a high level of international disputes. Furthermore, we document a strong regional component suggesting the presence of infectious contagion on a spatial level. Our results also support the presence of addictive contagion captured by a strong autoregressive component in each country's terrorist activity. Finally, we find a weak statistical link between the level of democracy and terrorist activity, although the level of democracy is a significant determinant of the potential under-reporting bias of terrorist activity."
+                }
+              ]
+            },
+            {
+              "topic": 3,
+              "keywords": [
+                "veterans",
+                "service",
+                "personnel",
+                "women",
+                "conscription",
+                "reenlistment",
+                "military",
+                "likely",
+                "navy",
+                "civilian"
+              ],
+              "count": 66,
+              "representatives": [
+                {
+                  "handle": "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
+                  "title": "The Impact of the Unemployment Rate on Attrition of First-Term Enlistees",
+                  "abstract": "This study examines the effects of home-state unemployment rates on attrition behavior of Navy enlistees for successive career windows during the first term of service: the first 6 months, the second 6 months, the second year, and the third year of service. The results indicate that attrition is negatively associated with changes in the local unemployment rate during the first three career windows covering two years of service. However, after two years of service, the estimated effect of the unemployment rate becomes insignificant for most groups of sailors. This is likely because sailors with the poorest job matches are sorted out early in the first term of service."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+                  "title": "The military recruiting productivity slowdown: The roles of resources, opportunity cost and the tastes of youth*",
+                  "abstract": "After a decade of successful recruiting, the US military began experiencing recruiting difficulties in the 1990s. Cyclical factors as well as trend factors may have played a role. This paper uses monthly data by state over the period 1989-1997 to estimate models of enlistment and evaluate the various explanations for the recruiting slowdown. Estimates of the impact of economic variables - relative military pay and unemployment - and recruiting resource variables - recruiters and advertising - are similar to those in previous studies. Two trend factors, rising college attendance and declining adult veteran population (influencers), are found to be important factors explaining the decline in enlistment."
+                },
+                {
+                  "handle": "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+                  "title": "THE CIVIL RETURNS OF MILITARY TRAINING: A STUDY OF YOUNG MEN IN SWEDEN",
+                  "abstract": "The purpose of our study was to examine the effect of military training on the earnings of young men in Sweden. The analysis is based on the cohort of males born in 1973. This cohort was conscripted during a time of rapid change in Swedish security policy and substantial cutbacks in the armed forces. As a consequence, a relatively large proportion of the cohort was assigned a service category after the enlistment test but one third of these individuals were never conscripted. We argue that these organizational changes, along with data on important background variables, make it possible to rely on selection on observables. A clear finding is that military training has a positive effect on annual earnings at the age of 30 for those men in the category 'private soldier' who do not subsequently obtain a high level of educational."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "baseline": {
+        "topic_count": 20,
+        "outliers": 242,
+        "coherence": 0.08985809703099114,
+        "silhouette": 0.10464843362569809,
+        "diversity": 0.93,
+        "coverage": 0.7873462214411248
+      },
+      "selected_before_reassignment": {
+        "topic_count": 5,
+        "outliers": 27,
+        "coherence": 0.17949742882974426,
+        "silhouette": 0.11341273039579391,
+        "diversity": 0.96,
+        "coverage": 0.976274165202109
+      },
+      "outliers": {
+        "minimum_agreement": 0.95,
+        "validation_count": 208,
+        "threshold": 0.4000000000000001,
+        "margin": 0.02,
+        "agreement": 0.9789473684210527,
+        "accepted_validation": 190,
+        "before": 27,
+        "after": 12
+      },
+      "rebuild_from": null,
+      "metric_weights": {
+        "coherence": 2,
+        "silhouette": 2,
+        "diversity": 1,
+        "coverage": 1
+      },
+      "metric_bounds": {
+        "coherence": [
+          -0.0012026764713554386,
+          0.18104566386341006
+        ],
+        "silhouette": [
+          0.05943998321890831,
+          0.12078800052404404
+        ],
+        "diversity": [
+          0.8058823529411765,
+          0.9888888888888889
+        ],
+        "coverage": [
+          0.7091388400702988,
+          1.0
+        ]
+      },
+      "selection": "Mean weighted normalised score across three seeds; stability breaks ties.",
+      "selected_after_reassignment": {
+        "topic_count": 5,
+        "outliers": 12,
+        "coherence": 0.1852670044477327,
+        "silhouette": 0.1119082123041153,
+        "diversity": 0.96,
+        "coverage": 0.9894551845342706
+      }
+    },
+    "classifier": {
+      "topic_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "threshold": 0.4000000000000001,
+      "margin": 0.02,
+      "minimum_agreement": 0.95,
+      "validation_count": 208,
+      "accepted_validation": 189,
+      "agreement": 0.9788359788359788,
+      "ready": true,
+      "basis": "Held-out agreement with discovered baseline assignments; not independent accuracy."
+    }
+  },
+  "update": {
+    "issue": "37:5",
+    "articles": 1214,
+    "changes": {
+      "added": [
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:669-686",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:687-705",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:706-730",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:731-760",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:761-796",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:797-821",
+        "RePEc:taf:defpea:v:37:y:2026:i:5:p:822-847"
+      ],
+      "removed": [],
+      "changed": [],
+      "unchanged": 1207
+    },
+    "topic_encoded": 7,
+    "topic_cached": 1138,
+    "search": {
+      "encoded": 7,
+      "cache_hits": 1207,
+      "corrupt_entries": 0,
+      "article_count": 1214,
+      "elapsed_seconds": 0.86943325,
+      "release_id": "d9366da651fa88501ea1",
+      "bytes": 103561426
+    },
+    "preserved": 1138,
+    "assignments": [
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:669-686",
+        "title": "Europe\u2019s dependence on US foreign military sales: evidence for policy makers from a new database",
+        "authors": [
+          "Juan Mejino-L\u00f3pez",
+          "Guntram B. Wolff"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "669-686",
+        "doi": "10.1080/10242694.2026.2647243",
+        "topic": 0,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.6242482662200928,
+        "margin": 0.14667156338691711,
+        "assignment_method": "frozen_centroid",
+        "x": 9.792219161987305,
+        "y": 12.206558227539062
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:687-705",
+        "title": "The unsung \u2018sheroes\u2019: studying the role of women as decision makers in curbing conflicts",
+        "authors": [
+          "Swapnanil SenGupta"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "687-705",
+        "doi": "10.1080/10242694.2025.2606890",
+        "topic": 1,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.6502282619476318,
+        "margin": 0.10963773727416992,
+        "assignment_method": "frozen_centroid",
+        "x": 5.059234142303467,
+        "y": 9.81679916381836
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:706-730",
+        "title": "Is fiscal decentralization helpful for mitigating internal conflict risk? sub-Saharan African countries\u2019 focus",
+        "authors": [
+          "Derick Ulrich Younda",
+          "Joseph Chretien Nzomo Tcheunta"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "706-730",
+        "doi": "10.1080/10242694.2025.2556353",
+        "topic": 1,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.5997975468635559,
+        "margin": 0.1167404055595398,
+        "assignment_method": "frozen_centroid",
+        "x": 5.034510135650635,
+        "y": 9.745577812194824
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:731-760",
+        "title": "The impact of violence on economic growth: evidence from Colombia\u2019s armed conflict",
+        "authors": [
+          "Carlos D\u00edaz",
+          "Jorge Orozco"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "731-760",
+        "doi": "10.1080/10242694.2025.2559009",
+        "topic": 1,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.48915812373161316,
+        "margin": 0.07618081569671631,
+        "assignment_method": "frozen_centroid",
+        "x": 4.15358829498291,
+        "y": 9.789642333984375
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:761-796",
+        "title": "Reassessing the military expenditure\u2013economic growth nexus in the context of geopolitical risk: evidence from Poland",
+        "authors": [
+          "Ourania Dimitraki",
+          "Kyriakos Emmanouilidis",
+          "Grzegorz Waszkiewicz"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "761-796",
+        "doi": "10.1080/10242694.2025.2568839",
+        "topic": -1,
+        "original_topic": -1,
+        "reassigned": false,
+        "similarity": 0.43609946966171265,
+        "margin": 0.017154335975646973,
+        "assignment_method": "frozen_centroid",
+        "x": 6.927960395812988,
+        "y": 13.404714584350586
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:797-821",
+        "title": "Macroeconomic consequences of the war in Ukraine on Central and Eastern European economies: a SVAR analysis",
+        "authors": [
+          "Daniel Daianu",
+          "Tudor Grosu",
+          "Andrei Neacsu",
+          "Andrei Tanase",
+          "Radu Vranceanu"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "797-821",
+        "doi": "10.1080/10242694.2025.2569771",
+        "topic": 4,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.6493006348609924,
+        "margin": 0.027076363563537598,
+        "assignment_method": "frozen_centroid",
+        "x": 3.721524238586426,
+        "y": 10.063271522521973
+      },
+      {
+        "handle": "RePEc:taf:defpea:v:37:y:2026:i:5:p:822-847",
+        "title": "Unpacking the effect of coup d\u2019\u00e9tat on energy poverty in Africa",
+        "authors": [
+          "Laure Toukap",
+          "Sosson Tadadjeu",
+          "Henri Njangang",
+          "Joseph Keneck Massil"
+        ],
+        "volume": "37",
+        "issue": "5",
+        "year": "2026",
+        "pages": "822-847",
+        "doi": "10.1080/10242694.2025.2571755",
+        "topic": 1,
+        "original_topic": -1,
+        "reassigned": true,
+        "similarity": 0.5415583252906799,
+        "margin": 0.07106053829193115,
+        "assignment_method": "frozen_centroid",
+        "x": 4.133360862731934,
+        "y": 9.534025192260742
+      }
+    ],
+    "stage_seconds": {
+      "topics": 12.079218875151128,
+      "citations": 15.631560374982655,
+      "dataset": 0.15288562513887882,
+      "website": 1.1717824158258736,
+      "browsers": 15.84278216585517
+    },
+    "citation_nodes_before": 1129,
+    "citation_nodes_after": 1136,
+    "citation_edges_before": 3061,
+    "citation_edges_after": 3080
+  },
+  "validation": {
+    "baseline_browsers": {
+      "startTime": "2026-10-15T19:03:56.743Z",
+      "duration": 17095.535,
+      "expected": 12,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "issue5_browsers": {
+      "startTime": "2026-10-15T19:05:02.565Z",
+      "duration": 15591.178,
+      "expected": 12,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "unchanged_replay": "Zero document encodings; verified and reused the completed Issue 5 release.",
+    "python_tests_passed": 45,
+    "javascript_tests_passed": 25,
+    "optional_citation_free_browsers": {
+      "startTime": "2026-10-15T19:10:43.815Z",
+      "duration": 14487.384,
+      "expected": 12,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  }
+}

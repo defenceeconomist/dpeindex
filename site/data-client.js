@@ -5,24 +5,6 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
   const cache = new Map();
   let worker, nextId = 0, failed = false, vectorsPromise;
   const jobs = new Map();
-  const api = async (name, params = new URLSearchParams(), options = {}) => {
-    const url = new URL(`api/${name}`, root); url.search = params.toString();
-    const response = await fetcher(url.href, options);
-    if (!response.ok) {
-      let message = name === "topics" ? "The topic explorer is temporarily unavailable." : "The requested data could not be loaded.";
-      try { message = (await response.json()).detail || message; } catch {}
-      throw new Error(message);
-    }
-    return response.json();
-  };
-  if (settings.mode === "api") return {
-    mode: "api", getCatalog: () => api("catalog"), getSource: () => api("source"),
-    getThemes: () => api("themes"), getTopics: () => api("topics"), getCitations: () => api("citations"),
-    getArticle: (handle) => api("article", new URLSearchParams({handle})),
-    getIssue: (params, signal) => api("issue", params, {signal}),
-    search: (params) => api("search", params),
-    downloadUrl: (run, name) => new URL(`api/citations/${encodeURIComponent(run)}/download/${encodeURIComponent(name)}`, root).href,
-  };
   const base = new URL(settings.datasetBase, root);
   const read = (name) => {
     if (!cache.has(name)) cache.set(name, fetcher(new URL(name, base).href).then(async (response) => {
@@ -64,7 +46,7 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
     mode: "static", getCatalog, getThemes, getSource: () => read("data/source.json"),
     getTopics: () => read("data/topics.json"), getCitations: () => read("data/citations.json"),
     async getIssue(params, signal) {
-      const [manifest, themes] = await Promise.all([read("data/manifest.json"), getThemes()]);
+      const [manifest, themes] = await Promise.all([read("data/manifest.json"), getThemes().catch(error => { if (params.has("theme")) throw error; return {status: "not_built"}; })]);
       const path = manifest.issues[`${params.get("volume")}:${params.get("number")}`];
       if (!path) throw new Error("Issue not found.");
       const data = await read(path);

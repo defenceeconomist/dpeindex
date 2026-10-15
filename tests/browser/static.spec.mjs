@@ -30,6 +30,7 @@ test("all public views, article details, filters and downloads work on a static 
   await expect(page.locator("#topic-timeline .plot-container").first()).toBeVisible();
   await screenshot(page, info, "topics");
   await page.goto(prefix + "citations/");
+  if (datasetInfo.citation_run_id) {
   await expect(page.locator("#citation-network .plot-container")).toBeVisible();
   await expect(page.locator("#citation-ranking-rows tr")).toHaveCount(25);
   await screenshot(page, info, "citations");
@@ -40,6 +41,9 @@ test("all public views, article details, filters and downloads work on a static 
   const download = await request.get(prefix + `api/citations/${manifest.citation_run_id}/download/bundle.zip`);
   expect(download.ok()).toBe(true);
   expect((await download.body()).length).toBeGreaterThan(1000);
+  } else {
+    await expect(page.locator("#citation-status")).toContainText("not included");
+  }
   expect(requests.some((r) => /\/api\/(catalog|article|issue|topics|citations)(?:\?|$)/.test(r))).toBe(false);
   expect(errors).toEqual([]);
   if (!process.env.DPE_PUBLIC_URL) {

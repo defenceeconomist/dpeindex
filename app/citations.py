@@ -1,24 +1,16 @@
 """Offline, reproducible direct-citation analysis for the existing DPE catalogue."""
 from __future__ import annotations
 
-import argparse
 import csv
-import hashlib
 import html
 import io
 import json
-import os
-import signal
-import threading
-import uuid
 import zipfile
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
-from pathlib import Path
+from collections import Counter
 
-from .citation_data import build_edges, collect, digest, now, read_records, write_json
-from .citation_store import DOWNLOADS, RUN_PATTERN, publish_snapshot, validate_snapshot
-from .topic_store import SUMMARY_FIELDS, corpus_fingerprint, read_corpus
+from .citation_data import build_edges, digest, now
+from .citation_store import validate_snapshot
+from .topic_store import SUMMARY_FIELDS, corpus_fingerprint
 
 PALETTE = ["#237b7b", "#c66b46", "#758945", "#6d70a3", "#b28530", "#a25778", "#4a8eae", "#9b5f3e", "#4e8c6b", "#b95d56", "#767b39", "#906ca4", "#388f96", "#d18c59", "#6085ad", "#b27996", "#809b72", "#ac944a", "#59757d", "#9b7770"]
 
@@ -319,89 +311,3 @@ def exports(snapshot, evidence, review, inputs=None):
             archive.writestr("inputs/" + name + ".json", json.dumps(value, ensure_ascii=False, indent=2))
     files["bundle.zip"] = bundle.getvalue()
     return files
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    operation = parser.add_mutually_exclusive_group(required=True)
-    operation.add_argument("--collect", action="store_true")
-    operation.add_argument("--build", action="store_true", help="Build a draft from cached records, without network requests")
-    operation.add_argument("--publish-run", help="Publish a fully audited saved run")
-    parser.add_argument("--artifacts", type=Path, default=Path(os.getenv("CITATION_ARTIFACTS_DIR", "data/citation-artifacts")))
-    parser.add_argument("--decisions", type=Path, default=Path("data/citation-decisions.json"))
-    parser.add_argument("--corpus", type=Path, help="Frozen catalogue JSON; otherwise read a consistent live Redis snapshot")
-    parser.add_argument("--topics", type=Path, help="Frozen topic snapshot JSON")
-    parser.add_argument("--records", type=Path, help="Frozen Crossref records JSON for exact replay instead of the shared cache")
-    parser.add_argument("--refresh", action="store_true", help="Refresh existing Crossref cache entries")
-    parser.add_argument("--contact", default=os.getenv("CROSSREF_MAILTO", ""))
-    args = parser.parse_args()
-    from .store import redis_client
-    client = redis_client()
-    lock = client.lock("dpe:citations:build-lock", timeout=180, blocking=False, thread_local=False)
-    if not lock.acquire(blocking=False):
-        raise RuntimeError("Another citation operation is running")
-    stop, lost = threading.Event(), threading.Event()
-    def renew():
-        while not stop.wait(45):
-            try:
-                lock.reacquire()
-            except Exception:
-                lost.set()
-                return
-    def interrupted(signum, frame):
-        raise KeyboardInterrupt
-    signal.signal(signal.SIGTERM, interrupted)
-    thread = threading.Thread(target=renew, daemon=True)
-    thread.start()
-    try:
-        if args.publish_run:
-            import re
-            if not re.fullmatch(RUN_PATTERN, args.publish_run):
-                raise ValueError("Invalid run ID")
-            directory = args.artifacts / "runs" / args.publish_run
-            snapshot = json.loads((directory / "snapshot.json").read_text())
-            files = {name: (directory / name).read_bytes() for name in DOWNLOADS}
-            if lost.is_set():
-                raise RuntimeError("Citation build lease lost")
-            publish_snapshot(snapshot, files, client, lock=lock)
-            print(f"Published citation run {args.publish_run}", flush=True)
-            return
-        articles = json.loads(args.corpus.read_text()) if args.corpus else read_corpus(client)
-        decisions = json.loads(args.decisions.read_text())
-        if args.collect:
-            write_json(args.artifacts / "input-corpus.json", articles)
-            collect(articles, args.artifacts, decisions, refresh=args.refresh, contact=args.contact)
-            return
-        if args.topics:
-            topics = json.loads(args.topics.read_text())
-        else:
-            raw = client.get("dpe:topics:current")
-            topics = json.loads(raw) if raw else None
-        run = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
-        directory = args.artifacts / "runs" / run
-        directory.mkdir(parents=True)
-        records = json.loads(args.records.read_text()) if args.records else read_records(articles, args.artifacts, decisions)
-        if any(r["status"] in {"error", "missing"} for r in records.values()):
-            raise ValueError("Collection is incomplete; run --collect before building")
-        if set(records) != {a["handle"] for a in articles} or any(r["sha256"] != digest(r.get("message")) for r in records.values()):
-            raise ValueError("Frozen Crossref record identities or hashes are inconsistent")
-        snapshot, evidence, review = build_snapshot(articles, records, decisions, topics, run)
-        inputs = {"corpus": articles, "records": records, "topics": topics, "decisions": decisions}
-        files = exports(snapshot, evidence, review, inputs)
-        snapshot["downloads"] = {name: {"sha256": hashlib.sha256(payload).hexdigest(), "bytes": len(payload)} for name, payload in files.items()}
-        for name, value in [("snapshot.json", snapshot), *((name + ".json", value) for name, value in inputs.items())]:
-            write_json(directory / name, value)
-        for name, payload in files.items():
-            (directory / name).write_bytes(payload)
-        write_json(args.artifacts / "latest-draft.json", {"run_id": run})
-        print(f"Saved {run}: {len(snapshot['nodes'])} papers, {len(snapshot['edges'])} links, "
-              f"{len(snapshot['communities'])} communities, {snapshot['review']['pending_count']} pending review items", flush=True)
-    finally:
-        stop.set()
-        thread.join(timeout=2)
-        if lock.owned():
-            lock.release()
-
-
-if __name__ == "__main__":
-    main()

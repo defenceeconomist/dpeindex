@@ -6,7 +6,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from redis.exceptions import ConnectionError as RedisConnectionError
+
 
 from app.retrospectives import (build_comparison, in_period, load_comparison,
                                reference_data, validate_reference)
@@ -138,7 +138,7 @@ class ComparisonTests(unittest.TestCase):
                 damaged = load_comparison(active, Archive(invalid))
             self.assertEqual(damaged["status"], "unavailable")
             archive = Archive()
-            with patch.object(archive, "get", side_effect=RedisConnectionError("archive read failed")), self.assertLogs("app.retrospectives", level="ERROR"):
+            with patch.object(archive, "get", side_effect=OSError("archive read failed")), self.assertLogs("app.retrospectives", level="ERROR"):
                 self.assertEqual(load_comparison(active, archive)["status"], "unavailable")
         self.assertEqual(load_comparison({"status": "not_built"})["status"], "not_built")
 

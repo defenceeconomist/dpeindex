@@ -4,10 +4,10 @@ import json
 from pathlib import Path
 import unittest
 
-from app.topic_store import CURRENT
-from app.topic_timeline import (PREFIX, WIDTHS, build_timeline, load_timeline,
-                                publication_year, publish_timeline, validate_timeline)
-from test_topics import MemoryClient
+
+from app.topic_timeline import (WIDTHS, build_timeline,
+                                publication_year, validate_timeline)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDITED = ROOT / "data/topic-artifacts/review/20261015T112751Z-f48f8afb/snapshot.json"
@@ -59,37 +59,7 @@ class TimelineTests(unittest.TestCase):
             if mutation == "undated": timeline["undated_abstract_count"] = 0
             with self.subTest(mutation=mutation), self.assertRaises(ValueError): validate_timeline(timeline, snapshot)
 
-    def test_atomic_timeline_publication_does_not_replace_the_model(self):
-        snapshot, timeline = fixture()
-        client = MemoryClient()
-        raw = json.dumps(snapshot)
-        client.data[CURRENT] = raw
-        publish_timeline(timeline, snapshot, client)
-        self.assertEqual(client.data[CURRENT], raw)
-        saved = client.data[PREFIX + "run-a"]
-        client.fail = True
-        with self.assertRaises(RuntimeError): publish_timeline(timeline, snapshot, client)
-        self.assertEqual(client.data[PREFIX + "run-a"], saved)
-        client.fail = False
-        changed = copy.deepcopy(snapshot); changed["metadata"]["run_id"] = "new-run"
-        client.data[CURRENT] = json.dumps(changed)
-        with self.assertRaises(ValueError): publish_timeline(timeline, snapshot, client)
-        self.assertEqual(client.data[PREFIX + "run-a"], saved)
-        self.assertEqual(client.data[CURRENT], json.dumps(changed))
 
-    def test_api_loader_handles_missing_invalid_and_embedded_analysis(self):
-        snapshot, timeline = fixture()
-        class Archive:
-            def __init__(self, raw): self.raw = raw
-            def get(self, key): return self.raw
-        self.assertEqual(load_timeline(snapshot, Archive(None))["status"], "not_built")
-        self.assertEqual(load_timeline({**snapshot, "timeline": timeline}, Archive(None))["status"], "ready")
-        refreshed = {**timeline, "built_at": "a later analysis"}
-        self.assertEqual(load_timeline({**snapshot, "timeline": timeline}, Archive(json.dumps(refreshed)))["built_at"], "a later analysis")
-        timeline["run_id"] = "old-run"
-        with self.assertLogs("app.topic_timeline", level="ERROR"):
-            self.assertEqual(load_timeline(snapshot, Archive(json.dumps(timeline)))["status"], "unavailable")
-        self.assertEqual(load_timeline({"status": "not_built"})["status"], "not_built")
 
 
 @unittest.skipUnless(AUDITED.exists() and importlib.util.find_spec("bertopic"), "Requires the audited snapshot and modelling environment")

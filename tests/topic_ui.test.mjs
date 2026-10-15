@@ -1,3 +1,4 @@
+import {dataClient, createDataClient} from "../site/data-client.js";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import test from "node:test";
@@ -20,9 +21,10 @@ async function mount(data = fixture, fail = false, mobile = false) {
   }};
   globalThis.Plotly = window.Plotly = plotly;
   globalThis.fetch = async (raw) => {
-    assert.ok(new URL(raw, "http://example.test/dpe/topics/").pathname.endsWith("/api/topics"));
+    assert.ok(new URL(raw, "http://example.test/dpe/topics/").pathname.endsWith("/data/topics.json"));
     return {ok: !fail, json: async () => structuredClone(data)};
   };
+  Object.assign(dataClient, createDataClient({datasetBase: "releases/test/", modelBase: "models/test/"}));
   await import(new URL(`../site/topics.js?scenario=${++scenario}`, import.meta.url));
   await settle(); return window.document;
 }

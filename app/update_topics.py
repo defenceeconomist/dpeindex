@@ -1,20 +1,17 @@
 """File-based model work for staged updates; never connects to production stores."""
 from __future__ import annotations
 
-import argparse
 import copy
 import hashlib
 import itertools
 import json
-import time
 import uuid
 from datetime import datetime, timezone
 from importlib.metadata import version
-from pathlib import Path
 
-from .topic_store import SUMMARY_FIELDS, corpus_fingerprint, validate_snapshot
+from .topic_store import SUMMARY_FIELDS, corpus_fingerprint
 from .topics import (Evaluator, calibrate_outliers, encode_abstracts, fit_model,
-                     make_snapshot, projection, representative_review, write_json)
+                     make_snapshot, projection, representative_review, write_json, tune)
 
 
 def new_id():
@@ -105,7 +102,8 @@ def train(articles, settings, directory, cache, device, label_seed=None):
     usable = [a for a in articles if a["abstract"].strip()]
     if len(usable) < 60:
         raise ValueError("At least 60 complete abstracts are needed for a baseline rebuild.")
-    revision, params = settings["model_revision"], settings["params"]
+    directory.mkdir(parents=True, exist_ok=True)
+    revision, params = settings["model_revision"], settings.get("params")
     embeddings, coverage = encode_abstracts(usable, revision, cache, device, 8)
     docs = [a["abstract"] for a in usable]
     evaluator = Evaluator(docs, embeddings)
@@ -113,7 +111,11 @@ def train(articles, settings, directory, cache, device, label_seed=None):
     untuned, untuned_labels = fit_model(docs, embeddings, projection(embeddings, default, 42), default)
     baseline_metrics = evaluator.measure(untuned, untuned_labels)
     del untuned
-    model, original = fit_model(docs, embeddings, projection(embeddings, params, 42), params)
+    tuning = {}
+    if params is None:
+        model, original, params, tuning = tune(docs, embeddings, evaluator, usable, directory)
+    else:
+        model, original = fit_model(docs, embeddings, projection(embeddings, params, 42), params)
     strengths = np.asarray(model.probabilities_).copy()
     before = evaluator.measure(model, original)
     final, similarities, outliers = calibrate_outliers(model, original, embeddings, docs)
@@ -122,7 +124,7 @@ def train(articles, settings, directory, cache, device, label_seed=None):
                   transform_seed=42, n_jobs=1, low_memory=True).fit(embeddings)
     report = {"trials": [], "finalists": [], "baseline": baseline_metrics,
               "selected_before_reassignment": before, "outliers": outliers,
-              "rebuild_from": settings["run_id"]}
+              "rebuild_from": settings.get("run_id"), **tuning}
     run_id = new_id()
     snapshot = make_snapshot(model, usable, articles, embeddings, original, final, similarities,
                              params, coverage, revision, run_id, report, map_projection=mapper)
@@ -142,7 +144,7 @@ def train(articles, settings, directory, cache, device, label_seed=None):
                   "classifier": calibration, "topics": copy.deepcopy(snapshot["topics"]),
                   "hierarchy": copy.deepcopy(snapshot["hierarchy"]),
                   "review": representative_review(model, final, embeddings, usable),
-                  "versions": {name: version(name) for name in ["bertopic", "umap-learn", "numpy", "scikit-learn", "torch"]}}
+                  "versions": {name: version(name) for name in ["bertopic", "sentence-transformers", "transformers", "umap-learn", "hdbscan", "numpy", "scikit-learn", "torch"]}}
     directory.mkdir(parents=True, exist_ok=True)
     np.save(directory / "centroids.npy", centers, allow_pickle=False)
     joblib.dump(mapper, directory / "map.joblib")
@@ -159,6 +161,7 @@ def incremental(articles, previous, model_dir, cache, device):
     definition = json.loads((model_dir / "definition.json").read_text())
     if definition["model_id"] != previous["metadata"].get("model_id", previous["metadata"]["run_id"]):
         raise ValueError("Previous assignments and frozen model differ.")
+    previous = copy.deepcopy(previous)
     prior_articles = {a["handle"]: a for a in previous.pop("_articles")}
     prior_docs = {d["handle"]: d for d in previous["documents"]}
     usable = [a for a in articles if a["abstract"].strip()]
@@ -196,43 +199,3 @@ def incremental(articles, previous, model_dir, cache, device):
     snapshot["assignment_update"] = {"classified_count": len(changed), "preserved_count": len(usable)-len(changed),
                                       "classifier": definition["classifier"]}
     return snapshot, coverage
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--corpus", type=Path, required=True)
-    parser.add_argument("--settings", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--cache", type=Path, required=True)
-    parser.add_argument("--previous", type=Path)
-    parser.add_argument("--model", type=Path)
-    parser.add_argument("--device", default="cpu")
-    args = parser.parse_args()
-    args.output.mkdir(parents=True, exist_ok=True)
-    articles = sorted(json.loads(args.corpus.read_text()), key=lambda a: a["handle"])
-    start = time.monotonic()
-    if args.previous:
-        previous = json.loads((args.previous / "topics.json").read_text())
-        previous["_articles"] = json.loads((args.previous / "corpus.json").read_text())
-        snapshot, coverage = incremental(articles, previous, args.model, args.cache, args.device)
-    else:
-        settings = json.loads(args.settings.read_text())["metadata"]
-        label_path = args.settings.parent / "labels.json"
-        label_seed = json.loads(label_path.read_text()) if label_path.exists() else None
-        snapshot, coverage = train(articles, settings, args.output / "model", args.cache, args.device, label_seed)
-    from .topic_timeline import build_timeline
-    snapshot["timeline"] = build_timeline(snapshot, articles)
-    snapshot.update(status="ready", stale=False)
-    validate_snapshot(snapshot)
-    elapsed = time.monotonic() - start
-    write_json(args.output / "topics.json", snapshot)
-    write_json(args.output / "coverage.json", coverage)
-    write_json(args.output / "topic-metrics.json", {"elapsed_seconds": elapsed,
-        "encoded": coverage["encoded_count"], "cache_hits": coverage["cache_hits"],
-        "topic_count": len(snapshot["topics"]), "unassigned": snapshot["metadata"]["outliers"]["after"],
-        "run_id": snapshot["metadata"]["run_id"], "model_id": snapshot["metadata"]["model_id"]})
-    print(json.dumps({"output": str(args.output), "seconds": round(elapsed, 2), "topics": len(snapshot["topics"])}))
-
-
-if __name__ == "__main__":
-    main()

@@ -20,16 +20,6 @@ function fixture(prefix = "/dpeindex/") {
   return {client: createDataClient({mode: "static", datasetBase: "releases/test/", modelBase: "models/test/"}, root, fetcher), requests};
 }
 
-test("API adapter resolves modules beneath standalone and portal roots", async () => {
-  for (const prefix of ["/", "/dpe/"]) {
-    const calls = [];
-    const client = createDataClient({mode: "api"}, new URL(`https://example.test${prefix}`), async (url) => { calls.push(new URL(url)); return {ok: true, json: async () => ({})}; });
-    await client.getTopics(); await client.getArticle("RePEc:test:paper");
-    assert.equal(calls[0].pathname, `${prefix}api/topics`);
-    assert.equal(calls[1].searchParams.get("handle"), "RePEc:test:paper");
-  }
-});
-
 test("static adapter lazily loads issue records, filters missing/unassigned and rejects old model links", async () => {
   for (const prefix of ["/", "/dpeindex/"]) {
     const {client, requests} = fixture(prefix);

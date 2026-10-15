@@ -5,39 +5,10 @@ import hashlib
 import json
 
 SUMMARY_FIELDS = ("handle", "title", "authors", "volume", "issue", "year", "pages", "doi")
-CURRENT = "dpe:topics:current"
-FINGERPRINT = "dpe:topics:catalog-fingerprint"
-
-
 def corpus_fingerprint(articles: list[dict]) -> str:
     records = [{key: article.get(key, "") for key in (*SUMMARY_FIELDS, "abstract")}
                for article in sorted(articles, key=lambda item: item["handle"])]
     return hashlib.sha256(json.dumps(records, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
-
-
-def read_corpus(client=None) -> list[dict]:
-    """WATCH the catalog, then atomically read every full record from that catalog."""
-    import redis
-    from .store import article_key, redis_client
-    client = client or redis_client()
-    for _ in range(5):
-        with client.pipeline() as pipe:
-            try:
-                pipe.watch("dpe:catalog")
-                raw = pipe.get("dpe:catalog")
-                if not raw:
-                    raise RuntimeError("Sync the article catalog before modelling topics.")
-                catalog = json.loads(raw)
-                keys = [article_key(item["handle"]) for item in catalog["articles"]]
-                pipe.multi()
-                pipe.mget(keys)
-                rows = pipe.execute()[0]
-                if any(row is None for row in rows):
-                    raise RuntimeError("Catalog contains missing article records; run app.sync first.")
-                return sorted([json.loads(row) for row in rows], key=lambda item: item["handle"])
-            except redis.WatchError:
-                continue
-    raise RuntimeError("The catalog kept changing while reading the modelling snapshot. Retry the rebuild.")
 
 
 def validate_snapshot(snapshot: dict) -> None:
@@ -84,31 +55,3 @@ def validate_snapshot(snapshot: dict) -> None:
     roots = set(nodes) - parents
     if len(roots) != 1 or set(nodes[roots.pop()]["topics"]) != ids:
         raise ValueError("Hierarchy does not cover every topic.")
-
-
-def publish_snapshot(snapshot: dict, client=None) -> None:
-    from .store import redis_client
-    validate_snapshot(snapshot)
-    # Serialise before MULTI: incomplete or non-finite runs never replace the current run.
-    encoded = json.dumps(snapshot, ensure_ascii=False, allow_nan=False)
-    client = client or redis_client()
-    pipe = client.pipeline(transaction=True)
-    pipe.set("dpe:topics:run:" + snapshot["metadata"]["run_id"], encoded)
-    pipe.set(CURRENT, encoded)
-    pipe.execute()
-
-
-def load_topics(client=None) -> dict:
-    from .store import redis_client
-    from .topic_labels import apply_display_labels
-    client = client or redis_client()
-    pipe = client.pipeline(transaction=True)
-    pipe.get(CURRENT)
-    pipe.get(FINGERPRINT)
-    raw, fingerprint = pipe.execute()
-    if not raw:
-        return {"status": "not_built", "message": "The topic model has not been built yet."}
-    snapshot = json.loads(raw)
-    if not fingerprint:
-        fingerprint = corpus_fingerprint(read_corpus(client))
-    return {**apply_display_labels(snapshot), "status": "ready", "stale": fingerprint != snapshot["metadata"]["corpus_fingerprint"]}

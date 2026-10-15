@@ -6,66 +6,16 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
 
-from app.main import app
+
+
 from app.redif import parse_file
-from app.topic_store import CURRENT, FINGERPRINT, corpus_fingerprint, load_topics, publish_snapshot, read_corpus, validate_snapshot
+from app.topic_store import corpus_fingerprint, validate_snapshot
 from app.topics import check_token_coverage, embedding_key
 
 
-class MemoryPipeline:
-    def __init__(self, client):
-        self.client, self.actions = client, []
-        self.watching = False
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
-
-    def watch(self, *keys):
-        self.watching = True
-
-    def multi(self):
-        self.watching = False
-
-    def get(self, key):
-        if self.watching:
-            return self.client.data.get(key)
-        self.actions.append(("get", key))
-        return self
-
-    def mget(self, keys):
-        self.actions.append(("mget", keys))
-        return self
-
-    def set(self, key, value):
-        self.actions.append(("set", key, value))
-        return self
-
-    def execute(self):
-        if self.client.fail:
-            raise RuntimeError("Redis transaction failed")
-        result = []
-        for action in self.actions:
-            if action[0] == "get":
-                result.append(self.client.data.get(action[1]))
-            elif action[0] == "mget":
-                result.append([self.client.data.get(key) for key in action[1]])
-            else:
-                self.client.data[action[1]] = action[2]
-                result.append(True)
-        return result
 
 
-class MemoryClient:
-    def __init__(self):
-        self.data, self.fail = {}, False
-
-    def pipeline(self, transaction=True):
-        return MemoryPipeline(self)
 
 
 def snapshot_fixture():
@@ -121,32 +71,9 @@ class CoverageTests(unittest.TestCase):
 
 class SnapshotTests(unittest.TestCase):
     def setUp(self):
-        self.client = MemoryClient()
         self.snapshot = snapshot_fixture()
-        self.client.data[FINGERPRINT] = "original"
 
-    def test_not_built_ready_and_stale(self):
-        self.assertEqual(load_topics(self.client)["status"], "not_built")
-        publish_snapshot(self.snapshot, self.client)
-        self.assertFalse(load_topics(self.client)["stale"])
-        self.client.data[FINGERPRINT] = "updated"
-        result = load_topics(self.client)
-        self.assertTrue(result["stale"])
-        self.assertEqual(result["metadata"]["run_id"], "test-run")
-        self.assertIn("dpe:topics:run:test-run", self.client.data)
 
-    def test_invalid_or_failed_run_keeps_last_successful_result(self):
-        publish_snapshot(self.snapshot, self.client)
-        original = self.client.data[CURRENT]
-        invalid = copy.deepcopy(self.snapshot)
-        invalid["documents"][0]["x"] = float("nan")
-        with self.assertRaises(ValueError):
-            publish_snapshot(invalid, self.client)
-        self.assertEqual(self.client.data[CURRENT], original)
-        self.client.fail = True
-        with self.assertRaises(RuntimeError):
-            publish_snapshot(self.snapshot, self.client)
-        self.assertEqual(self.client.data[CURRENT], original)
 
     def test_counts_point_identity_and_hierarchy_are_validated(self):
         validate_snapshot(self.snapshot)
@@ -167,53 +94,8 @@ class SnapshotTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 validate_snapshot(invalid)
 
-    def test_corpus_snapshot_reads_full_canonical_records(self):
-        from app.store import article_key
-        rows = [{"handle": "b", "abstract": "The complete final sentence."}, {"handle": "a", "abstract": ""}]
-        self.client.data["dpe:catalog"] = json.dumps({"articles": [{"handle": a["handle"]} for a in rows]})
-        for row in rows:
-            self.client.data[article_key(row["handle"])] = json.dumps(row)
-        self.assertEqual(read_corpus(self.client), rows[::-1])
-        del self.client.data[article_key("b")]
-        with self.assertRaisesRegex(RuntimeError, "missing article"):
-            read_corpus(self.client)
 
 
-class TopicApiTests(unittest.TestCase):
-    def setUp(self):
-        self.client = TestClient(app)
-
-    def test_api_states(self):
-        for result in ({"status": "not_built"}, {"status": "ready", "stale": False}, {"status": "ready", "stale": True}):
-            expected = {**result, **({"timeline": {"status": "not_built"}} if result["status"] == "ready" else {})}
-            with patch("app.main.load_topics", return_value=copy.deepcopy(result)), patch("app.main.load_timeline", return_value={"status": "not_built"}):
-                response = self.client.get("/api/topics")
-                self.assertEqual(response.status_code, 200)
-                self.assertEqual(response.json(), expected)
-        with patch("app.main.load_topics", side_effect=RuntimeError("internal redis address")):
-            response = self.client.get("/api/topics")
-            self.assertEqual(response.status_code, 503)
-            self.assertNotIn("internal redis", response.text)
-
-    def test_topic_page_and_shared_navigation(self):
-        for route in ("/", "/topics/"):
-            response = self.client.get(route)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn('aria-label="Main navigation"', response.text)
-            self.assertIn('aria-current="page"', response.text)
-        topic_page = self.client.get("/topics/").text
-        self.assertNotIn("retrospectives", topic_page)
-        self.assertNotIn("comparison-jump", topic_page)
-        self.assertIn('id="topic-timeline"', topic_page)
-        self.assertEqual(self.client.get("/retrospectives.js").status_code, 404)
-        for route in ("/topics.js", "/topics.css", "/article-ui.js", "/topic-timeline.js"):
-            self.assertEqual(self.client.get(route).status_code, 200)
-        redirect = self.client.get("/topics", follow_redirects=False)
-        self.assertEqual(redirect.status_code, 308)
-        self.assertEqual(redirect.headers["location"], "topics/")
-
-    def test_web_import_does_not_load_modelling_libraries(self):
-        subprocess.run([sys.executable, "-c", "import sys; import app.main; assert not any(x in sys.modules for x in ('torch', 'bertopic', 'sentence_transformers', 'umap'))"], check=True)
 
 
 class OutlierTests(unittest.TestCase):

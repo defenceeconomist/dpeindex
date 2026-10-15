@@ -10,3 +10,5 @@ dist/
 .static-cache/
 playwright-report/
 test-results/
+data/local-artifacts/
+.venv/

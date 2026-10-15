@@ -1,17 +1,14 @@
 """Offline BERTopic topics-over-time representations for published assignments."""
 from __future__ import annotations
 
-import json
 import logging
 import math
 from collections import Counter
 from datetime import datetime, timezone
 
-from redis.exceptions import RedisError
 
-from .topic_store import CURRENT, corpus_fingerprint
+from .topic_store import corpus_fingerprint
 
-PREFIX = "dpe:topics:timeline:"
 WIDTHS = {"year": 1, "five_years": 5, "decade": 10}
 logger = logging.getLogger(__name__)
 
@@ -132,35 +129,3 @@ def validate_timeline(timeline, snapshot):
             raise ValueError("Timeline omits modelled abstracts.")
         if sum(period["missing_abstract_count"] for period in periods) + timeline["undated_missing_count"] != snapshot["metadata"]["missing_abstract_count"]:
             raise ValueError("Timeline omits missing-abstract records.")
-
-
-def publish_timeline(timeline, snapshot, client):
-    validate_timeline(timeline, snapshot)
-    encoded = json.dumps(timeline, ensure_ascii=False, allow_nan=False)
-    with client.pipeline() as pipe:
-        pipe.watch(CURRENT)
-        active = json.loads(pipe.get(CURRENT) or "null")
-        if not active or any(active["metadata"][key] != timeline[key] for key in ("run_id", "corpus_fingerprint")):
-            raise ValueError("The model changed during timeline analysis; the live timeline was not replaced.")
-        pipe.multi()
-        pipe.set(PREFIX + timeline["run_id"], encoded)
-        pipe.execute()
-
-
-def load_timeline(active, client=None):
-    if active.get("status") != "ready":
-        return {"status": "not_built"}
-    try:
-        from .store import redis_client
-        client = client or redis_client()
-        raw = client.get(PREFIX + active["metadata"]["run_id"])
-        # A separately refreshed analysis supersedes the one bundled at model
-        # publication, while retaining the same model and assignment binding.
-        timeline = json.loads(raw) if raw else active.get("timeline")
-        if timeline is None:
-            return {"status": "not_built", "message": "The topics-over-time analysis has not been built for this model yet."}
-        validate_timeline(timeline, active)
-        return timeline
-    except (OSError, RedisError, ValueError, KeyError, TypeError, IndexError):
-        logger.exception("Topics-over-time analysis could not be validated")
-        return {"status": "unavailable", "message": "The topics-over-time analysis is temporarily unavailable."}
