@@ -20,6 +20,15 @@ COPY data/defpea.redif ./data/defpea.redif
 COPY data/retrospectives.json ./data/retrospectives.json
 ENTRYPOINT ["python", "-m", "app.topics"]
 
+FROM base AS citations
+ENV CITATION_ARTIFACTS_DIR=/app/citation-artifacts MPLCONFIGDIR=/tmp/matplotlib
+COPY requirements-citations.txt .
+RUN pip install --no-cache-dir -r requirements-citations.txt
+COPY app ./app
+COPY tests ./tests
+COPY data/citation-decisions.json ./data/citation-decisions.json
+ENTRYPOINT ["python", "-m", "app.citations"]
+
 FROM base AS web
 # Bundle Plotly locally, without installing modelling dependencies in the web image.
 RUN pip install --no-cache-dir --target=/tmp/plotly plotly==6.3.1 && \

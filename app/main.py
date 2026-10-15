@@ -5,13 +5,14 @@ import re
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response
 
 from .store import issue_from_catalog, load_article, load_catalog, redis_client, semantic_search
 from .topic_store import load_topics
 from .retrospectives import load_comparison
 from .theme_filter import selection_handles, theme_options
 from .topic_timeline import load_timeline
+from .citation_store import DOWNLOADS, load_citations, load_download
 
 SITE = Path(__file__).resolve().parent.parent / "site"
 app = FastAPI(title="Defence and Peace Economics Index", docs_url=None, redoc_url=None)
@@ -78,6 +79,24 @@ def article(handle: str = Query(min_length=10, max_length=200)):
     if result is None:
         raise HTTPException(404, "Article not found")
     return result
+
+
+@app.get("/api/citations")
+def citations():
+    try:
+        return load_citations()
+    except Exception as error:
+        raise HTTPException(503, "The citation explorer is temporarily unavailable.") from error
+
+
+@app.get("/api/citations/{run}/download/{filename}")
+def citation_download(run: str, filename: str):
+    payload = load_download(run, filename)
+    if payload is None:
+        raise HTTPException(404, "Citation download not found")
+    return Response(payload, media_type=DOWNLOADS[filename], headers={
+        "Content-Disposition": f'attachment; filename="dpe-{run}-{filename}"',
+        "Cache-Control": "public, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff"})
 
 
 @app.get("/api/search")
@@ -163,6 +182,26 @@ def timeline_javascript():
 @app.get("/topics.css")
 def topic_styles():
     return FileResponse(SITE / "topics.css", media_type="text/css")
+
+
+@app.get("/citations/")
+def citation_page():
+    return FileResponse(SITE / "citations.html", media_type="text/html")
+
+
+@app.get("/citations")
+def citation_page_redirect():
+    return RedirectResponse("citations/", status_code=308)
+
+
+@app.get("/citations.js")
+def citation_javascript():
+    return FileResponse(SITE / "citations.js", media_type="text/javascript")
+
+
+@app.get("/citations.css")
+def citation_styles():
+    return FileResponse(SITE / "citations.css", media_type="text/css")
 
 
 @app.get("/vendor/plotly.min.js")

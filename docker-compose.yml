@@ -35,6 +35,20 @@ services:
     networks:
       - datastores
 
+  dpe-citations:
+    profiles: [citations]
+    build:
+      context: .
+      target: citations
+    environment:
+      REDIS_URL: redis://redis:6379/4
+      CITATION_ARTIFACTS_DIR: /app/citation-artifacts
+      CROSSREF_MAILTO: ${CROSSREF_MAILTO:-}
+    volumes:
+      - dpe-citation-artifacts:/app/citation-artifacts
+    networks:
+      - datastores
+
 networks:
   datastores:
     external: true
@@ -43,3 +57,4 @@ networks:
 volumes:
   dpe-model-cache:
   dpe-topic-artifacts:
+  dpe-citation-artifacts:

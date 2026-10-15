@@ -1,0 +1,851 @@
+{
+  "version": 1,
+  "identities": {
+    "RePEc:taf:defpea:v:15:y:2004:i:4:p:309-330": {
+      "doi": "10.1080/1024269032000110559a",
+      "evidence": "Crossref DOI record title, volume 15 and pages 309-330 agree with this catalogue article; the unsuffixed DOI belongs to the Greece debt paper. Verified 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:16:y:2005:i:2:p:127-141": {
+      "doi": "10.1080/1024269032000110559c",
+      "evidence": "Crossref DOI record title, volume 16 and pages 127-141 agree with this catalogue article; the unsuffixed DOI belongs to the Greece debt paper. Verified 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:15:y:2004:i:4:p:331-342": {
+      "doi": "10.1080/1024269032000110559d",
+      "evidence": "Crossref title search resolves to DOI suffix d; title, author Anthony J. W. Turner, volume 15 and pages 331-342 agree. The unsuffixed DOI belongs to the Greece debt paper. Verified 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:12:y:2001:i:5:p:417-437": {
+      "doi": "10.1080/10430710108404997",
+      "verified": true,
+      "evidence": "Crossref title differs only by trailing footnote marker 1; volume 12, pages 417-437 and author Jordi Molas-Gallart agree. Verified against cached record 2026-10-15."
+    }
+  },
+  "eligibility": {
+    "RePEc:taf:defpea:v:11:y:2000:i:4:p:549-551": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10430710008404965"
+    },
+    "RePEc:taf:defpea:v:14:y:2003:i:2:p:105-106": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690302918"
+    },
+    "RePEc:taf:defpea:v:16:y:2005:i:5:p:327-329": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690500207274"
+    },
+    "RePEc:taf:defpea:v:17:y:2006:i:3:p:165-167": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690600644996"
+    },
+    "RePEc:taf:defpea:v:18:y:2007:i:5:p:403-404": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690701455409"
+    },
+    "RePEc:taf:defpea:v:19:y:2008:i:3:p:191-193": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690801972121"
+    },
+    "RePEc:taf:defpea:v:19:y:2008:i:4:p:249-251": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690802164769"
+    },
+    "RePEc:taf:defpea:v:19:y:2008:i:5:p:317-319": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242690802354246"
+    },
+    "RePEc:taf:defpea:v:21:y:2010:i:4:p:285-289": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242694.2010.491720"
+    },
+    "RePEc:taf:defpea:v:23:y:2012:i:2:p:107-108": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242694.2011.597242"
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:6:p:637-643": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10242694.2021.1951638"
+    },
+    "RePEc:taf:defpea:v:8:y:1997:i:1:p:1-16": {
+      "include": false,
+      "reason": "Individual review: title identifies an issue introduction; the abstract, where available, describes the special issue and its papers. Excluded under the study protocol.",
+      "evidence": "Catalogue title, pagination and complete available abstract; Crossref https://api.crossref.org/works/10.1080/10430719708404866"
+    },
+    "RePEc:taf:defpea:v:13:y:2002:i:5:p:351-352": {
+      "include": false,
+      "reason": "Routine book notice; short book-title item, no abstract or reference deposit.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690213508"
+    },
+    "RePEc:taf:defpea:v:13:y:2002:i:6:p:429-433": {
+      "include": false,
+      "reason": "Special-issue introduction; identified as such in the author publication record at https://www.prio.org/people/4267/publications.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690214333"
+    },
+    "RePEc:taf:defpea:v:14:y:2003:i:5:p:327-328": {
+      "include": false,
+      "reason": "Routine book notice; short book-title item, no abstract or reference deposit.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690302925"
+    },
+    "RePEc:taf:defpea:v:14:y:2003:i:6:p:385-388": {
+      "include": false,
+      "reason": "Opening overview for the thematic issue on internal and external threats, pages 385-388; screened as issue introduction.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/1024269032000085152"
+    },
+    "RePEc:taf:defpea:v:15:y:2004:i:2:p:109-110": {
+      "include": false,
+      "reason": "Opening special-issue notice, pages 109-110; no abstract or references.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2004.10055144"
+    },
+    "RePEc:taf:defpea:v:17:y:2006:i:6:p:587-588": {
+      "include": false,
+      "reason": "Short book-title memorial-essays notice, no abstract or references; screened as routine book notice.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690601025468"
+    },
+    "RePEc:taf:defpea:v:20:y:2009:i:5:p:437-439": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690802452313"
+    },
+    "RePEc:taf:defpea:v:20:y:2009:i:6:p:515-516": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242690902908370"
+    },
+    "RePEc:taf:defpea:v:22:y:2011:i:2:p:99-104": {
+      "include": false,
+      "reason": "Publisher labels this INTRODUCTION: https://www.tandfonline.com/doi/abs/10.1080/10242694.2011.562003.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2011.562003"
+    },
+    "RePEc:taf:defpea:v:23:y:2012:i:6:p:533-535": {
+      "include": false,
+      "reason": "Opening overview sharing the special issue title, pages 533-535; screened as issue introduction.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2012.663574"
+    },
+    "RePEc:taf:defpea:v:24:y:2013:i:6:p:497-501": {
+      "include": false,
+      "reason": "Publisher labels this Introduction: https://www.tandfonline.com/doi/full/10.1080/10242694.2012.723153.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2012.723153"
+    },
+    "RePEc:taf:defpea:v:26:y:2015:i:1:p:1-3": {
+      "include": false,
+      "reason": "Opening overview sharing the special issue title, pages 1-3; screened as issue introduction.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2013.848581"
+    },
+    "RePEc:taf:defpea:v:27:y:2016:i:2:p:172-175": {
+      "include": false,
+      "reason": "Special issue: defence inflation; short issue overview, screened as introduction.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2015.1123464"
+    },
+    "RePEc:taf:defpea:v:28:y:2017:i:3:p:271-271": {
+      "include": false,
+      "reason": "One-page memorial titled Carlos Pestana Barros; no abstract or references.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2017.1303897"
+    },
+    "RePEc:taf:defpea:v:29:y:2018:i:2:p:221-223": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2017.1345826"
+    },
+    "RePEc:taf:defpea:v:29:y:2018:i:3:p:352-354": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2017.1422473"
+    },
+    "RePEc:taf:defpea:v:29:y:2018:i:5:p:576-576": {
+      "include": false,
+      "reason": "One-page special-issue notice; no abstract or references.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2018.1483725"
+    },
+    "RePEc:taf:defpea:v:30:y:2019:i:4:p:505-507": {
+      "include": false,
+      "reason": "Title explicitly identifies a review of a named book; routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2019.1571826"
+    },
+    "RePEc:taf:defpea:v:30:y:2019:i:6:p:756-757": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2019.1665782"
+    },
+    "RePEc:taf:defpea:v:31:y:2020:i:1:p:1-3": {
+      "include": false,
+      "reason": "Complete abstract explicitly introduces and highlights the three papers in the special issue.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2019.1697500"
+    },
+    "RePEc:taf:defpea:v:31:y:2020:i:4:p:466-467": {
+      "include": false,
+      "reason": "Short book-title item, no abstract or references; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2020.1735695"
+    },
+    "RePEc:taf:defpea:v:31:y:2020:i:7:p:885-886": {
+      "include": false,
+      "reason": "Crossref title includes editor Ron Matthews, Cambridge University Press and ISBNs; routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2020.1815146"
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:3:p:377-380": {
+      "include": false,
+      "reason": "Short review of named selected-topics book; no abstract or reference deposit; screened as routine book notice.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2020.1864704"
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:4:p:507-508": {
+      "include": false,
+      "reason": "Short book-title item, no abstract and one reference; screened as routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2021.1906099"
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:5:p:635-636": {
+      "include": false,
+      "reason": "Title explicitly identifies a review of a named book; routine book review.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2021.1901455"
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:7:p:899-901": {
+      "include": false,
+      "reason": "Title explicitly identifies an In Memoriam item; administrative memorial.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2021.1971910"
+    },
+    "RePEc:taf:defpea:v:35:y:2024:i:7:p:791-791": {
+      "include": false,
+      "reason": "Title explicitly identifies an obituary; administrative memorial.",
+      "evidence": "Individual metadata screening on 2026-10-15: catalogue title, pagination, full available abstract and deposited references; https://api.crossref.org/works/10.1080/10242694.2024.2399084"
+    },
+    "RePEc:taf:defpea:v:29:y:2018:i:1:p:1-5": {
+      "include": false,
+      "reason": "Publisher explicitly labels this Introduction and describes the papers of the special issue: https://www.tandfonline.com/doi/full/10.1080/10242694.2017.1403739.",
+      "evidence": "Reviewed complete available abstract and publisher metadata on 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:35:y:2024:i:5:p:521-526": {
+      "include": false,
+      "reason": "Complete abstract explicitly states that this introductory article provides an overview of the contents of the NORAD special issue.",
+      "evidence": "Reviewed complete available abstract and publisher metadata on 2026-10-15."
+    }
+  },
+  "references": {
+    "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456#14": {
+      "target": "RePEc:taf:defpea:v:26:y:2015:i:3:p:341-356",
+      "reference_sha256": "e669c3ade414480d535a23f033c9c4ee7984323be1b6b7361fb4ba612cdde733",
+      "evidence": "Exact title and Chang/Lee/Chu authors agree. Unstructured reference also contains the target DOI 10.1080/10242694.2013.832556. Reference year 2013 is the first-online year; catalogue issue year is 2015. Individually audited 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456#21": {
+      "target": "RePEc:taf:defpea:v:25:y:2014:i:3:p:247-269",
+      "reference_sha256": "cea1227c851abae5cbcabeba6c5600a355d482b70a6a01aa8f5dbef6c27777ad",
+      "evidence": "Exact title and sole author Mohammad Reza Farzanegan agree. Unstructured reference contains target DOI 10.1080/10242694.2012.723160. Online year 2012 differs from issue year 2014. Individually audited 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:32:y:2021:i:3:p:296-311#24": {
+      "target": "RePEc:taf:defpea:v:19:y:2008:i:6:p:405-413",
+      "reference_sha256": "4f46215f2bbec1349b50b3cd9b685555d5af230615fb5d4aea02c42939f2bc61",
+      "evidence": "Journal, volume 19, issue 6 and first page 405 uniquely identify the Siqueira and Sandler paper; cited surname Sandler is a target coauthor. Reference 2007 is online year; issue year is 2008. Individually audited 2026-10-15."
+    },
+    "RePEc:taf:defpea:v:37:y:2026:i:2:p:218-241#108": {
+      "target": "RePEc:taf:defpea:v:35:y:2024:i:1:p:72-85",
+      "reference_sha256": "9d09b8c030de3fe50ce020f93f9214629691266cc3f1a836f60c601c2879b578",
+      "evidence": "Exact title and authors Satoshi Shimizutani and Eiji Yamada agree. Reference online pagination 1-14 differs from final issue pages 72-85; title and both surnames establish the same article. Individually audited 2026-10-15."
+    }
+  },
+  "communities": {
+    "2122fcfd2d4c31dc109aef5cddd3f857d8bc4e05ab5e40e3bb73c89e5c483eb6": {
+      "label": "Military spending and economic growth",
+      "interpretation": "Leading papers debate growth-model specification and estimate heterogeneous economic effects of military spending using panel and country evidence.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:16:y:2005:i:6:p:449-461",
+        "RePEc:taf:defpea:v:16:y:2005:i:4:p:283-295",
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:15-31"
+      ]
+    },
+    "406a16ed5ab62e9543b0630abff96b379f48f854e593291109aa3305aa75ef9a": {
+      "label": "Defence industries and European procurement",
+      "interpretation": "Leading papers connect European defence policy, industrial collaboration, weapons costs and procurement efficiency.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:2:p:107-115",
+        "RePEc:taf:defpea:v:15:y:2004:i:3:p:259-273",
+        "RePEc:taf:defpea:v:19:y:2008:i:4:p:303-315"
+      ]
+    },
+    "4847af0f984feeb0b5136696f43671241a9790b0bb2d8ce0c367063e133ca16a": {
+      "label": "Terrorism, counterterrorism and economic effects",
+      "interpretation": "Leading papers examine terrorist recruitment, the effects of deterrence and political policies, and the economic costs of terrorism.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:6:p:401-412",
+        "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+        "RePEc:taf:defpea:v:30:y:2019:i:5:p:609-631"
+      ]
+    },
+    "f7b7911ec85765c44a29bed242b9b275748f7eec7c453793e233b57547eddfc1": {
+      "label": "Demand for military expenditure",
+      "interpretation": "Leading papers estimate military-spending demand and distinguish economic determinants, strategic threats and spillovers.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:19:y:2008:i:4:p:273-292",
+        "RePEc:taf:defpea:v:14:y:2003:i:6:p:461-474",
+        "RePEc:taf:defpea:v:19:y:2008:i:4:p:293-302"
+      ]
+    },
+    "d35a8a96f35bd73cdf710567a136530c61ad7de11a4889cb87fea387c7ff0441": {
+      "label": "Arms markets, technology and capability",
+      "interpretation": "Leading papers combine strategic arms trade, defence R&D, equipment quality and asymmetric arms-race models; the scope is broader than arms exports alone.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
+        "RePEc:taf:defpea:v:17:y:2006:i:2:p:117-139",
+        "RePEc:taf:defpea:v:16:y:2005:i:5:p:331-346"
+      ]
+    },
+    "c8e449808eefd73cec22d568f47fdb316d78818da065b71d685841fb8d46cdf2": {
+      "label": "Geopolitical risk, resources and markets",
+      "interpretation": "Leading papers address geopolitical-risk measures, financial-market responses and resource-related military spending; this is a mixed empirical community.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:30:y:2019:i:3:p:367-379",
+        "RePEc:taf:defpea:v:33:y:2022:i:1:p:42-58",
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:5-13"
+      ]
+    },
+    "c138670a3337e1c6f7527a9a639acae00a36eef73319fa2bd5855725de705f97": {
+      "label": "Defence spending, debt and public budgets",
+      "interpretation": "Leading papers study external debt, government budget choices and interactions between military and welfare expenditure.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+        "RePEc:taf:defpea:v:17:y:2006:i:1:p:47-57",
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:33-48"
+      ]
+    },
+    "76dbb0c730ab4c66e4194ad38951e95ecea3e12eb9f27b49078abe2532fd73ce": {
+      "label": "Military recruitment, retention and conscription",
+      "interpretation": "Leading papers analyse enlistment incentives, pilot retention and changes from conscription to volunteer forces.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+        "RePEc:taf:defpea:v:23:y:2012:i:3:p:273-288",
+        "RePEc:taf:defpea:v:14:y:2003:i:5:p:343-355"
+      ]
+    },
+    "700923eb81318840b75fbd7075fc927d4b206627fd5480343aef6eac90a78b37": {
+      "label": "Civil war and the economic costs of conflict",
+      "interpretation": "Leading papers review civil-war research and estimate direct, regional and neighbouring-country consequences of armed conflict.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:13:y:2002:i:3:p:215-243",
+        "RePEc:taf:defpea:v:21:y:2010:i:2:p:149-164",
+        "RePEc:taf:defpea:v:24:y:2013:i:6:p:503-519"
+      ]
+    },
+    "d5a9cd86036e3e6aa1b7e84c296920e011568041a1ae985f885c40e3d1f8723b": {
+      "label": "Third-party intervention and conflict bargaining",
+      "interpretation": "Leading papers use strategic conflict models to examine intervention, rebellion, territorial disputes and bargaining.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:6:p:389-400",
+        "RePEc:taf:defpea:v:20:y:2009:i:3:p:149-169",
+        "RePEc:taf:defpea:v:18:y:2007:i:2:p:183-200"
+      ]
+    },
+    "992ffea086f77bc9d4ec030af190274929f505663ec25736fd27753e6c190474": {
+      "label": "Greek–Turkish military rivalry",
+      "interpretation": "Leading papers review Greek–Turkish arms-race evidence and link military spending to strategic threats and Greek economic performance.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:13:y:2002:i:2:p:85-107",
+        "RePEc:taf:defpea:v:8:y:1997:i:4:p:355-379",
+        "RePEc:taf:defpea:v:12:y:2001:i:1:p:47-67"
+      ]
+    },
+    "e3233905bb9f03763fb765894a6a8f4623f9952f0f9d06d0d75b94a03ff01c74": {
+      "label": "Aircraft replacement and defence inflation",
+      "interpretation": "Leading papers develop economic replacement rules for ageing aircraft and relate equipment costs to defence inflation.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:15:y:2004:i:5:p:421-431",
+        "RePEc:taf:defpea:v:14:y:2003:i:5:p:357-368",
+        "RePEc:taf:defpea:v:27:y:2016:i:2:p:176-183"
+      ]
+    },
+    "bfe427f16cd4d7e93878d81e777598332f29d75976fab5837161a0bb2497504a": {
+      "label": "Valuing defence and security preferences",
+      "interpretation": "Leading papers consider the welfare case for defence, individual preferences, national-security utility and business-cycle models.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:409-426",
+        "RePEc:taf:defpea:v:27:y:2016:i:4:p:549-570",
+        "RePEc:taf:defpea:v:12:y:2001:i:2:p:87-102"
+      ]
+    },
+    "c6c43efe7d31803743c5a68ccf539f285a719bb47f5ee4577dcec69d99996c2b": {
+      "label": "Risk, insurance and emergency provision",
+      "interpretation": "Leading papers model supply interruptions, risk aversion, insurance and international public goods.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:17:y:2006:i:4:p:287-309",
+        "RePEc:taf:defpea:v:17:y:2006:i:6:p:619-643",
+        "RePEc:taf:defpea:v:10:y:1999:i:2:p:117-137"
+      ]
+    },
+    "49d47172bffd0fc6db3ee3a2e3e51c188124da80cc6f954118204d807defeca8": {
+      "label": "Conflict exposure and education",
+      "interpretation": "Leading papers estimate effects of armed conflict on schooling, child labour and gender differences in human-capital accumulation.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:23:y:2012:i:2:p:161-184",
+        "RePEc:taf:defpea:v:35:y:2024:i:3:p:320-338",
+        "RePEc:taf:defpea:v:37:y:2026:i:3:p:395-421"
+      ]
+    },
+    "244e7a149f3a79dd431af0a2a9fb5b1f4b82c63423976493d6ce2dd9beaabd38": {
+      "label": "Armoured vehicles and casualty cost-effectiveness",
+      "interpretation": "This small group includes an explicit published exchange over the data and methods used to evaluate armoured tactical vehicles, together with a linked casualty-care study.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:24:y:2013:i:5:p:485-494",
+        "RePEc:taf:defpea:v:24:y:2013:i:4:p:293-316",
+        "RePEc:taf:defpea:v:24:y:2013:i:5:p:465-484"
+      ]
+    },
+    "392ac1881c35d476c06d71aa55bdef2a3f193fad87d1e99d07ed94ab351772ef": {
+      "label": "Terrorism research and prevention methods",
+      "interpretation": "This small group links a taxonomy of terrorism research, a study of predictability before 9/11 and evaluation of camera surveillance. The links alone do not establish one sustained debate.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:22:y:2011:i:2:p:105-123",
+        "RePEc:taf:defpea:v:20:y:2009:i:2:p:79-93",
+        "RePEc:taf:defpea:v:24:y:2013:i:1:p:1-14"
+      ]
+    },
+    "dda84e26e1e36c912568efa2d31447ee48d951c08d81141e0bedabc039429a85": {
+      "label": "Illicit small arms and ammunition markets",
+      "interpretation": "Leading papers trace illicit small-arms supply chains, ammunition diversion and market prices.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:20:y:2009:i:3:p:171-191",
+        "RePEc:taf:defpea:v:30:y:2019:i:7:p:799-812"
+      ]
+    },
+    "66c5021ebfb21ca10acb99dbc44861b47845482dcdcf48e0c9ce11ae91cd0475": {
+      "label": "Civil-conflict motives and economic shocks",
+      "interpretation": "This small group connects greed/grievance arguments, economic shocks and institutional accounts of conflict; a common substantive conversation remains provisional.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:24:y:2013:i:5:p:449-463",
+        "RePEc:taf:defpea:v:26:y:2015:i:2:p:153-177"
+      ]
+    },
+    "f649973cd724306052a21c3a70d2dae4522137d8f2ee47478431343b1faf594f": {
+      "label": "Combat deployment, health and education",
+      "interpretation": "Leading papers study the consequences of deployment and combat exposure for mental health and subsequent education.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:29:y:2018:i:1:p:62-77",
+        "RePEc:taf:defpea:v:31:y:2020:i:1:p:34-47"
+      ]
+    },
+    "b26fe7ba0422e1112bf72de8c23da403b4fbd803c74170a3386e522cc054d64b": {
+      "label": "French First World War military casualties",
+      "interpretation": "Leading papers use French historical soldier records to study deaths and military executions.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:30:y:2019:i:2:p:197-212",
+        "RePEc:taf:defpea:v:35:y:2024:i:1:p:128-144"
+      ]
+    },
+    "63f6f337ed03d0f03828d6fabe33bcdcffec26066b94df228dcaec5698412439": {
+      "label": "Israeli–Palestinian bargaining and proxy conflict",
+      "interpretation": "Leading papers model monopolization of violence, proxy-war relationships and obstacles to negotiated resolution.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:31:y:2020:i:8:p:892-903",
+        "RePEc:taf:defpea:v:31:y:2020:i:8:p:904-926"
+      ]
+    },
+    "7fa9953336d641676994fcec1508cd31c7b00c05743430e30fa7382f988b3207": {
+      "label": "Militant groups, rivalry and targeting",
+      "interpretation": "Leading papers connect militant-group ethnicity and rivalry with rebel decisions to target Americans.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:32:y:2021:i:6:p:757-772",
+        "RePEc:taf:defpea:v:32:y:2021:i:6:p:708-725"
+      ]
+    },
+    "bc6c8f33eedbb284a15ca09f240b5b5698dbd9cb791db8a6ab4f5bbfb36e4bab": {
+      "label": "Military organization and battlefield performance",
+      "interpretation": "Two linked papers examine battlefield success and the effects of military unionization. This small pair is a connection rather than evidence of a broad community.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:3:p:175-192",
+        "RePEc:taf:defpea:v:20:y:2009:i:1:p:11-19"
+      ]
+    },
+    "2205f026fe18076a0e6e8042cd9be998e1233bd37c92e256054edb93c4fb4ff1": {
+      "label": "Narcotics, crime and security policy",
+      "interpretation": "Two linked papers model narcotics restrictions and connect international crime with European threat perceptions.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:16:y:2005:i:5:p:391-401",
+        "RePEc:taf:defpea:v:22:y:2011:i:2:p:181-192"
+      ]
+    },
+    "d4b073b488f0bf64cbe54a9e0a75f54ccc5c93a9c819fe0084835e16cb4154e0": {
+      "label": "Civil-war termination and political outcomes",
+      "interpretation": "Two linked papers study how civil wars end and the political consequences of different outcomes.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:19:y:2008:i:6:p:415-434",
+        "RePEc:taf:defpea:v:34:y:2023:i:4:p:437-455"
+      ]
+    },
+    "fa1d69ddb16310f14371168ac4125452f0bc55a663f551a198567075a9474e54": {
+      "label": "Iraq mortality-survey controversy",
+      "interpretation": "Two linked articles scrutinize the methods, integrity and corroboration of the second Lancet Iraq mortality survey. This label describes the papers’ subjects without adjudicating their claims.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:21:y:2010:i:1:p:1-41",
+        "RePEc:taf:defpea:v:22:y:2011:i:3:p:299-316"
+      ]
+    },
+    "700172452f0834dca6763f50800d7bcc6b10fc01763206290d6cf5b6d84896b3": {
+      "label": "Economic growth and interstate war",
+      "interpretation": "Two linked papers examine whether economic growth increases the likelihood of interstate conflict.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:21:y:2010:i:3:p:249-268",
+        "RePEc:taf:defpea:v:34:y:2023:i:7:p:931-962"
+      ]
+    },
+    "7535721cd87bc518b5adb0c12c43d86bd38ac9e5f99276594dcdbd14db1521eb": {
+      "label": "Swedish military service and later earnings",
+      "interpretation": "Two linked studies estimate civilian earnings effects of military training and peacekeeping deployment in Sweden.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565",
+        "RePEc:taf:defpea:v:36:y:2025:i:3:p:349-372"
+      ]
+    },
+    "a5807a17f581a4ec47aa08acaff62002192a5a25141eb101e4f91fde2cf5ed50": {
+      "label": "Nuclear deterrence and defensive weapons",
+      "interpretation": "Two linked game-theoretic papers examine nuclear acquisition, deterrence and the consequences of asymmetric defensive shields.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:24:y:2013:i:1:p:15-21",
+        "RePEc:taf:defpea:v:27:y:2016:i:4:p:535-548"
+      ]
+    },
+    "d1a533dbbb321d246f1ce1d4e9b619c06e659c6b1f450784ad39247f9c6364e7": {
+      "label": "Armed violence and economic development",
+      "interpretation": "Two linked papers address resource dependence, sustainability and the effects of civil war on financial development.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:115-132",
+        "RePEc:taf:defpea:v:28:y:2017:i:2:p:188-207"
+      ]
+    },
+    "318e5c29a0eccf6263ff9567d029ea1ff02355e6926822cd1c6173cbe3f5fbde": {
+      "label": "Corruption and procurement accountability",
+      "interpretation": "Two linked papers model corruption controls and the costs and benefits of procurement bid protests.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:29:y:2018:i:7:p:840-852",
+        "RePEc:taf:defpea:v:31:y:2020:i:5:p:502-516"
+      ]
+    },
+    "2fb632deb6935b10f929eeb57ea637e8f8795417d60576e5580acea6794523ab": {
+      "label": "Espionage and innovation contests",
+      "interpretation": "Two linked theoretical papers study economic espionage, copying and competition over innovative effort.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:30:y:2019:i:3:p:269-277",
+        "RePEc:taf:defpea:v:34:y:2023:i:5:p:684-703"
+      ]
+    },
+    "9191431dd72b0c684545553bdd30eb0ae7ea8f3ee1da19ebb5012bc77631e53a": {
+      "label": "Orbital debris and space security",
+      "interpretation": "Two linked papers examine space debris, behavioural incentives and the consequences of anti-satellite weapons.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:32:y:2021:i:8:p:956-971",
+        "RePEc:taf:defpea:v:35:y:2024:i:7:p:826-845"
+      ]
+    },
+    "500b8fabe8220fb1849757c1e1394803ca65b192685aeab6587cecccf121c40f": {
+      "label": "House raids, demolitions and conflict behaviour",
+      "interpretation": "Two linked studies examine household exposure to state coercion and claims about punitive demolitions and suicide bombing. The label does not establish agreement between them.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:34:y:2023:i:8:p:1018-1038",
+        "RePEc:taf:defpea:v:35:y:2024:i:8:p:1070-1101"
+      ]
+    },
+    "925d228c97a9bc7c680684fd213e58f8b8e15d87c009a0748e03ad981c8024cf": {
+      "label": "Commodity shocks, conflict and peacekeeping",
+      "interpretation": "Two linked empirical papers examine commodity-price shocks, conflict intensity and the possible buffering role of UN peacekeeping.",
+      "provisional": true,
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:35:y:2024:i:5:p:622-637",
+        "RePEc:taf:defpea:v:37:y:2026:i:1:p:94-116"
+      ]
+    }
+  },
+  "audit": {
+    "doi_sample": [
+      {
+        "reference_id": "RePEc:taf:defpea:v:11:y:2000:i:1:p:1-16#6",
+        "reference_sha256": "6456c8de52be92d7fc248ec7e35c8d9bf6fe24f0d203ef6b1a51fb23c568a71d",
+        "source": "RePEc:taf:defpea:v:11:y:2000:i:1:p:1-16",
+        "target": "RePEc:taf:defpea:v:10:y:1999:i:1:p:1-37",
+        "year": "2000",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:12:y:2001:i:1:p:27-45#20",
+        "reference_sha256": "9bdfc77d4ae705e59e9c433cd3f65669992d01747d488b05c7e337b536c586f8",
+        "source": "RePEc:taf:defpea:v:12:y:2001:i:1:p:27-45",
+        "target": "RePEc:taf:defpea:v:8:y:1997:i:4:p:381-409",
+        "year": "2001",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:14:y:2003:i:6:p:413-424#3",
+        "reference_sha256": "f9667fda2d585e8a8ea0ad98f88f2ddafa3a5e08fde30d93a68c3bf7ddff9009",
+        "source": "RePEc:taf:defpea:v:14:y:2003:i:6:p:413-424",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:5:p:417-427",
+        "year": "2003",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:15:y:2004:i:1:p:71-82#3",
+        "reference_sha256": "b43bde55eaf0e9862728e3bbac016ba4befa5163754c46f2fd5410571a3ff526",
+        "source": "RePEc:taf:defpea:v:15:y:2004:i:1:p:71-82",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:1:p:55-60",
+        "year": "2004",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:16:y:2005:i:1:p:45-57#20",
+        "reference_sha256": "c15ff49731e7947d865908ef5d34963aa6f4620e2bf85b5e80ef45a0db5a23ce",
+        "source": "RePEc:taf:defpea:v:16:y:2005:i:1:p:45-57",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:4:p:321-328",
+        "year": "2005",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:17:y:2006:i:1:p:1-21#1",
+        "reference_sha256": "2ce4dcd0c638090836da5413a75c8324628174acaec53a73eb926f218485a1c3",
+        "source": "RePEc:taf:defpea:v:17:y:2006:i:1:p:1-21",
+        "target": "RePEc:taf:defpea:v:14:y:2003:i:5:p:357-368",
+        "year": "2006",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:18:y:2007:i:1:p:39-52#10",
+        "reference_sha256": "5603914e28347bff24e932ea0ed008b79b56b1b113875dafe0de06533772f41b",
+        "source": "RePEc:taf:defpea:v:18:y:2007:i:1:p:39-52",
+        "target": "RePEc:taf:defpea:v:16:y:2005:i:6:p:449-461",
+        "year": "2007",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:19:y:2008:i:1:p:1-20#91",
+        "reference_sha256": "f93fea769a9f125ed1e9edcf5cd2b297ff1b51a68adcc4c7afeff9f244989443",
+        "source": "RePEc:taf:defpea:v:19:y:2008:i:1:p:1-20",
+        "target": "RePEc:taf:defpea:v:15:y:2004:i:3:p:221-230",
+        "year": "2008",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:20:y:2009:i:1:p:1-10#7",
+        "reference_sha256": "18b55fa359b14ba620874bb93628fa53b4e786803bfa8bb51f4ea9bc65ada165",
+        "source": "RePEc:taf:defpea:v:20:y:2009:i:1:p:1-10",
+        "target": "RePEc:taf:defpea:v:14:y:2003:i:6:p:401-412",
+        "year": "2009",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:21:y:2010:i:1:p:105-134#82",
+        "reference_sha256": "f7626b1f20976a266277ce85cf80eb837ba12c812d31821cb98553a059210e7c",
+        "source": "RePEc:taf:defpea:v:21:y:2010:i:1:p:105-134",
+        "target": "RePEc:taf:defpea:v:15:y:2004:i:3:p:259-273",
+        "year": "2010",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:22:y:2011:i:1:p:43-61#49",
+        "reference_sha256": "8eaa7941c4db393d7735d3db1d0311662c213bb454f79a2480f39aef772967cb",
+        "source": "RePEc:taf:defpea:v:22:y:2011:i:1:p:43-61",
+        "target": "RePEc:taf:defpea:v:15:y:2004:i:3:p:221-230",
+        "year": "2011",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:23:y:2012:i:1:p:1-16#9",
+        "reference_sha256": "6071f52e44fee83299ef6abc2b345a674620173b5143b5245dd58b9e5131d9ac",
+        "source": "RePEc:taf:defpea:v:23:y:2012:i:1:p:1-16",
+        "target": "RePEc:taf:defpea:v:14:y:2003:i:2:p:107-115",
+        "year": "2012",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:24:y:2013:i:1:p:1-14#30",
+        "reference_sha256": "ed236b7d99a92b2d754cf5fe010d54d2307baab8119118dc964cf2699917e4ae",
+        "source": "RePEc:taf:defpea:v:24:y:2013:i:1:p:1-14",
+        "target": "RePEc:taf:defpea:v:22:y:2011:i:2:p:105-123",
+        "year": "2013",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:25:y:2014:i:1:p:23-38#21",
+        "reference_sha256": "f67feb6a1a88f6833e792d91b697a6e5b7ab073bf3681e3af6674784fde2498b",
+        "source": "RePEc:taf:defpea:v:25:y:2014:i:1:p:23-38",
+        "target": "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+        "year": "2014",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:26:y:2015:i:1:p:15-31#11",
+        "reference_sha256": "a1e4e1fe394916bb0052c110a2cd194d0840b1fd4c4ee0ef9f699629391cca49",
+        "source": "RePEc:taf:defpea:v:26:y:2015:i:1:p:15-31",
+        "target": "RePEc:taf:defpea:v:16:y:2005:i:6:p:449-461",
+        "year": "2015",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:27:y:2016:i:1:p:105-116#18",
+        "reference_sha256": "e6658973744047a4693bcb46e030428795612919bcb4e3f2ee84e671c776fc55",
+        "source": "RePEc:taf:defpea:v:27:y:2016:i:1:p:105-116",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
+        "year": "2016",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:28:y:2017:i:1:p:1-33#36",
+        "reference_sha256": "d5097f9e661cbea7b4c6bc48b3beeda4e3f8b2fede0f7ee947618b7d13294e4c",
+        "source": "RePEc:taf:defpea:v:28:y:2017:i:1:p:1-33",
+        "target": "RePEc:taf:defpea:v:19:y:2008:i:6:p:405-413",
+        "year": "2017",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:29:y:2018:i:2:p:130-146#4",
+        "reference_sha256": "2f4ea38bfcfd0fc1cc68444e30919225a588e29540c77f707c3e9f2a97413173",
+        "source": "RePEc:taf:defpea:v:29:y:2018:i:2:p:130-146",
+        "target": "RePEc:taf:defpea:v:29:y:2018:i:2:p:91-110",
+        "year": "2018",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:30:y:2019:i:1:p:111-127#70",
+        "reference_sha256": "0925fab0dc45c06ad125452fc66ea4eb4cdfb8d278a817a1aabfdc96aa5e6fa0",
+        "source": "RePEc:taf:defpea:v:30:y:2019:i:1:p:111-127",
+        "target": "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+        "year": "2019",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:31:y:2020:i:1:p:105-119#11",
+        "reference_sha256": "e520caee7c41e309d58796e3d8baeda72b53765a92d8becc3d7d7a83c53da660",
+        "source": "RePEc:taf:defpea:v:31:y:2020:i:1:p:105-119",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:3:p:145-177",
+        "year": "2020",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:32:y:2021:i:1:p:107-124#24",
+        "reference_sha256": "2ba06ba1deb8fb4f4ee4bb79163520bbc393e6c430baf01ff1933eec09cc1fb6",
+        "source": "RePEc:taf:defpea:v:32:y:2021:i:1:p:107-124",
+        "target": "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+        "year": "2021",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:33:y:2022:i:1:p:1-25#21",
+        "reference_sha256": "db2bfd13c6764d65e379e58bf204daaa02e615c2a5a61dd30c3bab6962a6e5dd",
+        "source": "RePEc:taf:defpea:v:33:y:2022:i:1:p:1-25",
+        "target": "RePEc:taf:defpea:v:30:y:2019:i:5:p:592-608",
+        "year": "2022",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:34:y:2023:i:1:p:112-127#5",
+        "reference_sha256": "ed375c2e43a51e64f5ce6c37e64a3dc094a2d6c63a73ccba2da700e2ea2fa915",
+        "source": "RePEc:taf:defpea:v:34:y:2023:i:1:p:112-127",
+        "target": "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+        "year": "2023",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:35:y:2024:i:1:p:1-23#3",
+        "reference_sha256": "4a194a286a30231f0d8a294fefdb3e00428af31ed0ff7293c0f3c28024a13cef",
+        "source": "RePEc:taf:defpea:v:35:y:2024:i:1:p:1-23",
+        "target": "RePEc:taf:defpea:v:29:y:2018:i:2:p:147-170",
+        "year": "2024",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:36:y:2025:i:1:p:1-19#37",
+        "reference_sha256": "b362a64aaaeea73e1f0c30af507de547afbf8232f2877945f5a5276b22286b23",
+        "source": "RePEc:taf:defpea:v:36:y:2025:i:1:p:1-19",
+        "target": "RePEc:taf:defpea:v:15:y:2004:i:3:p:299-307",
+        "year": "2025",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:37:y:2026:i:1:p:1-20#49",
+        "reference_sha256": "40d762a997635f565e35e26e1280c0141163d8d6af9417408c2afab36a468950",
+        "source": "RePEc:taf:defpea:v:37:y:2026:i:1:p:1-20",
+        "target": "RePEc:taf:defpea:v:27:y:2016:i:2:p:176-183",
+        "year": "2026",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      },
+      {
+        "reference_id": "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:39-61#7",
+        "reference_sha256": "5ce4c4fd46e16c2d39220d161f0d536b399e3ec06c22d331127f4beed291ac4a",
+        "source": "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:39-61",
+        "target": "RePEc:taf:defpea:v:8:y:1997:i:1:p:17-35",
+        "year": "1998",
+        "evidence": "Year-stratified metadata audit: deposited reference DOI agrees with the unique target DOI; target title, issue pagination and author identity checked against its cached Crossref record. Online/issue year differences retained. Reviewed 2026-10-15."
+      }
+    ],
+    "sampling": "First sorted DOI edge in each citing publication year with eligible observed DOI edges; 1997, 1999 and 2002 have no eligible DOI edges under this catalogue snapshot. This checks metadata linkage, not the context of citation in full text."
+  }
+}

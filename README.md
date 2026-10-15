@@ -130,3 +130,58 @@ DPE_AUDITED_SNAPSHOT=/path/to/snapshot.json python -m unittest discover -s tests
 ```
 
 DOM checks cover period selection, source citations, complete-abstract links and disabled links after a model change. `DPE_TOPIC_SNAPSHOT=/path/to/api-topics.json node --test tests/*ui.test.mjs` additionally exercises the full published API payload, including its comparison, through the linked explorer. Both standalone and portal routes use relative asset and API URLs.
+
+## Citation conversations
+
+The **Citations** page at `/citations/` (or `/dpe/citations/` through the portal) maps directed citations between eligible articles in the existing 1997–2026 RePEc catalogue. It adds an independently discovered citation-community view alongside the abstract-based Topics page. Scopus, hosted inference and topic-model retraining are not required. Reference deposits come from the public Crossref API.
+
+The initial audited analysis contains **1,143 eligible papers, 3,097 directed links, 36 communities and 188 papers with no observed internal links**. The DOI-only baseline has 3,093 links. The 78 exclusions include issue introductions, editorials, administrative notices, corrections and routine book notices; research comments, replies and substantive review articles remain eligible. Community labels are provisional descriptions based on the leading titles and available abstracts. Some communities contain only two papers and should not be read as established intellectual conversations. Sixty eligible papers have no deposited reference list. The methods report and reference review queue expose the remaining gaps.
+
+The page focuses on the directed network and a top-20 table with separate rankings for **citations in, citations out and citations in + out**. Rankings use the whole recovered study and remain unchanged by map filters. Community buttons filter the map; minimum-citation and From/To year sliders sit below it with live count/year labels. The map starts with at least **3 citations in** from other eligible DPE papers: 351 papers and 1,193 links in the initial study. The count selector also supports outgoing or combined counts; set the minimum to 0 to remove the count limit. Reset restores all years and the default of 3 incoming citations. Selecting a paper hidden by the filters reveals it by resetting the community/year limits and minimum count; selecting papers with no observed links also sets the minimum to 0. Every visible edge has a directional arrow from citing to cited paper; selecting a paper highlights incoming and outgoing links. Counts above the map and in the rankings refer to the whole recovered network; the visible map count reflects filters and the selected edge source. Switching to DOI-only edges retains the recovered citation counts, community assignments and coordinates. Article links open the existing Articles reader. Citation totals refer only to this study's eligible article universe, not global citations or the complete historical journal. Temporal prevalence, the frozen BERTopic comparison, methods, coverage and downloads remain available in the published API and run artifacts.
+
+The explorer caches node display data and arrow geometry when the snapshot loads. Edges and arrowheads share WebGL line batches, and all communities share one marker trace with per-paper colours. Five stable traces replace per-community traces and per-edge SVG annotations. Slider labels update immediately; animation-frame scheduling keeps only the latest pending view and never overlaps Plotly redraws. Filtering retains the published coordinates, community colours and zoom state.
+
+Build the optional, CPU-only citation image and collect references:
+
+```sh
+docker compose --profile citations build dpe-citations
+docker compose --profile citations run --rm dpe-citations --collect
+docker compose --profile citations run --rm dpe-citations --build
+```
+
+`CROSSREF_MAILTO` optionally supplies a contact address for Crossref's polite pool. Collection uses three workers, respects `Retry-After`, retries transient failures, and resumes from verified cache entries. `--refresh` explicitly refreshes the cache. Neither building from cache nor serving requests calls Crossref. The web image contains no NetworkX or Matplotlib dependency.
+
+`data/citation-decisions.json` records the reviewed DOI corrections, eligibility decisions, recovered references, year-stratified DOI audit and community interpretations. Three catalogue records incorrectly share the Greece debt paper's DOI; their actual DOIs have suffixes **a**, **c** and **d**. Citation-specific corrections preserve RePEc handles and leave the canonical article/topic records intact. Crossref title normalization handles HTML, footnotes, subscripts and ordinal suffixes; unresolved identities never supply another paper's references.
+
+The recovered graph accepts normalized DOI links first. Other automatic candidates require a unique exact journal/volume/first-page/author match or exact title/author match. Every accepted recovery is individually reviewed and bound to the deposited reference hash. Ambiguous or incomplete internal candidates remain in `review.json` and create no edges. References whose stated journal volume precedes catalogue coverage are reported separately. A missing reference deposit means data are unavailable, rather than evidence of a genuinely empty bibliography.
+
+`--build` always creates a draft. Inspect `runs/RUN_ID/review.json`, resolve required identity/eligibility/recovered-link reviews in the decisions file, and add the DOI sample audit before rebuilding. When decisions change, rebuild the citation image to include them. A fresh build is also required when the underlying reference hash changes. Interpretations are bound to exact membership hashes, so a different partition cannot inherit old labels silently.
+
+Publish a reviewed run with:
+
+```sh
+docker compose --profile citations run --rm dpe-citations --publish-run RUN_ID
+```
+
+Publication validates nodes, edges, degrees, flows, coverage, review completion and export hashes, checks the live catalogue fingerprint, and atomically writes an immutable archive plus `dpe:citations:current` in Redis DB 4. A renewable build lease prevents concurrent operations. Failed collection, analysis or publication keeps the previous published run. Unresolved reference candidates can remain in the queue; accepted recovered edges, identity decisions and eligibility must pass review. Public reads use only Redis. A changed catalogue marks the study stale; a changed topic run separately marks the frozen comparison. Neither event silently changes community or topic IDs.
+
+Each artifact run retains `corpus.json`, `records.json`, `topics.json`, `decisions.json`, `snapshot.json`, reference-level evidence, coverage and review files, node/edge CSVs, directed GEXF, SVG/PNG figures and a standalone HTML methods report. `bundle.zip` includes the frozen inputs. The raw records allow exact input replay after the shared Crossref cache changes:
+
+```sh
+python -m app.citations --build \
+  --corpus /path/to/run/corpus.json --records /path/to/run/records.json \
+  --topics /path/to/run/topics.json --decisions /path/to/run/decisions.json
+```
+
+Native execution uses `requirements-citations.txt` plus the base Redis dependencies; the artifact directory defaults to `data/citation-artifacts/`, or `CITATION_ARTIFACTS_DIR`. A local Redis connection is required for the build lease. Docker retains artifacts in `dpe-citation-artifacts`. API endpoints are `GET /api/citations` and `GET /api/citations/RUN_ID/download/FILENAME`; immutable downloads remain tied to their published run.
+
+Communities use Louvain on an undirected projection, with reciprocal edge weights summed, resolution 1 and the highest modularity across seeds 0–19 with deterministic tie-breaking. The report includes a DOI-only partition, resolution 0.5/1.5 sensitivity checks and adjusted Rand agreement on shared connected papers. ForceAtlas2 runs within connected components with seed 42 and 500 iterations; separate components are packed at the right and isolated papers below. Relative placement of disconnected components is arbitrary. Figure exports preserve directed edges; browser views show arrowheads on every visible link.
+
+Run citation checks and the full browser interaction suite with:
+
+```sh
+python -m unittest discover -s tests -p 'test_citations.py' -v
+node --test tests/*ui.test.mjs
+```
+
+`DPE_CITATION_SNAPSHOT=/path/to/run/snapshot.json` enables the full-data citation DOM check. The Python checks cover exact matching, conflicting DOIs, hash-bound review decisions, cached replay, directed degrees, components, reciprocal weights, topic denominators, immutability and failure states. The complete Python suite can also use `NUMBA_CACHE_DIR=/tmp/dpe-numba-tests` when native modelling dependencies need a writable JIT cache.
