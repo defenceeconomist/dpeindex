@@ -1,0 +1,11 @@
+{
+  "desktop": {
+    "images": true,
+    "overflow": false,
+    "refs": 10
+  },
+  "mobile": {
+    "overflow": false,
+    "images": true
+  }
+}

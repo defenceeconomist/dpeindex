@@ -1,0 +1,10 @@
+| Theme | First E / M | Second E / M | Third E / M |
+|---|---|---|---|
+| Growth | 9 / 10 | 56 / 62 | 65 / 90 |
+| Terrorism | 11 / 0 | 37 / 37 | 55 / 56 |
+| Conflict | — / 4 | 29 / 51 | 70 / 84 |
+| Alliances | 18 / 11 | 20 / 45 | 9 / 27 |
+| Industry | 16 / 15 | 25 / 39 | 15 / 22 |
+| Personnel | 14 / 0 | 14 / 19 | 29 / 32 |
+
+: Selected thematic counts: editorial (E) / model (M). Editorial denominators are 207, 331 and 389; model denominators are 45, 330 and 381 abstracts. First-decade model coverage is partial. A dash indicates no separate editorial category. These are scope comparisons, not matched article-level classifications: first-decade terrorism includes guerrilla warfare and insurgencies; model conflict includes peace, alliances includes spending demand, industry includes procurement, and personnel includes veterans. {#tbl-comparison}

@@ -1,0 +1,2 @@
+# Documentation only; no model downloads or analysis dependencies required.
+Sphinx==8.2.3

@@ -1,0 +1,6 @@
+.qa/
+.quarto/
+manuscript_files/
+__pycache__/
+*.log
+*.aux

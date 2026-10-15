@@ -89,6 +89,11 @@ try {
     await mkdir(join(staged, name));
     await cp(`site/${name}.html`, join(staged, name, "index.html"));
   }
+  // The manuscript is self-contained; publish the reviewed render without rebuilding its analysis.
+  await mkdir(join(staged, "research-note"));
+  const manuscript = await readFile("manuscript/manuscript.html", "utf8");
+  await writeFile(join(staged, "research-note/index.html"), manuscript.replaceAll('href="../manuscript.pdf"', 'href="manuscript.pdf"'));
+  await cp("manuscript/manuscript.pdf", join(staged, "research-note/manuscript.pdf"));
   for (const page of ["index.html", "topics/index.html", "citations/index.html"]) {
     const path = join(staged, page);
     let html = await readFile(path, "utf8");

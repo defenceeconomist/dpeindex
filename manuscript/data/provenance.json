@@ -1,0 +1,20 @@
+{
+  "release": "data/local-artifacts/mcp-updates/20261015T200537Z-fd83c402/release",
+  "frozen_date": "2026-10-15",
+  "files": {
+    "data/local-artifacts/mcp-updates/20261015T200537Z-fd83c402/release/topics.json": "a402edc0956c1df8741e3054bab3f1cc16ad58f28dbea2e5099ec85ce3ab0ef7",
+    "data/local-artifacts/mcp-updates/20261015T200537Z-fd83c402/release/citations.json": "08ed103a1eeea5fbddee16a77cf5f3feb83b9eeacafedd0b247c55a120c93ea6",
+    "data/local-artifacts/mcp-updates/20261015T200537Z-fd83c402/release/corpus.json": "d426b24b3a47c48aed7b3a50354e07cba6f7d44b834912edf2c7cff861dc62a1",
+    "data/local-artifacts/mcp-updates/20261015T200537Z-fd83c402/release/model/definition.json": "95e8ec476f478d3d37f79d00ebb7ac88d0996709105a8da15c8baf8d57343645",
+    "data/retrospectives.json": "19aeb18056a766a46d7ef4c7ee0eddd9ccdd707b1fb3878158b8de221c6d6d68",
+    "docs/DEFENCE AND PEACE ECONOMICS  THE SECOND DECADE IN RETROSPECT.pdf": "343e157ae6daaee658c692a2216df42d7240e472a7d0be5ddcba5af1baa348dc",
+    "docs/Defence and peace economics  A ten year retrospective.pdf": "643b9a0ce85501f3793cce512401138e046e0263b9522cf06b46a82bec891965",
+    "docs/delahais-thyrard-2025-conversations-in-evaluation-exploring-30-years-of-debates-in-our-field.pdf": "23c979421c62b1b2997570263475b0864c6c7f573cbcfa16e4d3c306dcf7b58f",
+    "docs/Defence and Peace Economics  The Third Decade in Retrospect.epub": "b2c347fccb02ab54c8d8b937287b4fb8f21731e36176113f831e8a18ca0af68c",
+    "app/topics.py": "75b70ecc27d9ea486ef26150f8c31ce306346e3f03dd3b3c4b198e4612f9db35",
+    "app/update_topics.py": "514120fe5848ad6665c988fafde53c4bd39ffa8d9f989f8a207804815d99d5a0",
+    "app/citations.py": "d7156935f0325fbace1c24ae2639d493b09f65aed7b0183d44270931cfc17185",
+    "app/citation_data.py": "58295230cd61ca88ccbafbe4e1a81ef8c8fba99d7d2699f38304d83a20f7e3ac"
+  },
+  "evidence_sha256": "1b16dd580a394e006366e28395e5cea43378ac90c930a074a890e421ba4c39f5"
+}

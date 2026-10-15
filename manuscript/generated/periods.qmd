@@ -1,0 +1,7 @@
+| Retrospective | Editorial papers | Catalogue | Abstracts | Unassigned |
+|---|---|---|---|---|
+| First decade (partial) | 207 | 48 | 45 | 2 |
+| Second decade | 331 | 361 | 330 | 34 |
+| Third decade | 389 | 407 | 381 | 23 |
+
+: Coverage of the retrospective cohorts. First: volumes 1–10 through 10(2), represented only from volume 8; second: volumes 11–20; third: volumes 21–30. Editorial totals exclude separately listed book reviews. Catalogue and abstract counts are distinct populations. {#tbl-periods}

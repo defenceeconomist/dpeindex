@@ -1,0 +1,388 @@
+{
+  "periods": [
+    {
+      "id": "first",
+      "catalogue": 48,
+      "abstracts": 45,
+      "missing": 3,
+      "unassigned": 2,
+      "counts": {
+        "0": 4,
+        "6": 3,
+        "3": 15,
+        "4": 11,
+        "-1": 2,
+        "1": 10,
+        "None": 3
+      }
+    },
+    {
+      "id": "second",
+      "catalogue": 361,
+      "abstracts": 330,
+      "missing": 31,
+      "unassigned": 34,
+      "counts": {
+        "None": 31,
+        "0": 51,
+        "-1": 34,
+        "1": 62,
+        "5": 19,
+        "6": 22,
+        "3": 39,
+        "4": 45,
+        "8": 8,
+        "2": 37,
+        "9": 12,
+        "7": 1
+      }
+    },
+    {
+      "id": "third",
+      "catalogue": 407,
+      "abstracts": 381,
+      "missing": 26,
+      "unassigned": 23,
+      "counts": {
+        "5": 32,
+        "3": 22,
+        "2": 56,
+        "1": 90,
+        "0": 84,
+        "None": 26,
+        "7": 6,
+        "4": 27,
+        "-1": 23,
+        "6": 14,
+        "8": 19,
+        "9": 8
+      }
+    }
+  ],
+  "trends": [
+    {
+      "start": 1997,
+      "end": 1999,
+      "abstracts": 53,
+      "counts": {
+        "0": 5,
+        "6": 5,
+        "3": 16,
+        "4": 11,
+        "-1": 4,
+        "1": 11,
+        "2": 1
+      }
+    },
+    {
+      "start": 2000,
+      "end": 2004,
+      "abstracts": 162,
+      "counts": {
+        "0": 20,
+        "-1": 21,
+        "1": 33,
+        "5": 8,
+        "6": 16,
+        "3": 22,
+        "4": 24,
+        "8": 7,
+        "2": 3,
+        "9": 7,
+        "7": 1
+      }
+    },
+    {
+      "start": 2005,
+      "end": 2009,
+      "abstracts": 168,
+      "counts": {
+        "4": 21,
+        "2": 34,
+        "5": 11,
+        "1": 29,
+        "3": 17,
+        "9": 5,
+        "-1": 13,
+        "6": 6,
+        "8": 1,
+        "0": 31
+      }
+    },
+    {
+      "start": 2010,
+      "end": 2014,
+      "abstracts": 173,
+      "counts": {
+        "5": 15,
+        "3": 16,
+        "2": 32,
+        "1": 33,
+        "0": 40,
+        "7": 1,
+        "4": 13,
+        "-1": 9,
+        "6": 4,
+        "8": 7,
+        "9": 3
+      }
+    },
+    {
+      "start": 2015,
+      "end": 2019,
+      "abstracts": 208,
+      "counts": {
+        "0": 44,
+        "1": 57,
+        "4": 14,
+        "2": 24,
+        "6": 10,
+        "-1": 14,
+        "7": 5,
+        "5": 17,
+        "8": 12,
+        "9": 5,
+        "3": 6
+      }
+    },
+    {
+      "start": 2020,
+      "end": 2024,
+      "abstracts": 288,
+      "counts": {
+        "5": 17,
+        "3": 36,
+        "1": 38,
+        "6": 14,
+        "2": 29,
+        "0": 73,
+        "4": 27,
+        "9": 5,
+        "8": 7,
+        "7": 25,
+        "-1": 17
+      }
+    },
+    {
+      "start": 2025,
+      "end": 2026,
+      "abstracts": 100,
+      "counts": {
+        "1": 17,
+        "4": 7,
+        "5": 5,
+        "6": 2,
+        "0": 28,
+        "-1": 4,
+        "2": 14,
+        "8": 2,
+        "7": 9,
+        "3": 12
+      }
+    }
+  ],
+  "within_community_edges": 2514,
+  "reference_coverage": {
+    "eligible": 1143,
+    "with_references": 1083,
+    "missing_reference_deposit": 60,
+    "unresolved_identities": 0
+  },
+  "communities": [
+    {
+      "id": 0,
+      "label": "Military spending and economic growth",
+      "count": 139
+    },
+    {
+      "id": 1,
+      "label": "Defence industries and European procurement",
+      "count": 135
+    },
+    {
+      "id": 2,
+      "label": "Terrorism, counterterrorism and economic effects",
+      "count": 134
+    },
+    {
+      "id": 3,
+      "label": "Demand for military expenditure",
+      "count": 117
+    },
+    {
+      "id": 4,
+      "label": "Arms markets, technology and capability",
+      "count": 81
+    },
+    {
+      "id": 5,
+      "label": "Geopolitical risk, resources and markets",
+      "count": 71
+    },
+    {
+      "id": 6,
+      "label": "Defence spending, debt and public budgets",
+      "count": 70
+    },
+    {
+      "id": 7,
+      "label": "Military recruitment, retention and conscription",
+      "count": 37
+    },
+    {
+      "id": 8,
+      "label": "Civil war and the economic costs of conflict",
+      "count": 36
+    },
+    {
+      "id": 9,
+      "label": "Third-party intervention and conflict bargaining",
+      "count": 30
+    },
+    {
+      "id": 10,
+      "label": "Greek–Turkish military rivalry",
+      "count": 24
+    },
+    {
+      "id": 11,
+      "label": "Aircraft replacement and defence inflation",
+      "count": 15
+    },
+    {
+      "id": 12,
+      "label": "Valuing defence and security preferences",
+      "count": 7
+    },
+    {
+      "id": 13,
+      "label": "Risk, insurance and emergency provision",
+      "count": 4
+    },
+    {
+      "id": 14,
+      "label": "Conflict exposure, education and economic growth",
+      "count": 4
+    },
+    {
+      "id": 15,
+      "label": "Armoured vehicles and casualty cost-effectiveness",
+      "count": 4
+    },
+    {
+      "id": 16,
+      "label": "Terrorism research and prevention methods",
+      "count": 3
+    },
+    {
+      "id": 17,
+      "label": "Illicit small arms and ammunition markets",
+      "count": 3
+    },
+    {
+      "id": 18,
+      "label": "Civil-conflict motives and economic shocks",
+      "count": 3
+    },
+    {
+      "id": 19,
+      "label": "Deployment selection, health and education",
+      "count": 3
+    },
+    {
+      "id": 20,
+      "label": "French First World War military casualties",
+      "count": 3
+    },
+    {
+      "id": 21,
+      "label": "Israeli–Palestinian bargaining and proxy conflict",
+      "count": 3
+    },
+    {
+      "id": 22,
+      "label": "Militant groups, rivalry and targeting",
+      "count": 3
+    },
+    {
+      "id": 23,
+      "label": "Military organization and battlefield performance",
+      "count": 2
+    },
+    {
+      "id": 24,
+      "label": "Narcotics, crime and security policy",
+      "count": 2
+    },
+    {
+      "id": 25,
+      "label": "Civil-war termination and political outcomes",
+      "count": 2
+    },
+    {
+      "id": 26,
+      "label": "Iraq mortality-survey controversy",
+      "count": 2
+    },
+    {
+      "id": 27,
+      "label": "Economic growth and interstate war",
+      "count": 2
+    },
+    {
+      "id": 28,
+      "label": "Swedish military service and later earnings",
+      "count": 2
+    },
+    {
+      "id": 29,
+      "label": "Nuclear deterrence and defensive weapons",
+      "count": 2
+    },
+    {
+      "id": 30,
+      "label": "Armed violence and economic development",
+      "count": 2
+    },
+    {
+      "id": 31,
+      "label": "Corruption and procurement accountability",
+      "count": 2
+    },
+    {
+      "id": 32,
+      "label": "Espionage and innovation contests",
+      "count": 2
+    },
+    {
+      "id": 33,
+      "label": "Orbital debris and space security",
+      "count": 2
+    },
+    {
+      "id": 34,
+      "label": "House raids, demolitions and conflict behaviour",
+      "count": 2
+    },
+    {
+      "id": 35,
+      "label": "Commodity shocks, conflict and peacekeeping",
+      "count": 2
+    }
+  ],
+  "topic_counts": {
+    "0": 241,
+    "6": 57,
+    "3": 125,
+    "4": 117,
+    "-1": 82,
+    "null": 69,
+    "1": 218,
+    "2": 137,
+    "5": 73,
+    "8": 36,
+    "9": 25,
+    "7": 41
+  },
+  "checks": "All frozen-evidence integrity, count, edge, degree and denominator checks passed."
+}

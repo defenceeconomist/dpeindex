@@ -141,6 +141,11 @@ npm run static:preview    # http://localhost:8790/ and /dpeindex/
 npm run static:validate
 ```
 
+The main navigation links to the research note at `research-note/`. Static builds
+include the self-contained render from `manuscript/manuscript.html` and its PDF. After editing
+the note, render both formats with `quarto render manuscript/manuscript.qmd --to all` before
+building the site; the site build does not rerun the manuscript analysis.
+
 An explicit release can be selected without changing the current pointer:
 
 ```sh
@@ -168,3 +173,21 @@ npm run static:validate -- data/local-artifacts/issue-5-min10/release/site
 ```
 
 The tests cover parser/grouping rules, split isolation, calibration and ambiguous assignments, corrections, saved point preservation, integrity failures and resumability, citation evidence and graph consistency, temporal denominators, static filters and deep links, real browser inference and encoder agreement, retry/fallback, mobile layouts and both deployment prefixes. `--skip-browser-tests` is available for development; use the default checked pipeline for a release.
+
+## Python documentation
+
+Sphinx guides and generated module references live in [docs/python](docs/python/index.rst).
+Build them independently of the model dependencies:
+
+```sh
+python3 -m venv .venv-docs
+.venv-docs/bin/python -m pip install -r requirements-docs.txt
+.venv-docs/bin/python -m sphinx -b html -W --keep-going docs/python docs/python/_build/html
+.venv-docs/bin/python -m sphinx -b doctest -W --keep-going docs/python docs/python/_build/doctest
+```
+
+Open `docs/python/_build/html/index.html`. The docs cover architecture, training
+and refresh workflows, citation review, MCP jobs, artifact contracts, all 17
+application modules, and supporting preview/manuscript scripts. The build imports
+API definitions with the optional MCP transport mocked; it does not train models,
+fetch source data, launch jobs, or publish the documentation.

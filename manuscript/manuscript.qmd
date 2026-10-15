@@ -1,0 +1,165 @@
+---
+title: "Themes and citation conversations in Defence and Peace Economics"
+subtitle: "A research note on the 1997–2026 catalogue"
+date: 2026-10-15
+lang: en-GB
+date-format: "D MMMM YYYY"
+bibliography: references.bib
+link-citations: true
+number-sections: true
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    css: styles.css
+    fontsize: 1.05em
+  pdf:
+    documentclass: article
+    pdf-engine: xelatex
+    papersize: a4
+    fontsize: 11pt
+    geometry: margin=25mm
+    colorlinks: true
+    keep-tex: false
+    fig-pos: htbp
+    include-in-header:
+      text: |
+        \usepackage{float}
+        \usepackage{microtype}
+        \raggedbottom
+        \renewcommand{\topfraction}{0.95}
+        \renewcommand{\bottomfraction}{0.95}
+        \renewcommand{\textfraction}{0.05}
+        \renewcommand{\floatpagefraction}{0.85}
+abstract: |
+  This research note combines abstract-based topic modelling and direct-citation analysis to describe the intellectual structure of Defence and Peace Economics. A frozen RePEc catalogue contains 1,221 records for 1997–2026, including 1,152 abstracts. A BERTopic pipeline identifies ten themes; a separate network of 1,143 eligible papers contains 3,097 internal citation links. Comparison with the journal's three decennial retrospectives supports the growing prominence of conflict, economic growth and terrorism, while revealing differences between editorial categories and computational clusters. The citation network distinguishes 36 communities, including separate conversations around growth, expenditure demand and public budgets. Drawing on Delahais and Thyrard's study of Evaluation, the note treats citation communities as candidates for intellectual conversations, rather than proof of substantive debate. Incomplete early coverage, missing references and model-selection choices constrain interpretation. The two approaches offer complementary accounts of what papers discuss and how their references connect them.
+---
+
+# Introduction
+
+A journal's thematic history can be told through editorial judgement, the language of its articles, or the connections made by their references. These perspectives answer related but different questions. Editorial retrospectives organise a field using substantive knowledge; topic models identify regularities in text; citation networks reveal which publications connect through recorded references. Their comparison can expose both durable areas of research and divisions that a single classification conceals.
+
+*Defence and Peace Economics* (DPE) provides a particularly useful setting. Its first three decennial retrospectives document changing emphases in defence, security and peace research [@hartley2000; @arce2010; @gaibulloev2020]. This note places an existing topic model and citation network alongside those accounts. It asks which themes recur, how their prominence changes, and whether semantic groupings correspond to citation communities. The analysis describes the available journal catalogue, rather than the entire field of defence economics.
+
+The interpretation of citations follows @delahais2026, whose study of *Evaluation* uses direct citations to identify possible intellectual conversations and then examines their substantive content. Their distinction matters here: similar abstracts need not belong to a shared exchange, and a citation can acknowledge background work without endorsing or debating it. The evidence below therefore separates descriptive topic prevalence, observed citation structure and interpretive claims about research conversations.
+
+# Data and methods
+
+## Catalogue, release and comparison populations
+
+The evidence is frozen from the completed local release of 15 October 2026. The RePEc catalogue contains 1,221 records dated 1997–2026, of which 1,152 have abstracts and 69 do not. Publication years describe catalogue metadata, not the completeness of a calendar year. The analytical snapshot includes volume 37 through issue 6. No new model was fitted for this manuscript.
+
+Three populations must be distinguished. Topic modelling uses abstract-bearing records. Citation analysis uses 1,143 eligible research articles and substantive reviews, excluding 78 records under documented title rules and individual decisions, principally administrative material, issue introductions, routine book notices and corrections. The retrospectives classify their own published-paper populations. An abstract does not establish citation eligibility, and absence of an abstract does not itself exclude a paper from the network.
+
+{{< include generated/periods.qmd >}}
+
+Retrospective cohorts are selected by volume and issue, rather than by dates mentioned in abstracts. The first survey covers volumes 1–10 only through issue 10(2), but the catalogue begins at volume 8: just 45 abstracts are available for comparison with 207 editorially classified papers. The second and third cohorts have much fuller temporal coverage, although their populations still differ (@tbl-periods). Book reviews listed separately in the original tables are excluded from the editorial denominators. The first survey's original arms-trade count is five; later historical tables reproduce six. We retain the original total of 207 rather than silently adopting the third retrospective's historical total of 208 [@hartley2000, pp. 4–6; @gaibulloev2020, table 1].
+
+## Topic modelling and incremental assignments
+
+The pipeline implements BERTopic's separation of document clustering from keyword representation [@grootendorst2022]. Complete abstracts are encoded as normalised vectors using the pinned Qwen3-Embedding-0.6B model [@zhang2025]. UMAP reduces these representations before HDBSCAN identifies dense groups and leaves some abstracts unassigned [@mcinnes2018; @mcinnes2017]. Class-based TF–IDF then extracts descriptive unigrams and bigrams, with English stop words removed and frequent-word reduction enabled. These keywords describe clusters; they do not constitute a predefined editorial taxonomy. The ten readable names were reviewed against keywords and three representative abstracts per topic.
+
+Training used 1,138 abstracts from 1,207 records, withholding the final two seven-paper issues. The search evaluated 54 configurations: UMAP neighbours of 10, 20 or 40; dimensions of five or ten; HDBSCAN minimum cluster sizes of 20, 35 or 50; and minimum samples of one, three or five. Coherence and cosine silhouette each received twice the weight of keyword diversity and coverage, after normalisation across trials. Configurations producing at least ten topics at seed 42 were preferred; the top three qualifying configurations were evaluated at seeds 42, 7 and 21. Mean score selected the configuration, with adjusted mutual information used for tie-breaking. This preference is a modelling choice favouring finer thematic resolution, not evidence that ten natural subjects exist.
+
+The selected settings are 40 neighbours, five dimensions, minimum cluster size 20 and minimum samples five; the final fit uses seed 42. UMAP uses cosine distance and zero minimum distance, while HDBSCAN uses Euclidean distance in the reduced space and excess-of-mass cluster selection. The separate two-dimensional map is a display projection, not the space in which the five-dimensional clustering is estimated.
+
+Outliers were reassigned only when similarity and separation from the runner-up topic met calibrated thresholds. In training, this reduced unassigned abstracts from 220 to 80. Compared with the untuned baseline, post-reassignment coherence increased from 0.0899 to 0.1382 and coverage from 78.7% to 93.0%; silhouette fell from 0.1046 to 0.0770, while diversity remained 0.93. The diagnostics therefore show a trade-off, not uniform improvement. Coherence measures keyword co-occurrence; silhouette assesses separation in the original embedding space; neither validates a historical interpretation.
+
+Subsequent issues received assignments from frozen topic centroids, preserving the trained structure and existing assignments. This classifier accepts an abstract at cosine similarity at least 0.475 and a best-versus-second-best margin of at least 0.02. Its held-out calibration accepted 116 of 120 confident members with 95.7% agreement with discovered labels. That is internal consistency, not independently assessed classification accuracy. The current release contains 1,070 assigned and 82 unassigned abstracts; no abstract was truncated during encoding. The full encoder revision and model identity are retained in the supplementary provenance.
+
+## Citation construction and interpretation
+
+Each network node is an eligible catalogue paper; an edge points from the citing paper to the cited paper. References come from Crossref deposits. DOI identities are checked against article metadata, while additional links require unique exact bibliographic matches or documented review. Fuzzy matches are not automatically accepted. Repeated references between the same ordered pair yield a single edge. The recovered graph is compared with a DOI-only baseline to show the consequences of matching beyond DOI links.
+
+Community detection uses Louvain modularity optimisation [@blondel2008] on an undirected projection of connected papers, summing reciprocal edge weights. Twenty seeds, 0–19, are tested at resolution one; maximum modularity and deterministic tie-breaking choose the partition. Isolates remain visible but are not assigned to a community. Resolutions 0.5 and 1.5 provide sensitivity checks. ForceAtlas2 supplies the display coordinates, with seed 42 and 500 iterations within each connected component [@jacomy2014]. Disconnected components and isolates are placed separately, so their relative distances carry no substantive meaning.
+
+The approach adapts the direct-citation strategy of @delahais2026, but uses RePEc rather than Scopus to define the universe and does not estimate external citation impact. Their substantive reading of candidate conversations motivates cautious interpretation of DPE's groups. Here, the release's descriptive labels and leading-paper evidence guide interpretation; all community labels remain marked provisional in the underlying snapshot. We retain every detected community and avoid presenting a selected set of large groups as an exhaustive taxonomy.
+
+# Themes in relation to the three retrospectives
+
+## Overall profile
+
+The largest topic is conflict, war and peace, followed by military spending and economic growth, then terrorism and counterterrorism (@tbl-topics). Together they contain 596 abstracts, or 51.7% of the abstract-bearing catalogue. Defence industry, spending and alliances remain substantial, while personnel, arms trade, geopolitical markets, equipment costs and debt identify more specialised bodies of work. Single assignments simplify papers that may address several questions; the absence of a standalone topic does not demonstrate absence of a subject.
+
+{{< include generated/topics.qmd >}}
+
+The retrospective crosswalk is interpretive, not a relabelling of the model as editorial categories. It was rebuilt against the current keywords and all 30 representative abstracts because the archived comparison referred to an older model. In particular, the current spending-and-alliances topic includes expenditure-demand studies, while geopolitical markets capture only part of the later security category. The supplementary crosswalk records the original categories, counts, source locations, overlapping current topics and reasons for each match. Topic counts can recur across editorial rows and must not be summed as a new classified total.
+
+{{< include generated/comparison.qmd >}}
+
+## First decade: continuity under severe coverage limits
+
+Hartley and Sandler's first retrospective foregrounds defence expenditure studies, procurement, alliances, conversion and industrial structure. Its expenditure category explicitly spans macroeconomic consequences, time-series properties and demand. These concerns cross the present growth, spending-and-alliances and debt topics; treating them as one modern cluster would erase distinctions introduced by the model. Procurement and industrial structure also overlap, while conversion has no separate cluster [@hartley2000, pp. 4–6].
+
+The available first-period abstracts are concentrated in industry and procurement (15 of 45; 33.3%), spending and alliances (11; 24.4%) and growth (10; 22.2%). These provide evidence of continuity with the editorial concerns, but cannot establish their relative prominence throughout the 1990s. No abstract in this restricted cohort is assigned to the terrorism topic, although the retrospective lists 11 papers under terrorism, guerrilla warfare and insurgencies. The apparent absence is therefore not a contradiction of the retrospective: most of its decade is outside the available catalogue, and its combined category is broader than the model's terrorism cluster.
+
+The comparison also illustrates why retrospective categories should not be treated as a fixed benchmark. Country surveys are a publication form, and developing-country studies are a geographical scope; either can discuss growth, industry, alliances or conflict. A subject model is not expected to reproduce these categories as distinct clusters. The first retrospective is most useful here as evidence of institutional and conceptual continuity, rather than as a population on which to evaluate automated classification.
+
+## Second decade: growth, terrorism and conflict
+
+For volumes 11–20, Arce and Kollias identify defence and the economy as the largest category, followed by terrorism, with conflict and civil wars also prominent. The current assignments yield 62 growth abstracts (18.8%), 51 conflict abstracts (15.5%) and 37 terrorism abstracts (11.2%). The editorial figures are 56, 29 and 37 respectively, out of 331 classified papers. Agreement on terrorism's count is descriptive coincidence, not proof of article-level agreement: the model denominator is 330 abstracts and membership has not been validated against a shared coding of individual papers [@arce2010, table I].
+
+The broader conflict cluster helps explain the larger model count. The editorial scheme distinguishes conflict and civil wars from peace and peacekeeping; the model combines conflict, war and peace. Its representatives include civil-war risk, appropriation contests and relationships between economic structure and conflict. Likewise, the 45 abstracts assigned to spending and alliances exceed the editorial economics-of-alliances count of 20 because the cluster includes national expenditure determinants. Neither difference should be interpreted as editorial error or algorithmic superiority.
+
+The retrospective connects the expansion of terrorism research to the changing security environment, including the attacks of 11 September 2001 [@arce2010, pp. 398–399]. The model's temporal profile is compatible with that account: terrorism rises from three of 162 abstracts in 2000–2004 to 34 of 168 in 2005–2009. Publication lags, special issues and changing data availability could also contribute. The pattern locates the increase within the catalogue; it does not identify a causal effect of a particular event on publication choices.
+
+## Third decade and the subsequent catalogue
+
+Gaibulloev, Kollias and Solomon report increased concentration in conflict, defence and the economy, and terrorism: 190 of 389 papers, or 48.8%. In the corresponding model cohort, growth contributes 90 abstracts, conflict 84 and terrorism 56, together 230 of 381 (60.4%). The shared prominence of these areas supports the retrospective's central thematic account. The difference in their combined share reflects broader model boundaries, population differences and the selected ten-topic resolution [@gaibulloev2020, tables 1–2].
+
+Other changes also align. From the second to the third cohort, the personnel topic increases from 5.8% to 8.4% of abstracts, while industry and procurement falls from 11.8% to 5.8%. Spending and alliances falls from 13.6% to 7.1%. The retrospective similarly records increased personnel coverage and lower counts for industrial-base and alliance categories. Equipment costs, however, rise from eight to 19 model abstracts and form a separate cluster. This distinction shows how cost and capability research can retain visibility despite a decline in a broader industrial category.
+
+The third retrospective introduces security economics/issues, including geopolitical risks and sanctions [@gaibulloev2020]. The model divides that broad space: geopolitical risk and financial markets form a specialised topic, whereas sanctions appear among the conflict topic's keywords. Only six third-period abstracts belong to geopolitical markets, followed by 25 during 2020–2024 and nine in the available 2025–2026 records. This suggests a subsequent concentration around market responses to risk, rather than recovery of the entire editorial security category.
+
+![Topic shares across publication-year windows. Each denominator includes all abstracts in that window, including unassigned abstracts. Asterisks mark boundary windows of unequal length: 1997–1999 and the available 2025–2026 catalogue. These year windows differ from the first retrospective's issue cutoff. Lines connect descriptive proportions and do not imply continuous annual estimates.](figures/topic-trends.png){#fig-trends width=100% fig-alt="Ten small-multiple charts show topic shares over seven publication windows; conflict and geopolitical markets become more prominent in recent windows."}
+
+The later records extend rather than complete the retrospective sequence. @fig-trends shows renewed industrial representation and sustained conflict coverage alongside the newer geopolitical-market concentration. As all periods use a fixed model trained largely on the available full span, these are historical shares of a common vocabulary-based classification. They do not demonstrate that contemporary researchers used the same category boundaries, or that the model would discover identical themes if fitted independently to each decade.
+
+# Citation communities and thematic overlap
+
+## Observed structure and sensitivity
+
+The network contains 3,097 directed edges among 1,143 eligible papers. Of these papers, 955 have at least one observed internal connection and 188 (16.4%) are isolates. The largest weakly connected component contains 896 papers (78.4% of eligible papers). The primary partition yields 36 communities with modularity 0.6486. Twelve communities contain at least 15 papers; the remainder are smaller groups, not discarded residual observations. Community numbers in the figures are one-based display labels, not persistent identifiers.
+
+The largest groups concern growth (139 papers), industry and procurement (135), terrorism (134), expenditure demand (117), arms and technology (81), geopolitical risk and resources (71), and debt and budgets (70). Of the observed links, 2,514 (81.2%) are within communities. Since modularity optimisation explicitly favours such concentration, this share describes the chosen partition rather than independently demonstrating disciplinary closure. Inter-community links remain important: growth and debt, for example, need not be separate intellectual worlds merely because the partition distinguishes them.
+
+![Direct-citation network, retaining the release's layout. Node area increases linearly with observed internal in-degree, with a minimum area for visibility. Colours distinguish the twelve largest communities; the other communities are grey and isolates light grey. Edge arrows are omitted for legibility; the analytical graph remains directed. Small disconnected components are packed to the right and isolates below, with arbitrary relative placement.](figures/citation-network.png){#fig-network width=100% fig-alt="Citation network with a large connected component, small disconnected groups to the right and isolates below; colours identify major communities."}
+
+The DOI-only baseline contains 3,093 edges and yields 34 communities; its adjusted Rand agreement with the primary partition is 0.918 on the same 955 connected papers. Only four recovered edges therefore coexist with some partition changes, illustrating the sensitivity of local community boundaries. At resolutions 0.5 and 1.5, the graph yields 31 and 41 communities, with adjusted Rand indices of 0.678 and 0.660 against the primary solution. These are alternative granularities, not failed replications. Modularity values at different resolutions optimise different objectives and should not be ranked as if they measured the same fit.
+
+## Shared subjects, distinct conversations
+
+The topic-by-community comparison makes the distinction between text and references concrete (@fig-overlap). In the growth community, 121 of 139 papers (87.1%) belong to the growth topic. Recruitment is similarly concentrated: 32 of 37 papers (86.5%) belong to the personnel topic. These are cases where subject language and citation structure largely reinforce one another, although even these communities contain exceptions.
+
+Other correspondences are less direct. The debt-and-budgets community contains 31 growth-topic papers and 23 debt-topic papers: shared fiscal questions connect articles separated by their abstract vocabulary. The expenditure-demand community combines 66 spending-and-alliances papers with 24 growth papers. Conversely, the broad conflict topic appears in distinct communities around civil-war costs and intervention/bargaining, contributing 31 of 36 and 29 of 30 papers respectively. The model offers a thematic umbrella where the network suggests more specific lines of exchange.
+
+![Topic composition of the twelve largest citation communities, the remaining 24 communities pooled for display, and isolates. Each row sums to 100%, including unassigned and missing abstracts. Cell annotations show rounded percentages only where the share is at least 10%; shading shows every cell. Pooling is for display and does not merge analytical communities.](figures/topic-community.png){#fig-overlap width=100% fig-alt="Heatmap showing strong growth and recruitment correspondences, mixed debt and demand communities, and conflict papers spread across several citation communities."}
+
+This is the main value of the conversation perspective. Delahais and Thyrard show why citation clustering requires substantive interpretation and why themes can cross community boundaries [@delahais2026]. For DPE, the observed splits nominate areas for closer reading: whether expenditure-demand papers share estimation frameworks, or whether intervention studies address different strategic mechanisms from conflict-cost studies. Titles, abstracts and links support those hypotheses, but do not establish the content or tone of every citation. The analysis therefore identifies candidate conversations rather than verifying a sustained debate within each group.
+
+# Discussion and limitations
+
+The three approaches converge on a journal with durable defence-economic concerns and growing attention to conflict and terrorism. They also reveal different kinds of structure. Editorial categories preserve institutional knowledge and distinctions such as peacekeeping, conversion and country surveys. The model supplies a consistent semantic classification across the observed period, including specialised cost, debt and geopolitical-market clusters. Citation communities divide and reconnect those themes according to recorded references. Their disagreement is often informative about scale and scope, rather than evidence that one representation is wrong.
+
+Several limitations bound this interpretation. First, coverage starts in 1997, so the first decade cannot be reconstructed and pre-1997 citations cannot become graph edges. Second, missing abstracts and citation deposits are different mechanisms of missingness. Of 1,143 eligible papers, 1,083 have deposited references and 60 do not; notably, all 30 eligible papers from 2002 and 23 of 30 from 2003 lack deposits. Such papers can still receive incoming links, but their absent outgoing references can distort communities. An isolate has no *observed internal* links, not necessarily no citations or intellectual connections.
+
+Third, the network excludes connections outside the catalogue, including other journals. Unlike the wider bibliometric material discussed by Delahais and Thyrard, these data cannot establish external influence or the field's openness to neighbouring disciplines. Recent papers have had less time to accumulate citations. In-degree is consequently a measure of observed internal reception at this snapshot, not an age-adjusted measure of quality or importance.
+
+Fourth, model choice and interpretation remain consequential. A preference for at least ten topics shapes granularity; single-label assignments suppress overlap; centroid updates preserve consistency but cannot discover new clusters. The low silhouette and resolution sensitivity counsel against interpreting boundaries as natural divisions. Representative-abstract review supports descriptive names without replacing a manually coded validation sample. The provisional citation labels likewise require closer reading before claims about particular debates can be made.
+
+The defensible conclusion is thus specific: within the available catalogue, topic prevalence broadly supports the later retrospectives' emphasis on growth, conflict and terrorism, while citation links distinguish and connect more particular research conversations. A useful next empirical extension would combine fuller early coverage and recovered references with article-level editorial coding and citation-context reading. That would test the present interpretations directly instead of treating agreement between two computational summaries as validation.
+
+# Reproducibility {.unnumbered}
+
+The accompanying Quarto source, BibTeX bibliography, frozen evidence, category crosswalk and Python figure/table generator reproduce this note without retraining or live data retrieval. Source checksums bind the extract to the release and local reference papers; generated statistics retain denominators and period counts. The scripts also check graph degrees, edge uniqueness, topic totals and community composition. Full original papers are not redistributed in the manuscript bundle. Delahais and Thyrard is cited using its 2026 issue year, with its December 2025 online-publication date recorded in the bibliography.
+
+```{=latex}
+\clearpage
+```
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

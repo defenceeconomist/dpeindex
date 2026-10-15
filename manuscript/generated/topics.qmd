@@ -1,0 +1,15 @@
+| Topic | Articles | Share (%) |
+|---|---|---|
+| Conflict, war and peace | 241 | 20.9 |
+| Military spending and economic growth | 218 | 18.9 |
+| Terrorism and counterterrorism | 137 | 11.9 |
+| Defence industries and procurement | 125 | 10.9 |
+| Defence spending and alliances | 117 | 10.2 |
+| Military personnel, recruitment and veterans | 73 | 6.3 |
+| Arms trade and arms races | 57 | 4.9 |
+| Geopolitical risk and financial markets | 41 | 3.6 |
+| Military equipment costs | 36 | 3.1 |
+| Military spending and public debt | 25 | 2.2 |
+| Unassigned | 82 | 7.1 |
+
+: Topic prevalence among 1,152 abstract-bearing records, including unassigned abstracts in the denominator. The 69 records without abstracts are excluded. {#tbl-topics}

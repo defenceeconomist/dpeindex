@@ -12,3 +12,7 @@ playwright-report/
 test-results/
 data/local-artifacts/
 .venv/
+
+# Sphinx documentation environment and generated output
+.venv-docs/
+docs/python/_build/
