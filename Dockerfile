@@ -18,6 +18,7 @@ COPY site ./site
 COPY tests ./tests
 COPY data/defpea.redif ./data/defpea.redif
 COPY data/retrospectives.json ./data/retrospectives.json
+COPY data/topic-labels.json ./data/topic-labels.json
 ENTRYPOINT ["python", "-m", "app.topics"]
 
 FROM base AS citations
@@ -27,6 +28,7 @@ RUN pip install --no-cache-dir -r requirements-citations.txt
 COPY app ./app
 COPY tests ./tests
 COPY data/citation-decisions.json ./data/citation-decisions.json
+COPY data/topic-labels.json ./data/topic-labels.json
 ENTRYPOINT ["python", "-m", "app.citations"]
 
 FROM base AS web
@@ -39,5 +41,6 @@ COPY site ./site
 COPY tests ./tests
 COPY data/defpea.redif ./data/defpea.redif
 COPY data/retrospectives.json ./data/retrospectives.json
+COPY data/topic-labels.json ./data/topic-labels.json
 EXPOSE 8789
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8789"]

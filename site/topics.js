@@ -1,5 +1,4 @@
 import {escapeHtml} from "./article-ui.js";
-import {mountComparison} from "./retrospectives.js";
 import {mountTimeline} from "./topic-timeline.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -11,6 +10,16 @@ const colour = (topic) => topic === -1 ? "#a1a9aa" : palette[state.data.topics.f
 const topicById = (id) => state.data.topics.find((topic) => topic.id === id);
 const isSelected = (topic) => state.selection === null || state.selection.has(topic);
 const short = (text, length) => text.length > length ? text.slice(0, length - 1) + "…" : text;
+
+function mapLabel(label) {
+  const lines = [];
+  let line = "";
+  for (const word of label.replaceAll(" · ", " ").split(/\s+/)) {
+    if (line && `${line} ${word}`.length > 19) { lines.push(line); line = word; }
+    else line = line ? `${line} ${word}` : word;
+  }
+  return [...lines, line].map(escapeHtml).join("<br>");
+}
 
 function renderTopicControls() {
   const button = (id, label, count, color) => `<button type="button" class="topic-button" data-topic="${id}" aria-pressed="false"><span class="topic-swatch" style="background:${color}"></span><span class="topic-label">${escapeHtml(label)}</span><span class="topic-count">${count}</span></button>`;
@@ -113,7 +122,7 @@ async function drawMap() {
     const papers = state.data.documents.filter((paper) => paper.topic === topic.id);
     return {x: papers.reduce((total, paper) => total + paper.x, 0) / papers.length,
       y: papers.reduce((total, paper) => total + paper.y, 0) / papers.length,
-      text: topic.label.split(" · ").slice(0, 2).map((word) => escapeHtml(word)).join("<br>"),
+      text: mapLabel(topic.label),
       showarrow: false, yshift: 18, font: {size: 10, color: "#142f35"}, bgcolor: "rgba(255,255,255,.83)", borderpad: 3};
   });
   await Plotly.react($("#datamap"), mapData(), {margin: {l: 12, r: 12, t: 30, b: 8},
@@ -169,7 +178,7 @@ function renderMethod() {
   const before = report.selected_before_reassignment, after = report.selected_after_reassignment, baseline = report.baseline;
   const metricRows = [["Topics", "topic_count"], ["Unassigned abstracts", "outliers"], ["Coherence (NPMI)", "coherence"], ["Cosine silhouette", "silhouette"], ["Keyword diversity", "diversity"]];
   const display = (value) => Number.isInteger(value) ? value : value.toFixed(3);
-  $("#model-method").innerHTML = `<p>Every non-empty abstract is embedded in full using the local <strong>Qwen3-Embedding-0.6B</strong> sentence transformer. Authors and titles are used for browsing, not for fitting topics. Articles without abstracts are excluded. No GPT or hosted inference API is used.</p><p>Checked ${meta.token_coverage.checked_abstracts.toLocaleString()} abstracts: the longest was ${meta.token_coverage.max_tokens.toLocaleString()} tokens against an effective limit of ${meta.token_coverage.sequence_limit.toLocaleString()}. <strong>Zero abstracts were truncated.</strong> Stopwords are filtered only for topic keywords.</p><p>${report.trials.length ? "The parameter search compared 54 configurations. Three finalists were checked with three random seeds." : "This model was rebuilt using previously selected parameters."} Selection favours 10–20 broad themes, coherence, and separation in the original embedding space. The untuned baseline uses the same embeddings and keyword processing with default clustering parameters. The map uses its own two-dimensional projection and is not used to score clusters.</p><table><caption class="sr-only">Comparison with the untuned BERTopic baseline using the same embeddings</caption><thead><tr><th>Quality check</th><th>Untuned</th><th>Tuned</th><th>After reassignment</th></tr></thead><tbody>${metricRows.map(([name, key]) => `<tr><th>${name}</th><td>${display(baseline[key])}</td><td>${display(before[key])}</td><td>${display(after[key])}</td></tr>`).join("")}</tbody></table><p>Outlier reduction: ${meta.outliers.before} → ${meta.outliers.after}. ${meta.outliers.agreement === null ? "There were too few reliable validation matches for cautious reassignment." : `The similarity threshold achieved ${(meta.outliers.agreement * 100).toFixed(1)}% agreement on ${meta.outliers.accepted_validation} held-out confident members. This measures agreement with the discovered clusters, not independently verified accuracy.`} Ambiguous abstracts remain unassigned.</p><p>UMAP neighbours: ${meta.params.n_neighbors}; clustering dimensions: ${meta.params.n_components}; minimum cluster size: ${meta.params.min_cluster_size}; minimum samples: ${meta.params.min_samples}. Seeds: ${meta.seeds.join(", ")}.</p><p>Topic labels are extracted keywords. The hierarchy describes similarity between those keyword profiles. Topic IDs belong to this model run and may change on rebuild.</p><p>Run: <code>${escapeHtml(meta.run_id)}</code><br>Model revision: <code>${escapeHtml(meta.model_revision)}</code><br>Corpus fingerprint: <code>${escapeHtml(meta.corpus_fingerprint)}</code></p>`;
+  $("#model-method").innerHTML = `<p>Every non-empty abstract is embedded in full using the local <strong>Qwen3-Embedding-0.6B</strong> sentence transformer. Authors and titles are used for browsing, not for fitting topics. Articles without abstracts are excluded. Topic modelling uses no GPT or hosted inference API.</p><p>Checked ${meta.token_coverage.checked_abstracts.toLocaleString()} abstracts: the longest was ${meta.token_coverage.max_tokens.toLocaleString()} tokens against an effective limit of ${meta.token_coverage.sequence_limit.toLocaleString()}. <strong>Zero abstracts were truncated.</strong> Stopwords are filtered only for topic keywords.</p><p>${report.trials.length ? "The parameter search compared 54 configurations. Three finalists were checked with three random seeds." : "This model was rebuilt using previously selected parameters."} Selection favours 10–20 broad themes, coherence, and separation in the original embedding space. The untuned baseline uses the same embeddings and keyword processing with default clustering parameters. The map uses its own two-dimensional projection and is not used to score clusters.</p><table><caption class="sr-only">Comparison with the untuned BERTopic baseline using the same embeddings</caption><thead><tr><th>Quality check</th><th>Untuned</th><th>Tuned</th><th>After reassignment</th></tr></thead><tbody>${metricRows.map(([name, key]) => `<tr><th>${name}</th><td>${display(baseline[key])}</td><td>${display(before[key])}</td><td>${display(after[key])}</td></tr>`).join("")}</tbody></table><p>Outlier reduction: ${meta.outliers.before} → ${meta.outliers.after}. ${meta.outliers.agreement === null ? "There were too few reliable validation matches for cautious reassignment." : `The similarity threshold achieved ${(meta.outliers.agreement * 100).toFixed(1)}% agreement on ${meta.outliers.accepted_validation} held-out confident members. This measures agreement with the discovered clusters, not independently verified accuracy.`} Ambiguous abstracts remain unassigned.</p><p>UMAP neighbours: ${meta.params.n_neighbors}; clustering dimensions: ${meta.params.n_components}; minimum cluster size: ${meta.params.min_cluster_size}; minimum samples: ${meta.params.min_samples}. Seeds: ${meta.seeds.join(", ")}.</p><p>${meta.display_labels ? "Topic names summarise the extracted keywords and representative abstracts; they do not change article assignments." : "Topic labels are extracted keywords."} The hierarchy describes similarity between the extracted keyword profiles. Topic IDs belong to this model run and may change on rebuild.</p><p>Run: <code>${escapeHtml(meta.run_id)}</code><br>Model revision: <code>${escapeHtml(meta.model_revision)}</code><br>Corpus fingerprint: <code>${escapeHtml(meta.corpus_fingerprint)}</code></p>`;
 }
 
 async function init() {
@@ -192,11 +201,6 @@ async function init() {
     $("#explorer").hidden = false;
     renderTopicControls();
     renderMethod();
-    mountComparison($("#retrospectives"), data.comparison, (handle) => {
-      const paper = data.documents.find((item) => item.handle === handle);
-      if (paper) location.assign(articleUrl(paper));
-    });
-    $("#comparison-jump").hidden = $("#retrospectives").hidden;
     $("#reset-selection").addEventListener("click", () => selectTopics(null, null, "All topics"));
     if (!window.Plotly && document.readyState !== "complete") await new Promise((resolve) => window.addEventListener("load", resolve, {once: true}));
     if (!window.Plotly) throw new Error("The charts could not be loaded. Please reload the page.");

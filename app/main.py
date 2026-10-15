@@ -9,7 +9,6 @@ from fastapi.responses import FileResponse, RedirectResponse, Response
 
 from .store import issue_from_catalog, load_article, load_catalog, redis_client, semantic_search
 from .topic_store import load_topics
-from .retrospectives import load_comparison
 from .theme_filter import selection_handles, theme_options
 from .topic_timeline import load_timeline
 from .citation_store import DOWNLOADS, load_citations, load_download
@@ -66,7 +65,6 @@ def topics():
     try:
         data = load_topics()
         if data.get("status") == "ready":
-            data["comparison"] = load_comparison(data)
             data["timeline"] = load_timeline(data)
         return data
     except Exception as error:
@@ -167,11 +165,6 @@ def topic_page_redirect():
 @app.get("/topics.js")
 def topic_javascript():
     return FileResponse(SITE / "topics.js", media_type="text/javascript")
-
-
-@app.get("/retrospectives.js")
-def retrospective_javascript():
-    return FileResponse(SITE / "retrospectives.js", media_type="text/javascript")
 
 
 @app.get("/topic-timeline.js")

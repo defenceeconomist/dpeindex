@@ -6,10 +6,8 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
 from redis.exceptions import ConnectionError as RedisConnectionError
 
-from app.main import app
 from app.retrospectives import (build_comparison, in_period, load_comparison,
                                reference_data, validate_reference)
 
@@ -128,7 +126,7 @@ class ComparisonTests(unittest.TestCase):
                 self.assertTrue(result["links_enabled"])
         self.assertEqual(self.snapshot, before)
 
-    def test_missing_or_invalid_archive_does_not_remove_explorer(self):
+    def test_missing_or_invalid_archive_is_reported(self):
         active = copy.deepcopy(self.snapshot)
         active["metadata"]["run_id"] = "new-model"
         with patch("app.retrospectives.reference_data", return_value=self.reference):
@@ -142,11 +140,6 @@ class ComparisonTests(unittest.TestCase):
             archive = Archive()
             with patch.object(archive, "get", side_effect=RedisConnectionError("archive read failed")), self.assertLogs("app.retrospectives", level="ERROR"):
                 self.assertEqual(load_comparison(active, archive)["status"], "unavailable")
-            with patch("app.main.load_topics", return_value=active), patch("app.main.load_comparison", return_value=missing), patch("app.main.load_timeline", return_value={"status": "not_built"}):
-                response = TestClient(app).get("/api/topics")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json()["status"], "ready")
-            self.assertEqual(response.json()["comparison"]["status"], "unavailable")
         self.assertEqual(load_comparison({"status": "not_built"})["status"], "not_built")
 
 

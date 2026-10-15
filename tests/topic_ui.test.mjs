@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import {createRequire} from "node:module";
 import test from "node:test";
-import {comparisonFixture} from "./retrospectives_fixture.mjs";
 import {fixture} from "./topic_fixture.mjs";
 import {installDomHelpers, settle} from "./dom_helpers.mjs";
 
@@ -35,6 +34,8 @@ test("map and hierarchy link to Articles, with no research reader on Topics", as
   assert.equal(doc.querySelector("#explorer").hidden, false);
   assert.equal(doc.querySelector("#paper-detail"), null);
   assert.equal(doc.querySelector("#paper-list"), null);
+  assert.equal(doc.querySelector("#retrospectives"), null);
+  assert.equal(doc.querySelector("#comparison-jump"), null);
   assert.doesNotMatch(doc.body.textContent, /Read the research/);
   const map = doc.querySelector("#datamap");
   assert.equal(map.plotData.reduce((sum, trace) => sum + trace.x.length, 0), 3);
@@ -85,15 +86,6 @@ test("temporal charts, counts/shares, periods and linked theme highlighting", as
   assert.equal(doc.querySelectorAll("#timeline-words tr").length, 3);
 });
 
-test("comparison example links open the matching article on the main page", async () => {
-  const doc = await mount({...fixture, comparison: comparisonFixture()});
-  doc.querySelector('[data-comparison-handle="paper-b"]').click();
-  const destination = new URL(globalThis.destination, "http://example.test/dpe/topics/");
-  assert.equal(destination.pathname, "/dpe/");
-  assert.equal(destination.searchParams.get("article"), "paper-b");
-  assert.equal(destination.searchParams.get("theme"), "1");
-});
-
 test("not-built, stale, temporal failure, mobile charts and API error states", async () => {
   let doc = await mount({status: "not_built"});
   assert.match(doc.querySelector("#page-status").textContent, /being prepared/);
@@ -115,6 +107,14 @@ test("full published snapshot populates the linked charts", {skip: !process.env.
   assert.equal(traces.reduce((sum, trace) => sum + trace.x.length, 0), data.documents.length);
   assert.equal(new Set(traces.flatMap((trace) => trace.customdata.map((row) => row[0]))).size, data.documents.length);
   assert.equal(doc.querySelector("#hierarchy").plotData[1].customdata.length, data.hierarchy.length);
+  for (const topic of data.topics) {
+    assert.ok(doc.querySelector(`[data-topic="${topic.id}"]`).textContent.includes(topic.label));
+    assert.equal(traces.find((trace) => trace.name === topic.label).customdata[0][3], topic.label);
+  }
+  if (data.metadata.display_labels) {
+    assert.match(doc.querySelector("#model-method").textContent, /Topic names summarise/);
+    assert.deepEqual(doc.querySelector("#datamap").plotLayout.annotations.map((a) => a.text.replaceAll("<br>", " ")), data.topics.map((t) => t.label));
+  }
   if (data.timeline?.status === "ready") {
     assert.equal(doc.querySelector("#theme-trends").plotData.length, data.topics.length + 1);
     assert.equal(doc.querySelectorAll("#timeline-words tr").length, data.topics.length + 1);

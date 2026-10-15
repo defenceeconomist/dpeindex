@@ -185,8 +185,8 @@ class TopicApiTests(unittest.TestCase):
 
     def test_api_states(self):
         for result in ({"status": "not_built"}, {"status": "ready", "stale": False}, {"status": "ready", "stale": True}):
-            expected = {**result, **({"comparison": {"status": "ready"}, "timeline": {"status": "not_built"}} if result["status"] == "ready" else {})}
-            with patch("app.main.load_topics", return_value=copy.deepcopy(result)), patch("app.main.load_comparison", return_value={"status": "ready"}), patch("app.main.load_timeline", return_value={"status": "not_built"}):
+            expected = {**result, **({"timeline": {"status": "not_built"}} if result["status"] == "ready" else {})}
+            with patch("app.main.load_topics", return_value=copy.deepcopy(result)), patch("app.main.load_timeline", return_value={"status": "not_built"}):
                 response = self.client.get("/api/topics")
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json(), expected)
@@ -201,7 +201,12 @@ class TopicApiTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('aria-label="Main navigation"', response.text)
             self.assertIn('aria-current="page"', response.text)
-        for route in ("/topics.js", "/topics.css", "/article-ui.js", "/retrospectives.js", "/topic-timeline.js"):
+        topic_page = self.client.get("/topics/").text
+        self.assertNotIn("retrospectives", topic_page)
+        self.assertNotIn("comparison-jump", topic_page)
+        self.assertIn('id="topic-timeline"', topic_page)
+        self.assertEqual(self.client.get("/retrospectives.js").status_code, 404)
+        for route in ("/topics.js", "/topics.css", "/article-ui.js", "/topic-timeline.js"):
             self.assertEqual(self.client.get(route).status_code, 200)
         redirect = self.client.get("/topics", follow_redirects=False)
         self.assertEqual(redirect.status_code, 308)

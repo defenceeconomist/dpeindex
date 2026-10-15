@@ -100,6 +100,7 @@ def publish_snapshot(snapshot: dict, client=None) -> None:
 
 def load_topics(client=None) -> dict:
     from .store import redis_client
+    from .topic_labels import apply_display_labels
     client = client or redis_client()
     pipe = client.pipeline(transaction=True)
     pipe.get(CURRENT)
@@ -110,4 +111,4 @@ def load_topics(client=None) -> dict:
     snapshot = json.loads(raw)
     if not fingerprint:
         fingerprint = corpus_fingerprint(read_corpus(client))
-    return {**snapshot, "status": "ready", "stale": fingerprint != snapshot["metadata"]["corpus_fingerprint"]}
+    return {**apply_display_labels(snapshot), "status": "ready", "stale": fingerprint != snapshot["metadata"]["corpus_fingerprint"]}
