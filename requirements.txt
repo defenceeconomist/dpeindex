@@ -1,0 +1,4 @@
+fastapi>=0.111,<1
+fastembed>=0.7,<0.8
+redis>=5,<7
+uvicorn>=0.30,<1
