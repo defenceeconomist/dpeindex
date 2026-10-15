@@ -4,13 +4,13 @@ const $ = (selector) => document.querySelector(selector);
 const esc = (value) => escapeHtml(String(value ?? ""));
 const palette = ["#237b7b", "#c66b46", "#758945", "#6d70a3", "#b28530", "#a25778", "#4a8eae", "#9b5f3e", "#4e8c6b", "#b95d56", "#767b39", "#906ca4", "#388f96", "#d18c59", "#6085ad", "#b27996", "#809b72", "#ac944a", "#59757d", "#9b7770"];
 const metrics = {in_degree: "citations in", out_degree: "citations out", degree: "citations in + out"};
-const state = {data: null, community: null, paper: null, ranking: "in_degree", firstYear: 0, lastYear: 0, edgeSets: {}, nodeDisplay: new Map(), maxima: {}};
+const state = {data: null, community: null, paper: null, ranking: "in_degree", page: 1, pageSize: 25, rankedNodes: [], firstYear: 0, lastYear: 0, edgeSets: {}, nodeDisplay: new Map(), maxima: {}};
 const DEFAULT_MIN_CITATIONS = 3;
 const colour = (id) => id === -1 ? "#a1a9aa" : palette[id % palette.length];
 const label = (id) => id === -1 ? "No observed internal links" : state.data.communities.find((c) => c.id === id)?.label || "Unknown community";
 const config = {responsive: true, displaylogo: false, scrollZoom: true, modeBarButtonsToRemove: ["select2d", "lasso2d"]};
 const font = {family: '"DM Sans", sans-serif', color: "#557077", size: 11};
-let pendingView = null, framePending = false, drawing = false, lastViewKey = null, selectionKey = null;
+let pendingView = null, framePending = false, drawing = false, lastViewKey = null, selectionKey = null, rankingKey = null;
 
 function articleUrl(node) {
   return `../?${new URLSearchParams({volume: node.volume, issue: node.issue, article: node.handle})}`;
@@ -65,7 +65,7 @@ function communityButtons() {
 }
 
 function resetFilters({minimum = DEFAULT_MIN_CITATIONS} = {}) {
-  state.community = null; state.paper = null;
+  state.community = null; state.paper = null; state.ranking = "in_degree";
   $("#citation-from").value = String(state.firstYear); $("#citation-to").value = String(state.lastYear);
   $("#citation-count-type").value = "in_degree"; $("#citation-minimum").value = String(minimum);
 }
@@ -75,14 +75,37 @@ function selectPaper(handle) {
   if (!filteredNodes().some((node) => node.handle === handle)) resetFilters({minimum: 0});
   state.paper = handle;
   render();
+  const page = Math.floor(state.rankedNodes.findIndex((node) => node.handle === handle) / state.pageSize) + 1;
+  if (page !== state.page) { state.page = page; renderRankingsPage(); }
 }
 
-function renderRankings() {
+function updateRankings(nodes) {
+  const key = [state.community, citationMetric(), minimumCitations(), $("#citation-from").value, $("#citation-to").value, state.ranking].join("|");
+  if (key === rankingKey) return;
+  rankingKey = key;
   const metric = state.ranking;
-  const papers = [...state.data.nodes].sort((a, b) => b[metric] - a[metric] || b.degree - a.degree || (a.handle < b.handle ? -1 : a.handle > b.handle ? 1 : 0)).slice(0, 20);
-  $("#citation-ranking-caption").textContent = `Top ${papers.length} papers by ${metrics[metric]}`;
+  state.rankedNodes = [...nodes].sort((a, b) => b[metric] - a[metric] || b.degree - a.degree || (a.handle < b.handle ? -1 : a.handle > b.handle ? 1 : 0));
+  state.page = 1;
+  renderRankingsPage();
+}
+
+function renderRankingsPage() {
+  const metric = state.ranking;
+  const total = state.rankedNodes.length, pages = Math.max(1, Math.ceil(total / state.pageSize));
+  state.page = Math.max(1, Math.min(pages, state.page));
+  const offset = (state.page - 1) * state.pageSize, papers = state.rankedNodes.slice(offset, offset + state.pageSize);
+  $("#citation-ranking-caption").textContent = `Papers ranked by ${metrics[metric]} · current filters`;
+  $("#citation-ranking-status").textContent = total ? `Showing ${offset + 1}–${offset + papers.length} of ${total.toLocaleString()} matching papers` : "No papers match the current filters.";
+  $("#citation-page").value = String(state.page);
+  $("#citation-page").max = String(pages);
+  $("#citation-page").disabled = pages === 1;
+  $("#citation-page-total").textContent = `of ${pages}`;
+  $("#citation-page-previous").disabled = state.page === 1;
+  $("#citation-page-next").disabled = state.page === pages;
   document.querySelectorAll("[data-ranking]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.ranking === metric)));
-  $("#citation-ranking-rows").innerHTML = papers.map((node, i) => `<tr data-selected="${node.handle === state.paper}"><td>${i + 1}</td><td><button type="button" aria-pressed="${node.handle === state.paper}" data-paper="${esc(node.handle)}">${esc(node.title)}</button><small>${esc(node.authors.join(", "))} · ${esc(node.year)}</small><a class="citation-reader-link" href="${esc(articleUrl(node))}">Read abstract ↗</a></td>${["in_degree", "out_degree", "degree"].map((count) => `<td${metric === count ? ' class="ranking-active"' : ""}>${node[count]}</td>`).join("")}</tr>`).join("") || '<tr><td colspan="5">No eligible papers in this study.</td></tr>';
+  document.querySelectorAll("[data-ranking-column]").forEach((column) => column.setAttribute("aria-sort", column.dataset.rankingColumn === metric ? "descending" : "none"));
+  $("#citation-ranking-rows").innerHTML = papers.map((node, i) => `<tr data-selected="${node.handle === state.paper}"><td>${offset + i + 1}</td><td><button type="button" aria-pressed="${node.handle === state.paper}" data-paper="${esc(node.handle)}">${esc(node.title)}</button><small>${esc(node.authors.join(", "))} · ${esc(node.year)}</small><a class="citation-reader-link" href="${esc(articleUrl(node))}">Read abstract ↗</a></td>${["in_degree", "out_degree", "degree"].map((count) => `<td${metric === count ? ' class="ranking-active"' : ""}>${node[count]}</td>`).join("")}</tr>`).join("") || '<tr><td colspan="5">No papers match these filters. Choose another community or widen the citation count and year range.</td></tr>';
+  $(".citation-table-scroll").scrollTop = 0;
 }
 
 function renderSelection() {
@@ -90,7 +113,7 @@ function renderSelection() {
   $("#citation-clear-paper").hidden = !node;
   if (!node) {
     const community = state.data.communities.find((c) => c.id === state.community);
-    $("#citation-selection").innerHTML = community ? `<h3>${esc(community.label)}</h3><p>${esc(community.interpretation)}</p><p>${community.count} papers in the whole study${community.provisional ? " · interpretation provisional" : ""}.</p>` : "<p>Select a paper on the map or in the top-20 table to explore its incoming and outgoing citations.</p>";
+    $("#citation-selection").innerHTML = community ? `<h3>${esc(community.label)}</h3><p>${esc(community.interpretation)}</p><p>${community.count} papers in the whole study${community.provisional ? " · interpretation provisional" : ""}.</p>` : "<p>Select a paper on the map or in the ranking table to explore its incoming and outgoing citations.</p>";
     return;
   }
   const edges = selectedEdges(), lookup = new Map(state.data.nodes.map((n) => [n.handle, n]));
@@ -171,7 +194,7 @@ function scheduleNetwork(view) {
       await drawNetwork(latest);
     } catch {
       $("#citation-status").hidden = false;
-      $("#citation-status").textContent = "The map could not be displayed. The top-20 rankings and article links remain available.";
+      $("#citation-status").textContent = "The map could not be displayed. The paper rankings and article links remain available.";
     } finally {
       drawing = false;
       // At most one draw is active and one latest view is pending, even during a long drag.
@@ -183,12 +206,13 @@ function scheduleNetwork(view) {
 
 function render() {
   updateSliders();
+  const nodes = filteredNodes(), handles = new Set(nodes.map((node) => node.handle));
+  if (state.paper && !handles.has(state.paper)) state.paper = null;
+  updateRankings(nodes);
   const key = [state.community, state.paper, citationMetric(), minimumCitations(), $("#citation-from").value, $("#citation-to").value, $("#citation-edges").value].join("|");
   if (key === lastViewKey) return;
-  const nodes = filteredNodes(), handles = new Set(nodes.map((node) => node.handle));
+  lastViewKey = key;
   const edges = selectedEdges().filter((edge) => handles.has(edge.source) && handles.has(edge.target));
-  if (state.paper && !handles.has(state.paper)) state.paper = null;
-  lastViewKey = [state.community, state.paper, citationMetric(), minimumCitations(), $("#citation-from").value, $("#citation-to").value, $("#citation-edges").value].join("|");
   $("#citation-visible").textContent = `${nodes.length.toLocaleString()} visible papers · ${edges.length.toLocaleString()} visible links · ${$("#citation-from").value}–${$("#citation-to").value} · minimum ${minimumCitations()} ${metrics[citationMetric()]} · ${$("#citation-edges").value === "baseline" ? "DOI-only edges; recovered community assignments retained" : "verified recovered network"}. Totals above describe the whole study.`;
   const nextSelection = [state.community, state.paper, $("#citation-edges").value].join("|");
   if (nextSelection !== selectionKey) {
@@ -217,12 +241,13 @@ function renderStudy() {
     slider.min = String(state.firstYear); slider.max = String(state.lastYear);
     slider.value = String(end === "from" ? state.firstYear : state.lastYear);
   }
-  prepareNetwork(); communityButtons(); renderRankings();
+  prepareNetwork(); communityButtons();
 }
 
 function bindControls() {
   for (const event of ["input", "change"]) $("#citation-minimum").addEventListener(event, render);
-  for (const id of ["#citation-count-type", "#citation-edges"]) $(id).addEventListener("change", render);
+  $("#citation-count-type").addEventListener("change", () => { state.ranking = citationMetric(); render(); });
+  $("#citation-edges").addEventListener("change", render);
   for (const end of ["from", "to"]) for (const event of ["input", "change"]) $(`#citation-${end}`).addEventListener(event, () => {
     if (Number($("#citation-from").value) > Number($("#citation-to").value)) {
       $(end === "from" ? "#citation-to" : "#citation-from").value = $(`#citation-${end}`).value;
@@ -233,7 +258,19 @@ function bindControls() {
   $("#citation-clear-paper").addEventListener("click", () => { state.paper = null; render(); });
   $("#citation-ranking-controls").addEventListener("click", (event) => {
     const button = event.target.closest("[data-ranking]");
-    if (button && Object.hasOwn(metrics, button.dataset.ranking)) { state.ranking = button.dataset.ranking; renderRankings(); }
+    if (button && Object.hasOwn(metrics, button.dataset.ranking)) { state.ranking = button.dataset.ranking; updateRankings(filteredNodes()); }
+  });
+  $("#citation-page-previous").addEventListener("click", () => { state.page--; renderRankingsPage(); });
+  $("#citation-page-next").addEventListener("click", () => { state.page++; renderRankingsPage(); });
+  $("#citation-page").addEventListener("change", () => {
+    const value = Number($("#citation-page").value);
+    if (Number.isInteger(value)) state.page = value;
+    renderRankingsPage();
+  });
+  $("#citation-page-size").addEventListener("change", () => {
+    const value = Number($("#citation-page-size").value);
+    if (![25, 50, 100].includes(value)) return;
+    state.pageSize = value; state.page = 1; renderRankingsPage();
   });
   for (const id of ["#citation-ranking-rows", "#citation-selection"]) $(id).addEventListener("click", (event) => { const target = event.target.closest("[data-paper]"); if (target) selectPaper(target.dataset.paper); });
 }

@@ -28,11 +28,19 @@
 .citation-ranking-controls{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 8px}
 .citation-ranking-controls button{background:#fff;color:var(--teal);border:1px solid #b8cbca;border-radius:5px;padding:10px 15px;font:500 12px/1.4 "DM Sans",sans-serif;cursor:pointer}
 .citation-ranking-controls button[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}
-.citation-table-scroll{overflow:auto;width:100%;margin-top:18px}
+.citation-pagination{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin:18px 0;font-size:11px;color:var(--muted)}
+.citation-pagination p{flex:1 1 210px;margin:0;color:var(--teal);font-variant-numeric:tabular-nums}
+.citation-pagination label{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.citation-pagination select,.citation-pagination input{border:1px solid #b8cbca;border-radius:5px;padding:8px;background:#fff;color:var(--ink);font:12px/1.4 "DM Sans",sans-serif}
+.citation-pagination input{width:58px}
+.citation-page-controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.citation-page-controls button{border:1px solid #b8cbca;border-radius:5px;padding:9px 12px;background:#fff;color:var(--teal);font:500 11px/1.4 "DM Sans",sans-serif;cursor:pointer}
+.citation-page-controls button:disabled,.citation-pagination input:disabled{opacity:.45;cursor:default}
+.citation-table-scroll{overflow:auto;width:100%;max-height:720px;margin-top:18px}
 .citation-table{width:100%;min-width:650px;border-collapse:collapse;font:11px/1.6 "DM Sans",sans-serif;text-align:left}
 .citation-table caption{text-align:left;font-weight:600;color:var(--teal);padding:0 0 12px}
 .citation-table th,.citation-table td{border-bottom:1px solid var(--line);padding:13px 13px 13px 8px;vertical-align:top}
-.citation-table thead th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.citation-table thead th{position:sticky;top:0;z-index:1;background:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
 .citation-table td:nth-child(2){width:65%;min-width:290px}
 .citation-table td small{display:block;color:var(--muted);margin:5px 0}
 .citation-table button{border:0;background:none;padding:0;color:var(--ink);font:500 12px/1.6 "DM Sans",sans-serif;text-align:left;cursor:pointer}
@@ -41,7 +49,7 @@
 .citation-table td:not(:nth-child(2)){white-space:nowrap;font-variant-numeric:tabular-nums}
 .citation-table .ranking-active{background:rgba(35,123,123,.07);font-weight:600;color:var(--teal)}
 .citation-reader-link{font-size:10px}
-.citation-chart-actions :focus-visible,.citation-sliders :focus-visible,.citation-table :focus-visible,.citation-table-scroll:focus-visible,.citation-ranking-controls :focus-visible,.citation-relations :focus-visible{outline:3px solid #8dbab4;outline-offset:2px}
+.citation-chart-actions :focus-visible,.citation-sliders :focus-visible,.citation-table :focus-visible,.citation-table-scroll:focus-visible,.citation-ranking-controls :focus-visible,.citation-pagination :focus-visible,.citation-relations :focus-visible{outline:3px solid #8dbab4;outline-offset:2px}
 #citation-explorer[hidden]{display:none}
 @media(max-width:1000px){.citation-workspace{grid-template-columns:185px minmax(0,1fr);gap:18px}.citation-network{height:500px}.citation-relations{grid-template-columns:1fr}}
 @media(max-width:680px){.citation-workspace{display:block}.citation-sidebar{margin-bottom:24px}.citation-sidebar .topic-list{max-height:220px}.citation-network{height:420px}.citation-sliders{padding:15px;gap:18px 16px}.citation-slider-metric,.citation-slider-count{grid-column:1/-1}.citation-chart-actions{gap:14px}.citation-chart-actions label{width:100%}.citation-chart-actions .text-button{margin-left:auto}.citation-scope{font-size:11px}.citation-visible{font-size:10px}.citation-ranking-controls button{padding:10px 12px;font-size:11px}}

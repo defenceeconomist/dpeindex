@@ -18,7 +18,7 @@ async function mount(data = citationFixture(), {fail = false, mapFail = false, p
     if (frames.hold) frames.pending.push(callback);
     else setImmediate(callback);
   };
-  renderer.calls = []; renderer.waiters = []; renderer.active = 0; renderer.maxActive = 0;
+  renderer.calls = []; renderer.waiters = []; renderer.active = 0; renderer.maxActive = 0; renderer.fetches = 0;
   const plotly = {async react(element, traces, layout) {
     if (mapFail) throw new Error("Chart unavailable");
     renderer.calls.push({traces, layout}); renderer.active++;
@@ -29,7 +29,7 @@ async function mount(data = citationFixture(), {fail = false, mapFail = false, p
     renderer.active--;
   }};
   globalThis.Plotly = window.Plotly = plotly;
-  globalThis.fetch = async (url) => { assert.equal(new URL(url, `http://example.test${prefix}citations/`).pathname, `${prefix}api/citations`); return {ok: !fail, json: async () => structuredClone(data)}; };
+  globalThis.fetch = async (url) => { renderer.fetches++; assert.equal(new URL(url, `http://example.test${prefix}citations/`).pathname, `${prefix}api/citations`); return {ok: !fail, json: async () => structuredClone(data)}; };
   await import(new URL(`../site/citations.js?scenario=${++scenario}`, import.meta.url)); await settle(); return window.document;
 }
 const plot = (doc) => doc.querySelector("#citation-network");
@@ -154,34 +154,86 @@ test("year sliders filter inclusively, show live years and keep the year interva
   assert.equal(from.value, "2000"); assert.equal(to.value, "2006");
   await input(doc, "#citation-from", 2001); await input(doc, "#citation-to", 2001);
   assert.match(doc.querySelector("#citation-visible").textContent, /0 visible papers/);
-  assert.equal(doc.querySelectorAll("#citation-ranking-rows [data-paper]").length, 3);
-  doc.querySelector('#citation-ranking-rows [data-paper="RePEc:test:beta"]').click(); await settle();
-  assert.equal(from.value, "2000"); assert.equal(to.value, "2006"); assert.equal(doc.querySelector("#citation-minimum").value, "0");
+  assert.equal(rankedHandles(doc).length, 0);
+  assert.match(doc.querySelector("#citation-ranking-status").textContent, /No papers match/);
+  assert.equal(doc.querySelector("#citation-page-previous").disabled, true);
+  assert.equal(doc.querySelector("#citation-page-next").disabled, true);
+  doc.querySelector("#citation-reset").click(); await settle();
+  assert.equal(from.value, "2000"); assert.equal(to.value, "2006"); assert.equal(doc.querySelector("#citation-minimum").value, "3");
 });
 
-test("three top-20 rankings sort independently and remain whole-study rankings under filters", async () => {
+function rankingFixture() {
   const data = citationFixture(), base = data.nodes[0];
-  data.nodes = Array.from({length: 24}, (_, i) => ({...base, handle: `paper-${String(i).padStart(2, "0")}`, title: `Paper ${i}`, in_degree: i, out_degree: (23 - i) * 2, degree: 46 - i})).reverse();
+  data.nodes = Array.from({length: 67}, (_, i) => ({...base, handle: `paper-${String(i).padStart(2, "0")}`, title: `Paper ${i}`,
+    year: String(2000 + i % 7), community: i % 2, in_degree: i, out_degree: (66 - i) * 2, degree: 132 - i})).reverse();
   data.edges = [];
-  data.nodes[0].in_degree = data.nodes[1].in_degree; // Tie resolved by total degree, then stable handle.
-  const doc = await mount(data);
+  data.nodes[0].in_degree = data.nodes[1].in_degree; // Ties use total degree, then the stable handle.
+  return data;
+}
+const ranked = (nodes, metric) => [...nodes].sort((a, b) => b[metric] - a[metric] || b.degree - a.degree || a.handle.localeCompare(b.handle));
+
+test("rankings paginate all matching papers and render only the requested page", async () => {
+  const data = rankingFixture(), renderer = {}, doc = await mount(data, {renderer});
+  const matching = data.nodes.filter((node) => node.in_degree >= 3);
+  const draws = renderer.calls.length;
   for (const metric of ["in_degree", "out_degree", "degree"]) {
     doc.querySelector(`[data-ranking="${metric}"]`).click(); await settle();
-    const expected = [...data.nodes].sort((a, b) => b[metric] - a[metric] || b.degree - a.degree || a.handle.localeCompare(b.handle)).slice(0, 20);
-    assert.deepEqual(rankedHandles(doc), expected.map((node) => node.handle));
-    assert.equal(doc.querySelectorAll("#citation-ranking-rows tr").length, 20);
-    const cells = doc.querySelector("#citation-ranking-rows tr").children;
-    assert.deepEqual([cells[2].textContent, cells[3].textContent, cells[4].textContent], [expected[0].in_degree, expected[0].out_degree, expected[0].degree].map(String));
-    assert.equal(doc.querySelectorAll("#citation-ranking-controls [aria-pressed=true]").length, 1);
-    const before = rankedHandles(doc);
-    await input(doc, "#citation-minimum", 20);
-    await input(doc, "#citation-edges", "baseline", "change");
-    doc.querySelector('[data-community="1"]').click(); await settle();
-    assert.deepEqual(rankedHandles(doc), before);
-    assert.equal(handles(doc).length, 0);
+    const expected = ranked(matching, metric), seen = [];
+    assert.equal(doc.querySelector("#citation-page").value, "1");
+    assert.equal(doc.querySelector("#citation-page-previous").disabled, true);
+    assert.equal(doc.querySelector(`[data-ranking-column="${metric}"]`).getAttribute("aria-sort"), "descending");
+    for (let page = 1; page <= 3; page++) {
+      const offset = (page - 1) * 25;
+      assert.deepEqual(rankedHandles(doc), expected.slice(offset, offset + 25).map((node) => node.handle));
+      assert.equal(doc.querySelector("#citation-ranking-rows td").textContent, String(offset + 1));
+      assert.ok(doc.querySelectorAll("#citation-ranking-rows tr").length <= 25);
+      seen.push(...rankedHandles(doc));
+      if (page < 3) { doc.querySelector("#citation-page-next").click(); await settle(); }
+    }
+    assert.deepEqual(seen, expected.map((node) => node.handle));
+    assert.equal(doc.querySelector("#citation-page-next").disabled, true);
+    doc.querySelector("#citation-page-previous").click(); await settle();
+    assert.equal(doc.querySelector("#citation-page").value, "2");
+    const first = expected[25], cells = doc.querySelector("#citation-ranking-rows tr").children;
+    assert.deepEqual([cells[2].textContent, cells[3].textContent, cells[4].textContent], [first.in_degree, first.out_degree, first.degree].map(String));
   }
+  assert.equal(renderer.calls.length, draws); // Paging and sorting need no map redraw or additional request.
+  assert.equal(renderer.fetches, 1);
+  await input(doc, "#citation-page", 999, "change"); assert.equal(doc.querySelector("#citation-page").value, "3");
+  await input(doc, "#citation-page", -2, "change"); assert.equal(doc.querySelector("#citation-page").value, "1");
+  await input(doc, "#citation-page", 1.5, "change"); assert.equal(doc.querySelector("#citation-page").value, "1");
+  await input(doc, "#citation-page-size", 50, "change");
+  assert.equal(rankedHandles(doc).length, 50); assert.equal(doc.querySelector("#citation-page").value, "1");
+  await input(doc, "#citation-page-size", 100, "change");
+  assert.equal(rankedHandles(doc).length, matching.length); assert.equal(doc.querySelector("#citation-page-next").disabled, true);
   const reader = new URL(doc.querySelector("#citation-ranking-rows a").getAttribute("href"), "http://example.test/dpe/citations/");
   assert.equal(reader.pathname, "/dpe/"); assert.equal(reader.searchParams.get("article"), rankedHandles(doc)[0]);
+});
+
+test("rankings follow community, count and year filters, reset pages, and sort by the selected measure", async () => {
+  const data = rankingFixture(), doc = await mount(data);
+  doc.querySelector("#citation-page-next").click(); await settle();
+  doc.querySelector('[data-community="1"]').click(); await settle();
+  assert.equal(doc.querySelector("#citation-page").value, "1");
+  await input(doc, "#citation-from", 2002); await input(doc, "#citation-to", 2005);
+  await input(doc, "#citation-minimum", 10);
+  const matching = (metric) => data.nodes.filter((node) => node.community === 1 && Number(node.year) >= 2002 && Number(node.year) <= 2005 && node[metric] >= 10);
+  assert.deepEqual(rankedHandles(doc), ranked(matching("in_degree"), "in_degree").map((node) => node.handle));
+  assert.deepEqual(new Set(rankedHandles(doc)), new Set(handles(doc)));
+  await input(doc, "#citation-count-type", "out_degree", "change");
+  assert.deepEqual(rankedHandles(doc), ranked(matching("out_degree"), "out_degree").map((node) => node.handle));
+  assert.equal(doc.querySelector('[data-ranking="out_degree"]').getAttribute("aria-pressed"), "true");
+  await input(doc, "#citation-count-type", "degree", "change");
+  const expected = ranked(matching("degree"), "degree").map((node) => node.handle);
+  assert.deepEqual(rankedHandles(doc), expected);
+  await input(doc, "#citation-edges", "baseline", "change"); assert.deepEqual(rankedHandles(doc), expected);
+  doc.querySelector("#citation-reset").click(); await settle();
+  assert.equal(doc.querySelector('[data-ranking="in_degree"]').getAttribute("aria-pressed"), "true");
+  assert.deepEqual(rankedHandles(doc), ranked(data.nodes.filter((n) => n.in_degree >= 3), "in_degree").slice(0, 25).map((n) => n.handle));
+  const selected = ranked(data.nodes.filter((n) => n.in_degree >= 3), "in_degree")[40];
+  plot(doc).events.plotly_click({points: [{customdata: [selected.handle]}]}); await settle();
+  assert.equal(doc.querySelector("#citation-page").value, "2");
+  assert.equal(doc.querySelector(`#citation-ranking-rows [data-paper="${selected.handle}"]`).getAttribute("aria-pressed"), "true");
 });
 
 test("baseline and community filters retain coordinates and published community membership", async () => {
@@ -202,7 +254,7 @@ test("not built, service failure, map failure, catalogue change and standalone r
   assert.match(doc.querySelector("#citation-status").textContent, /being prepared/); assert.equal(doc.querySelector("#citation-explorer").hidden, true);
   doc = await mount(citationFixture(), {fail: true}); doc.querySelector("#citation-retry").click(); assert.equal(window.reloaded, true);
   doc = await mount(citationFixture(), {mapFail: true});
-  assert.match(doc.querySelector("#citation-status").textContent, /top-20 rankings/); assert.equal(rankedHandles(doc).length, 3);
+  assert.match(doc.querySelector("#citation-status").textContent, /paper rankings/); assert.equal(rankedHandles(doc).length, 1);
   const data = citationFixture(); data.stale = true; data.topic_changed = true;
   doc = await mount(data, {prefix: "/"});
   assert.equal(doc.querySelector("#citation-stale").hidden, false);
@@ -211,7 +263,7 @@ test("not built, service failure, map failure, catalogue change and standalone r
   assert.equal(link.pathname, "/");
 });
 
-test("published citation snapshot supplies all arrows, year bounds and exact top-20 rankings", {skip: !process.env.DPE_CITATION_SNAPSHOT}, async () => {
+test("published citation snapshot supplies all arrows and every matching paper through lazy pages", {skip: !process.env.DPE_CITATION_SNAPSHOT}, async () => {
   const data = JSON.parse(await readFile(process.env.DPE_CITATION_SNAPSHOT, "utf8"));
   const doc = await mount(data), visible = data.nodes.filter((node) => node.in_degree >= 3), visibleHandles = new Set(visible.map((node) => node.handle));
   assert.equal(handles(doc).length, visible.length);
@@ -220,12 +272,23 @@ test("published citation snapshot supplies all arrows, year bounds and exact top
   assert.equal(doc.querySelector("#citation-from").value, "1997"); assert.equal(doc.querySelector("#citation-to").value, "2026");
   for (const metric of ["in_degree", "out_degree", "degree"]) {
     doc.querySelector(`[data-ranking="${metric}"]`).click(); await settle();
-    assert.deepEqual(rankedHandles(doc), [...data.nodes].sort((a, b) => b[metric] - a[metric] || b.degree - a.degree || a.handle.localeCompare(b.handle)).slice(0, 20).map((node) => node.handle));
+    assert.deepEqual(rankedHandles(doc), ranked(visible, metric).slice(0, 25).map((node) => node.handle));
   }
   await input(doc, "#citation-minimum", 0);
   assert.equal(handles(doc).length, data.nodes.length);
   assert.equal(arrows(doc).length, data.edges.length);
   assert.equal(plot(doc).plotData.length, 5);
+  const expected = ranked(data.nodes, "degree").map((node) => node.handle), seen = [];
+  await input(doc, "#citation-page-size", 100, "change");
+  for (let page = 1; page <= Math.ceil(expected.length / 100); page++) {
+    const offset = (page - 1) * 100;
+    assert.deepEqual(rankedHandles(doc), expected.slice(offset, offset + 100));
+    assert.equal(doc.querySelector("#citation-ranking-rows td").textContent, String(offset + 1));
+    seen.push(...rankedHandles(doc));
+    if (!doc.querySelector("#citation-page-next").disabled) { doc.querySelector("#citation-page-next").click(); await settle(); }
+  }
+  assert.deepEqual(seen, expected);
+  assert.equal(new Set(seen).size, data.nodes.length);
 });
 
 test("rapid slider inputs update labels immediately and coalesce into one latest frame", async () => {
