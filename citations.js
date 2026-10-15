@@ -55,7 +55,7 @@ function filteredNodes() {
 function communityButtons() {
   const entries = [{id: "all", label: "All communities", count: state.data.nodes.length}, ...state.data.communities,
     {id: -1, label: "No observed internal links", count: state.data.metadata.isolated_count}];
-  $("#citation-communities").innerHTML = entries.map((c) => `<button type="button" class="topic-button" data-community="${c.id}" aria-pressed="false"><span class="topic-swatch" style="background:${c.id === "all" ? "#174a4f" : colour(c.id)}"></span><span class="topic-label">${esc(c.label)}${c.provisional ? " · provisional" : ""}</span><span class="topic-count">${c.count}</span></button>`).join("");
+  $("#citation-communities").innerHTML = entries.map((c) => `<button type="button" class="topic-button" data-community="${c.id}" aria-pressed="false"><span class="topic-swatch" style="background:${c.id === "all" ? "#174a4f" : colour(c.id)}"></span><span class="topic-label">${esc(c.label)}</span><span class="topic-count">${c.count}</span></button>`).join("");
   $("#citation-communities").addEventListener("click", (event) => {
     const button = event.target.closest("[data-community]");
     if (!button) return;
@@ -114,7 +114,7 @@ function renderSelection() {
   $("#citation-clear-paper").hidden = !node;
   if (!node) {
     const community = state.data.communities.find((c) => c.id === state.community);
-    $("#citation-selection").innerHTML = community ? `<h3>${esc(community.label)}</h3><p>${esc(community.interpretation)}</p><p>${community.count} papers in the whole study${community.provisional ? " · interpretation provisional" : ""}.</p>` : "<p>Select a paper on the map or in the ranking table to explore its incoming and outgoing citations.</p>";
+    $("#citation-selection").innerHTML = community ? `<h3>${esc(community.label)}</h3><p>${esc(community.interpretation)}</p><p>${community.count} papers in the whole study.</p>` : "<p>Select a paper on the map or in the ranking table to explore its incoming and outgoing citations.</p>";
     return;
   }
   const edges = selectedEdges(), lookup = new Map(state.data.nodes.map((n) => [n.handle, n]));
@@ -233,7 +233,7 @@ function renderStudy() {
   $("#citation-stats").innerHTML = [[m.eligible_count, "eligible papers"], [m.edge_count, "observed citation links"], [data.communities.length, "citation communities"], [m.isolated_count, "with no observed links"]].map(([count, text]) => `<div><strong>${count.toLocaleString()}</strong><span>${text}</span></div>`).join("");
   $("#citation-date").textContent = `${m.year_from}–${m.year_to} catalogue coverage · retrieved ${m.retrieved_to?.slice(0, 10) || "date unavailable"}`;
   $("#citation-stale").hidden = !data.stale;
-  $("#citation-scope").textContent = `${m.article_count.toLocaleString()} catalogue records; ${m.excluded_count} excluded from the study. Pre-1997 articles are outside this catalogue. Reference deposits may be incomplete; a paper with no observed links may still cite, or be cited by, other DPE papers. Community labels are provisional; citation links alone do not establish agreement or debate.`;
+  $("#citation-scope").textContent = `${m.article_count.toLocaleString()} catalogue records; ${m.excluded_count} excluded from the study. Pre-1997 articles are outside this catalogue. Reference deposits may be incomplete; a paper with no observed links may still cite, or be cited by, other DPE papers. Citation links alone do not establish agreement or debate.`;
   const years = data.nodes.map((node) => Number(node.year));
   state.firstYear = years.length ? Math.min(...years) : m.year_from;
   state.lastYear = years.length ? Math.max(...years) : m.year_to;
