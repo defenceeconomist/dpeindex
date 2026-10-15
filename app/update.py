@@ -10,15 +10,14 @@ from pathlib import Path
 import shutil
 import subprocess
 import time
-import urllib.request
 
 from .citation_data import write_json, digest
 from .topic_store import corpus_fingerprint
+from .repec import SOURCE, fetch_redif, source_metadata, validate_redif
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / 'data/local-artifacts'
 REVISION = '97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3'
-SOURCE = 'ftp://ftp.repec.org/opt/ReDIF/RePEc/taf/defpea/defpea.redif'
 
 
 def read(path):
@@ -182,6 +181,9 @@ def run(state):
             print(json.dumps({'status': 'unchanged', 'release': str(release), 'encoded': 0}))
             return
         def topics_stage():
+            if state['device'] == 'auto':
+                import torch
+                state['device'] = 'mps' if torch.backends.mps.is_available() else 'cpu'
             if previous and state['operation'] == 'refresh':
                 prior = read(previous / 'topics.json')
                 prior['_articles'] = old
@@ -203,7 +205,8 @@ def run(state):
             write_json(release / 'topics.json', snapshot)
             write_json(release / 'coverage.json', coverage)
             write_json(release / 'corpus.json', articles)
-            write_json(release / 'source.json', {'url': SOURCE, 'sha256': state['source_sha256'], 'count': len(articles)})
+            write_json(release / 'source.json', {**state.get('source', {'url': SOURCE}),
+                       'sha256': state['source_sha256'], 'count': len(articles)})
         stage(state, 'topics', topics_stage, ['release/model', 'release/topics.json', 'release/coverage.json', 'release/corpus.json', 'release/source.json'])
         topics = read(release / 'topics.json')
         def citations_stage():
@@ -238,7 +241,7 @@ def run(state):
         print(json.dumps({'status': 'ready', 'release': str(release), 'articles': len(articles)}))
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='operation', required=True)
     for name in ('train', 'refresh'):
@@ -260,33 +263,37 @@ def main():
         p.add_argument('--skip-browser-tests', action='store_true')
     for name in ('resume', 'status'):
         p = commands.add_parser(name); p.add_argument('workspace', type=Path)
-    args = parser.parse_args()
-    if args.operation in ('resume', 'status'):
-        state = read(args.workspace / 'state.json')
-        if args.operation == 'status':
-            print(json.dumps(state, indent=2)); return
-        run(state); return
+    return parser
+
+
+def prepare(args, *, provenance=None):
+    """Freeze and validate inputs without running the expensive update stages."""
     if args.labels and args.operation != 'train':
-        parser.error('Use --labels with train; incremental updates inherit frozen labels')
-    if args.device == 'auto':
-        import torch
-        args.device = 'mps' if torch.backends.mps.is_available() else 'cpu'
+        raise ValueError('Use --labels with train; incremental updates inherit frozen labels')
     directory = args.output.resolve()
     if directory.exists():
         raise ValueError('Output already exists; use resume or choose a new workspace')
     previous = args.previous.resolve() if args.previous else None
     if previous: verify_release(previous)
-    raw = urllib.request.urlopen(SOURCE).read() if args.fetch else args.source.read_bytes()
-    from .redif import parse_redif
-    full = parse_redif(raw.decode('utf-8-sig'))
+    if args.fetch:
+        raw, provenance = fetch_redif()
+    else:
+        raw = args.source.read_bytes()
+    full = validate_redif(raw)
+    if provenance and provenance['sha256'] != hashlib.sha256(raw).hexdigest():
+        raise ValueError('Source checksum does not match download provenance')
+    provenance = provenance or source_metadata(raw, full, file=args.source.name)
     articles = select_corpus(full, args.through, args.exclude)
     if not articles: raise ValueError('Empty source selection')
     changes = diff_articles(read(previous / 'corpus.json') if previous else [], articles)
     if changes['removed'] and not args.allow_removals:
         raise ValueError('Source removes articles; use --allow-removals after review')
-    (directory / 'inputs').mkdir(parents=True)
+    # Reserve atomically so two callers cannot initialise the same workspace.
+    directory.mkdir(parents=True, exist_ok=False)
+    (directory / 'inputs').mkdir()
     (directory / 'inputs/source.redif').write_bytes(raw)
     write_json(directory / 'inputs/full-corpus.json', full)
+    write_json(directory / 'inputs/source.json', provenance)
     write_json(directory / 'inputs/corpus.json', articles)
     shutil.copyfile(args.decisions, directory / 'inputs/decisions.json')
     shutil.copyfile(args.decisions, directory / 'inputs/original-decisions.json')
@@ -296,12 +303,23 @@ def main():
         shutil.copyfile(args.labels, directory / 'inputs/labels.json')
     immutable = hashes(directory / 'inputs'); immutable.pop('decisions.json')
     state = {'directory': str(directory), 'operation': args.operation, 'previous': str(previous) if previous else None,
-             'source_sha256': hashlib.sha256(raw).hexdigest(), 'device': args.device,
+             'source_sha256': hashlib.sha256(raw).hexdigest(), 'source': provenance, 'device': args.device,
              'topic_cache': str(args.topic_cache.resolve()), 'citation_cache': str(args.citation_cache.resolve()),
              'search_cache': str(args.search_cache.resolve()), 'citations': not args.without_citations,
              'browser_tests': not args.skip_browser_tests, 'completed': {},
              'inputs': {'inputs/' + k: v for k, v in immutable.items()}}
     write_json(directory / 'state.json', state)
+    return state
+
+
+def main():
+    args = build_parser().parse_args()
+    if args.operation in ('resume', 'status'):
+        state = read(args.workspace / 'state.json')
+        if args.operation == 'status':
+            print(json.dumps(state, indent=2)); return
+    else:
+        state = prepare(args)
     run(state)
 
 if __name__ == '__main__':

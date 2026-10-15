@@ -1,0 +1,2 @@
+# Optional local MCP tools; model updates also need the topic/citation stacks.
+mcp==2.3.0

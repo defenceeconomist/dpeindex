@@ -19,6 +19,58 @@ npx playwright install chromium firefox webkit
 
 Core parsing, file management and export use the Python standard library. Topic packages and citation packages are offline dependencies. `--without-citations` omits citation collection and analysis when that optional stack is not installed; the site then explains that citation analysis was not included.
 
+## MCP tools
+
+The optional local MCP server exposes RePEc fetching and the existing incremental
+update pipeline over stdio. Install it into the same Python environment as the
+topic and citation dependencies, then register its absolute launcher paths:
+
+```sh
+python -m pip install -r requirements-mcp.txt
+codex mcp add dpe -- "$PWD/.venv/bin/python" "$PWD/scripts/run-mcp.py"
+codex mcp get dpe
+```
+
+Use your actual environment's Python path if it differs from `.venv`. The launcher
+works from any directory. Other MCP clients can use the same command and argument;
+no HTTP service or credentials are needed. Set `tool_timeout_sec = 120` in the
+`[mcp_servers.dpe]` entry to allow time for FTP retries. See
+[Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
+
+| Tool | Purpose |
+| --- | --- |
+| `dpe_fetch_redif()` | Fetch the complete DPE catalogue from the fixed anonymous RePEc FTP URL; return a snapshot ID, checksum, retrieval time, counts and changes against the current release. |
+| `dpe_update_model(snapshot_id, through?, device?, without_citations?, allow_removals?)` | Freeze that snapshot and start an incremental update of the current model; return a workspace ID immediately. |
+| `dpe_update_status(workspace_id?)` | Show completed stages, failures, review paths and the finished release. Omit the ID to inspect the current model. |
+| `dpe_resume_update(workspace_id)` | Resume after resolving an error or citation review, verifying completed stages before reuse. |
+
+First call `dpe_fetch_redif`, then pass its `snapshot_id` to `dpe_update_model`,
+and check the returned `workspace_id` with `dpe_update_status`. A trained baseline
+must already exist. Omit `through` to include all issues; use `37:6`, for example,
+to cap the catalogue. Defaults keep citations and full browser verification.
+The model identity, reviewed topic names, hierarchy and historical assignments
+are preserved. This is an incremental refresh; use the training CLI to discover
+new clusters deliberately.
+
+Downloads are stored in `data/local-artifacts/repec/<snapshot_id>/` with raw ReDIF
+and provenance. Fetching rejects empty, oversized, malformed, duplicate and
+wrong-series records, uses network timeouts and retries transport failures.
+Updates verify snapshot checksums and reject missing existing handles unless
+`allow_removals` is explicitly enabled. The CLI's `--fetch` uses the same validation.
+
+Jobs live in `data/local-artifacts/mcp-updates/<workspace_id>/`; detached workers
+survive MCP disconnects and restarts. One MCP update can run at a time. Status
+returns the worker log, review decisions and report paths. For `review_required`,
+inspect `review.json`, correct that workspace's `inputs/decisions.json`, then
+resume. A changed current release or damaged completed artifact requires a fresh
+workspace. Only successful checked releases update `current.json`; publishing
+the website remains a separate explicit command. Retain the returned IDs for
+checking jobs from a later session.
+
+Run MCP and fetch checks with the normal Python test suite after installing
+`requirements-mcp.txt`. Protocol tests exercise real stdio discovery and calls;
+network and failure tests run against isolated fixtures.
+
 ## Train and demonstrate the held-out update
 
 ```sh
@@ -48,7 +100,12 @@ The completed experiment and measured results are documented in [docs/rebuild-ev
 
 ## Manual final-issue update
 
-**Issue 37:6 has not been processed by this experiment.** Once ready, run:
+The original held-out experiment stopped at issue 37:5. The MCP refresh on
+15 October 2026 added issue 37:6 to the current local release: **1,221 articles**,
+seven new topic embeddings and seven new search vectors, with all **1,145**
+earlier abstract assignments and map positions preserved. Model identity and
+hierarchy are unchanged, and all 12 browser checks passed. To reproduce that
+seven-article update from the earlier checkpoint, run:
 
 ```sh
 python -m app.update refresh --source data/defpea.redif --through 37:6 \
