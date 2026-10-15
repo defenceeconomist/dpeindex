@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142f35">
+  <meta name="description" content="Explore research themes in Defence and Peace Economics through a map of complete abstracts and a hierarchy of topics.">
+  <title>Topics · Defence and Peace Economics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../topics.css">
+  <script src="../vendor/plotly.min.js" defer></script>
+  <script src="../topics.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to topic explorer</a>
+  <header class="masthead">
+    <div class="topbar wrap">
+      <a class="wordmark" href="../" aria-label="Defence and Peace Economics index home"><span class="wordmark-icon">D<span>·</span>P<span>·</span>E</span><span class="wordmark-label">ARTICLE INDEX</span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a href="../">Articles</a><a href="./" aria-current="page">Topics</a></nav>
+      <a class="portal-link" href="/">← Mac mini portal</a>
+    </div>
+    <div class="hero topics-hero wrap">
+      <div class="hero-copy"><p class="eyebrow">A different way into the research</p><h1>The shape of<br><em>the conversation.</em></h1><p class="hero-subtitle">Discover the journal’s broad themes, see how they connect, and trace how themes change over time.</p></div>
+      <div class="topic-hero-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+  </header>
+  <main id="content" class="wrap topics-main">
+    <div id="page-status" class="topic-notice" role="status" aria-live="polite">Loading the topic explorer…</div>
+    <div id="stale-notice" class="topic-notice stale-notice" hidden>The article catalog has changed since this model was built. This explorer shows the last completed model.</div>
+    <div id="explorer" hidden>
+      <section class="topic-stats" aria-label="Model coverage">
+        <div><strong id="abstract-count">—</strong><span>complete abstracts</span></div><div><strong id="theme-count">—</strong><span>research themes</span></div><div><strong id="unassigned-count">—</strong><span>unassigned abstracts</span></div><div><strong id="missing-count">—</strong><span>without an abstract</span></div>
+      </section>
+      <div class="model-dateline"><span id="model-date"></span><a href="#topic-timeline">Themes over time ↓</a><a id="comparison-jump" href="#retrospectives" hidden>Compare with the retrospectives ↓</a><span>Locally modelled · BERTopic + Qwen3</span></div>
+      <div class="topic-workspace">
+        <aside class="topic-sidebar" aria-label="Choose a research theme"><p class="eyebrow">Follow a theme</p><h2>Research topics</h2><p class="topic-help">Choose a theme to highlight its papers.</p><div id="topic-list" class="topic-list"></div></aside>
+        <div class="topic-charts">
+          <section class="chart-panel" aria-labelledby="map-title"><div class="chart-heading"><div><p class="eyebrow">The research landscape</p><h2 id="map-title">A map of the abstracts</h2></div><button id="reset-selection" class="text-button" type="button">Show all topics ↗</button></div><p class="chart-description">Each dot is a paper. Nearby dots have similar abstracts. Select a dot for a link to its abstract on the Articles page; drag to pan and scroll or pinch to zoom.</p><div id="datamap" class="datamap" role="img" aria-label="Interactive two-dimensional map of article abstracts"></div><p class="chart-footnote"><span class="unassigned-dot"></span> Grey dots remain unassigned. The map is a two-dimensional approximation of abstract similarity.</p><div class="topic-selection"><p id="selection-summary" aria-live="polite"></p><a id="selected-article-link" hidden></a><div id="selection-links" class="selection-links"></div></div></section>
+          <section class="chart-panel" aria-labelledby="hierarchy-title"><div class="chart-heading"><div><p class="eyebrow">From themes to connections</p><h2 id="hierarchy-title">How topics relate</h2></div></div><p class="chart-description">Select a topic or a branch to explore its papers. Topics that join at a shorter distance have more similar keyword profiles.</p><div id="hierarchy" class="hierarchy-chart" role="img" aria-label="Interactive hierarchy of research topics"></div><details class="accessible-hierarchy"><summary>Explore the hierarchy as a list</summary><div id="hierarchy-list"></div></details></section>
+        </div>
+      </div>
+      <section id="topic-timeline" class="topic-timeline" aria-labelledby="timeline-title"><p class="topic-help">Loading themes over time…</p></section>
+      <section id="retrospectives" class="retrospectives" aria-labelledby="comparison-title" hidden></section>
+      <details class="method-panel"><summary>About this model &amp; its quality checks</summary><div id="model-method"></div></details>
+    </div>
+  </main>
+  <footer class="footer wrap"><span>Defence and Peace Economics · bibliographic index</span><a href="../">Browse articles by issue ↗</a></footer>
+</body>
+</html>

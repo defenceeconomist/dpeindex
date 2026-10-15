@@ -35,3 +35,98 @@ docker compose exec dpe-index python -m app.sync
 ```
 
 Run the parser and grouping checks with `docker compose exec dpe-index python -m unittest discover -s tests`.
+
+## Topic explorer
+
+The **Articles / Topics** navigation opens a linked abstract map, topic hierarchy and dynamic time charts at `http://localhost:8789/topics/` (or `/dpe/topics/` through the portal). Select a topic, hierarchy branch or map point to highlight its papers. Paper links open the complete-abstract reader on **Articles**, which also provides theme and publication-year filters. Papers without abstracts remain available under **All themes**; ambiguous abstracts have an explicit **Unassigned** option and grey map points.
+
+Topic modelling is an explicit offline operation. It uses local `Qwen/Qwen3-Embedding-0.6B` through Sentence Transformers, then BERTopic, UMAP and HDBSCAN. It makes **no GPT or hosted inference API calls**. The initial model download comes from Hugging Face. The web image serves Plotly locally and does not install or load the modelling stack.
+
+Build the optional training image and run the full parameter search:
+
+```sh
+docker compose --profile topics build dpe-topics
+docker compose --profile topics run --rm dpe-topics --tune
+```
+
+This compares 54 configurations, favours 10–20 broad topics, and validates three finalists with seeds 42, 7 and 21. Ranking uses normalised coherence and original-embedding cosine silhouette with weight 2 each, and keyword diversity and coverage with weight 1 each. The baseline uses default clustering settings with the same complete embeddings and keyword processing. Coherence is document-level NPMI of the top ten topic terms. The mean validation score selects the winner; adjusted mutual information breaks ties.
+
+Every abstract is tokenised without truncation, including special tokens, before encoding. Over-limit input fails with the affected article handles. Embeddings are normalised and cached by full abstract text, model name and immutable model revision; a fully cached rebuild does not load the encoder weights. English stopword filtering applies only to keyword extraction. Outlier reassignment requires a calibrated similarity threshold and a margin over the second-best topic. Calibration requires at least 95% agreement on held-out confident cluster members; this is agreement with discovered clusters, not independently verified accuracy.
+
+To refit the last successfully published settings and model revision:
+
+```sh
+docker compose --profile topics run --rm dpe-topics --rebuild
+```
+
+To review before publication:
+
+```sh
+docker compose --profile topics run --rm dpe-topics --tune --no-publish
+docker compose --profile topics run --rm dpe-topics --publish-run RUN_ID
+```
+
+The `dpe-topic-artifacts` volume retains `runs/RUN_ID/report.json`, `trials.json`, per-article `token-coverage.json`, `snapshot.json`, the BERTopic model, cached embeddings and `selected.json`. Reports include representative article titles and full abstracts for review, original and final quality metrics, baseline results, outlier calibration, parameters, seeds and library versions. The separate `dpe-model-cache` volume retains downloaded model files.
+
+Training reads a consistent snapshot of canonical Redis articles. Complete, validated runs publish atomically to `dpe:topics:current` and `dpe:topics:run:RUN_ID` in Redis DB 4. A renewable build lease prevents concurrent publication. Failed or interrupted runs leave the previous result intact. Catalog sync records a corpus fingerprint; `/api/topics` returns `stale: true` when the saved model differs from the current abstracts or displayed metadata. Refreshes stay manual. Topic IDs are scoped to a run.
+
+Docker uses CPU inference. On Apple Silicon, the same command module also supports native GPU inference with Python 3.12, the packages in `requirements-topics.txt`, plus the base FastAPI/Redis dependencies:
+
+```sh
+HF_HOME=/path/to/model-cache TOPIC_ARTIFACTS_DIR=/path/to/artifacts \
+  python -m app.topics --tune --device mps --batch-size 8
+```
+
+The initial GPU run for this catalog used all 1,152 abstracts; the longest was 414 tokens against a 32,768-token limit. The 69 articles with missing abstracts were excluded. Corpus counts will change with future syncs.
+
+Full Python checks, including the final keyword-processing regression, run in the modelling image:
+
+```sh
+docker compose --profile topics run --rm --entrypoint python dpe-topics -m unittest discover -s tests -v
+```
+
+DOM interaction checks exercise topic/branch/map selection, temporal charts, the main-page abstract reader, theme and year filtering, stale results and API failures. They use a temporary dependency outside the project:
+
+```sh
+npm install --prefix /tmp/dpe-ui-tests --no-audit --no-fund linkedom
+node --test tests/*ui.test.mjs
+```
+
+## Themes over time and article filters
+
+The Topics page uses [BERTopic topics over time](https://maartengr.github.io/BERTopic/getting_started/topicsovertime/topicsovertime.html) to show changing prevalence and period-specific keywords while retaining the published topic identities and final assignments. It includes line charts and a heatmap, annual/five-year/decade intervals, count/share measures, linked theme highlighting, an accessible period table and links to matching articles. Calendar bins include all available publication years; they have different boundaries from the retrospective comparison below. Early catalog coverage and partial end periods are identified. Share denominators include unassigned abstracts; missing abstracts are counted separately. Periods without abstracts appear as gaps, rather than zero prevalence.
+
+Temporal analysis is offline. It restores the published assignment-based c-TF-IDF representation from complete canonical abstracts, checks its keyword signature against the published model, then runs `topics_over_time` separately for each interval width. `global_tuning=True` stabilises period keywords against the pooled topic representation; `evolution_tuning=False` keeps periods independent of previous period representations. Smoothed words may therefore originate outside the selected period. Counts and assignments are never smoothed. The operation loads no sentence-transformer weights, fits no clusters and calls no inference API.
+
+Build or refresh the temporal analysis for the current model without replacing it:
+
+```sh
+docker compose --profile topics build dpe-topics
+docker compose --profile topics run --rm dpe-topics --timeline
+```
+
+The command requires a canonical corpus fingerprint matching the published model, writes `runs/RUN_ID/timeline.json` in the artifact volume, and publishes under `dpe:topics:timeline:RUN_ID` only if that model is still active. A failed analysis keeps the existing timeline. New `--tune` and `--rebuild` runs include the timeline in their atomic model snapshot. `/api/topics` returns it as `timeline`; missing or invalid analysis does not remove the existing map or hierarchy. Undated abstracts are reported separately.
+
+`GET /api/themes` supplies current theme labels and compact article assignments for the Articles filters. `/api/issue` and `/api/search` accept `theme`, `run`, `year_from` and `year_to`. A theme requires its model run ID; old-run requests return 409 so topic IDs cannot silently change meaning. Semantic filtering uses Qdrant point-ID conditions before ranking and limiting results, and exact title/author matches use the same filter. Main-page URLs retain filters; `article=HANDLE` plus volume/issue opens that paper’s complete abstract. Old model links reset the theme with an explanation. Theme availability failures leave normal issue browsing and search usable.
+
+## Retrospective comparison
+
+The Topics page also compares the fixed published themes with the three original retrospective papers in `docs/`. The comparison does not train or publish a model. `/api/topics` adds a `comparison` payload with source-table counts, coverage, model counts, separate percentage denominators, category definitions, overlapping crosswalks and period-specific example papers.
+
+`data/retrospectives.json` records the original sources, DOI references, table/page locations and file hashes. It binds the reviewed crosswalk to run `20261015T112751Z-f48f8afb`, its corpus fingerprint and ordered topic keywords. The source PDFs and EPUB are not served by the site. Editorial counts preserve the original tables: 207 papers in Hartley & Sandler (2000), 331 in Arce & Kollias (2010), and 389 in Gaibulloev, Kollias & Solomon (2020). The original first retrospective lists five arms-trade papers; the 2020 historical summary lists six and totals 208. The page reports this discrepancy rather than silently harmonising it. Separately listed book reviews do not enter editorial percentage denominators.
+
+`app/retrospectives.py` calculates model counts from the audited published snapshot, using publication volumes and issues, including combined issue ranges. The first source's cutoff is volume 10, issue 2, so issues 3–4 are excluded. Available first-period records cover only volumes 8–9 and 10(1–2): 45 abstracts, three missing abstracts and seven unassigned. Volumes 11–20 contain 330 abstracts, 31 missing and 26 unassigned; volumes 21–30 contain 381 abstracts, 26 missing and 23 unassigned. Volumes 31 onward are excluded. Frozen missing-abstract identities preserve the audited coverage after catalog changes. Every model share uses all usable abstracts, including unassigned ones. Editorial and model populations differ; matching counts do not measure classification accuracy.
+
+Crosswalk relationships distinguish close, broader, narrower, partial and unresolved matches. Definitions paraphrase the editorial scope; the interpretation notes explain where model clusters combine or split it. Topic counts can recur in multiple editorial rows and are never summed as exclusive matches. Review used the full abstracts of the two nearest confident members to each period-specific topic centroid (one example for the second period's one-paper geopolitical-risk topic). The examples include the Spain and UK country surveys in the industry cluster, conversion in Russian industry, equipment-cost and national-defence cost studies, debt research, alliance burden sharing, civil conflict and terrorism. This checks interpretation of topic scope, not editorial article-level assignments. The first period's broad conflict examples also illustrate the limits of interpreting a pooled cluster from a tiny early sample.
+
+When a different model becomes active, the API reads `dpe:topics:run:20261015T112751Z-f48f8afb` to retain the dated comparison, returns `review_required`, and disables links from the old crosswalk to the new explorer. The new model remains usable. If the archive or evidence fails validation, only the comparison becomes unavailable. Catalog freshness is still reported separately by the existing topic API. A failed rebuild leaves the last successful model and its comparison intact.
+
+After a future rebuild, updating this comparison requires an explicit review: retain the old archive, audit the new snapshot and period coverage, read representative abstracts, revise the crosswalk and narrative as necessary, then update the binding and regression expectations together. Rebuilding a model alone never updates the scholarly interpretation automatically.
+
+The Python suite tests period boundaries, denominators, source transcription, overlapping mappings, model binding and archive failure states. The published-run regression also checks the exact 45/330/381 abstract totals and all topic counts when its snapshot is available. To run that regression from an exported immutable snapshot:
+
+```sh
+DPE_AUDITED_SNAPSHOT=/path/to/snapshot.json python -m unittest discover -s tests -v
+```
+
+DOM checks cover period selection, source citations, complete-abstract links and disabled links after a model change. `DPE_TOPIC_SNAPSHOT=/path/to/api-topics.json node --test tests/*ui.test.mjs` additionally exercises the full published API payload, including its comparison, through the linked explorer. Both standalone and portal routes use relative asset and API URLs.

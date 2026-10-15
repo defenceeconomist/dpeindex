@@ -1,6 +1,8 @@
 services:
   dpe-index:
-    build: .
+    build:
+      context: .
+      target: web
     container_name: dpe-index
     restart: unless-stopped
     environment:
@@ -18,6 +20,21 @@ services:
       timeout: 10s
       retries: 3
 
+  dpe-topics:
+    profiles: [topics]
+    build:
+      context: .
+      target: topics
+    environment:
+      REDIS_URL: redis://redis:6379/4
+      HF_HOME: /app/model-cache/huggingface
+      TOPIC_ARTIFACTS_DIR: /app/topic-artifacts
+    volumes:
+      - dpe-model-cache:/app/model-cache
+      - dpe-topic-artifacts:/app/topic-artifacts
+    networks:
+      - datastores
+
 networks:
   datastores:
     external: true
@@ -25,3 +42,4 @@ networks:
 
 volumes:
   dpe-model-cache:
+  dpe-topic-artifacts:

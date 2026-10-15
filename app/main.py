@@ -5,9 +5,13 @@ import re
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from .store import issue_from_catalog, load_article, load_catalog, redis_client, semantic_search
+from .topic_store import load_topics
+from .retrospectives import load_comparison
+from .theme_filter import selection_handles, theme_options
+from .topic_timeline import load_timeline
 
 SITE = Path(__file__).resolve().parent.parent / "site"
 app = FastAPI(title="Defence and Peace Economics Index", docs_url=None, redoc_url=None)
@@ -31,17 +35,41 @@ def catalog():
 
 @app.get("/api/issue")
 def issue(volume: str = Query(min_length=1, max_length=10),
-          number: str = Query(min_length=1, max_length=10)):
-    articles = issue_from_catalog(load_catalog(), volume, number)
+          number: str = Query(min_length=1, max_length=10),
+          theme: int | None = Query(default=None, ge=-1), run: str | None = Query(default=None, max_length=80),
+          year_from: int | None = Query(default=None, ge=1500, le=2500),
+          year_to: int | None = Query(default=None, ge=1500, le=2500)):
+    catalog = load_catalog()
+    allowed = selection_handles(catalog, theme, run, year_from, year_to)
+    articles = issue_from_catalog(catalog, volume, number)
     if articles is None:
         raise HTTPException(404, "Issue not found")
+    if allowed is not None:
+        articles = [article for article in articles if article["handle"] in allowed]
     return {"volume": volume, "issue": number, "articles": articles}
+
+
+@app.get("/api/themes")
+def themes():
+    return theme_options(load_topics(), load_catalog())
 
 
 @app.get("/api/source")
 def source():
     raw = redis_client().get("dpe:source")
     return json.loads(raw) if raw else {}
+
+
+@app.get("/api/topics")
+def topics():
+    try:
+        data = load_topics()
+        if data.get("status") == "ready":
+            data["comparison"] = load_comparison(data)
+            data["timeline"] = load_timeline(data)
+        return data
+    except Exception as error:
+        raise HTTPException(503, "The topic explorer is temporarily unavailable.") from error
 
 
 @app.get("/api/article")
@@ -53,15 +81,22 @@ def article(handle: str = Query(min_length=10, max_length=200)):
 
 
 @app.get("/api/search")
-def search(q: str = Query(min_length=2, max_length=250)):
+def search(q: str = Query(min_length=2, max_length=250),
+           theme: int | None = Query(default=None, ge=-1), run: str | None = Query(default=None, max_length=80),
+           year_from: int | None = Query(default=None, ge=1500, le=2500),
+           year_to: int | None = Query(default=None, ge=1500, le=2500)):
     query = q.strip()
     if len(query) < 2:
         raise HTTPException(400, "Enter at least two characters")
-    semantic = semantic_search(query, 40)
+    catalog = load_catalog()
+    allowed = selection_handles(catalog, theme, run, year_from, year_to)
+    semantic = semantic_search(query, 40, allowed_handles=allowed)
     by_handle = {item["handle"]: item for item in semantic}
     # Add exact title and author matches, which dense retrieval can miss.
     terms = re.findall(r"[\w’-]+", query.casefold())
-    for summary in load_catalog()["articles"]:
+    for summary in catalog["articles"]:
+        if allowed is not None and summary["handle"] not in allowed:
+            continue
         haystack = (summary["title"] + " " + " ".join(summary["authors"])).casefold()
         if terms and all(term in haystack for term in terms):
             if summary["handle"] not in by_handle:
@@ -92,6 +127,48 @@ def scroll_styles():
 @app.get("/app.js")
 def javascript():
     return FileResponse(SITE / "app.js", media_type="text/javascript")
+
+
+@app.get("/article-ui.js")
+def article_ui():
+    return FileResponse(SITE / "article-ui.js", media_type="text/javascript")
+
+
+@app.get("/topics/")
+def topic_page():
+    return FileResponse(SITE / "topics.html", media_type="text/html")
+
+
+@app.get("/topics")
+def topic_page_redirect():
+    # A relative redirect retains Caddy's /dpe/ prefix as well as standalone URLs.
+    return RedirectResponse("topics/", status_code=308)
+
+
+@app.get("/topics.js")
+def topic_javascript():
+    return FileResponse(SITE / "topics.js", media_type="text/javascript")
+
+
+@app.get("/retrospectives.js")
+def retrospective_javascript():
+    return FileResponse(SITE / "retrospectives.js", media_type="text/javascript")
+
+
+@app.get("/topic-timeline.js")
+def timeline_javascript():
+    return FileResponse(SITE / "topic-timeline.js", media_type="text/javascript")
+
+
+@app.get("/topics.css")
+def topic_styles():
+    return FileResponse(SITE / "topics.css", media_type="text/css")
+
+
+@app.get("/vendor/plotly.min.js")
+def plotly_javascript():
+    return FileResponse(SITE.parent / "vendor" / "plotly.min.js", media_type="text/javascript",
+                        headers={"Cache-Control": "public, max-age=86400"})
 
 
 @app.get("/")

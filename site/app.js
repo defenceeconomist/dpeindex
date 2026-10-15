@@ -1,47 +1,68 @@
+import {articleCard, attachDetails, escapeHtml} from "./article-ui.js";
+
 const state = {
   catalog: null, issues: [], nodes: new Map(), loaded: new Set(), pending: new Map(),
   failed: new Set(), observer: null, mode: "browse", active: null, lastBrowse: null,
-  sequence: 0, scrollScheduled: false,
+  sequence: 0, scrollScheduled: false, allIssues: [], themes: null, theme: "all",
+  yearFrom: "", yearTo: "", searchQuery: "", focusHandle: null, articleHandle: null,
 };
 const $ = (selector) => document.querySelector(selector);
-const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
 const keyFor = (volume, issue) => `${volume}:${issue}`;
 
-function articleCard(article, search = false) {
-  const issueLabel = search ? `<span>Vol. ${escapeHtml(article.volume)} · Issue ${escapeHtml(article.issue)}</span>` : "";
-  return `<details class="article-card" data-handle="${escapeHtml(article.handle)}"><summary><div><div class="article-meta"><span>${escapeHtml(article.year)}</span><span>pp. ${escapeHtml(article.pages)}</span>${issueLabel}</div><span class="article-title">${escapeHtml(article.title)}</span><span class="article-authors">${escapeHtml(article.authors.join(", "))}</span></div><span class="expand-icon" aria-hidden="true">+</span></summary><div class="article-detail"><p>Loading article details…</p></div></details>`;
+function filterParams() {
+  const params = new URLSearchParams();
+  if (state.theme !== "all") { params.set("theme", state.theme); params.set("run", state.themes.run_id); }
+  if (state.yearFrom) params.set("year_from", state.yearFrom);
+  if (state.yearTo) params.set("year_to", state.yearTo);
+  return params;
 }
 
-function renderDetail(article) {
-  const cells = [
-    ["Journal", article.journal], ["Volume / issue", `${article.volume} / ${article.issue}`],
-    ["Year", article.year], ["Pages", article.pages], ["DOI", article.doi],
-    ["Keywords", article.keywords || "Not supplied"],
-  ];
-  const links = [["View at RePEc", article.repec_url], ["Open DOI", article.doi_url], ["Publisher page", article.file_url]]
-    .filter(([, url]) => url && /^https?:\/\//i.test(url))
-    .map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>`).join("");
-  return `<h4>Abstract</h4><p>${escapeHtml(article.abstract || "No abstract was supplied in the RePEc record.")}</p><div class="detail-grid">${cells.map(([key, value]) => `<div><strong>${escapeHtml(key)}</strong>${escapeHtml(value || "—")}</div>`).join("")}</div>${article.file_restriction ? `<p><small>${escapeHtml(article.file_restriction)}</small></p>` : ""}<div class="detail-links">${links}</div>`;
+async function responseError(response, fallback) {
+  try { return (await response.json()).detail || fallback; } catch { return fallback; }
 }
 
-async function expandArticle(event) {
-  const details = event.target;
-  if (!details.open || details.dataset.loaded === "true") return;
-  const target = details.querySelector(".article-detail");
-  try {
-    const response = await fetch(`api/article?handle=${encodeURIComponent(details.dataset.handle)}`);
-    if (!response.ok) throw new Error("Article details could not be loaded.");
-    const article = await response.json();
-    if (!details.isConnected || !details.open) return;
-    target.innerHTML = renderDetail(article);
-    details.dataset.loaded = "true";
-  } catch (error) {
-    if (details.isConnected) target.textContent = error.message;
+function updateLocation(extras = {}) {
+  const params = filterParams();
+  Object.entries(extras).forEach(([key, value]) => { if (value) params.set(key, value); });
+  if (state.articleHandle) params.set("article", state.articleHandle);
+  history.replaceState(null, "", params.size ? `?${params}` : location.pathname);
+}
+
+function selectedArticles() {
+  return state.themes?.articles.filter((article) => (state.theme === "all" || article.topic === Number(state.theme)) &&
+    (!state.yearFrom || /^\d{4}$/.test(article.year) && Number(article.year) >= Number(state.yearFrom)) &&
+    (!state.yearTo || /^\d{4}$/.test(article.year) && Number(article.year) <= Number(state.yearTo)));
+}
+
+function filterDescription() {
+  const label = state.theme === "all" ? "All themes" : state.theme === "-1" ? "Unassigned abstracts" : state.themes.topics.find((topic) => topic.id === Number(state.theme)).label;
+  return `${label}${state.yearFrom || state.yearTo ? ` · ${state.yearFrom || "earliest"}–${state.yearTo || "latest"}` : ""}`;
+}
+
+function applyIssueFilters() {
+  const selected = selectedArticles();
+  if (selected) {
+    const counts = new Map();
+    selected.forEach((article) => { const key = keyFor(article.volume, article.issue); counts.set(key, (counts.get(key) || 0) + 1); });
+    state.issues = state.allIssues.filter((issue) => counts.has(issue.key)).map((issue) => ({...issue, count: counts.get(issue.key)}));
+  } else state.issues = state.allIssues;
+  const volumes = new Set(state.issues.map((issue) => issue.volume));
+  document.querySelectorAll("#volume-list button, #volume-select option").forEach((element) => { element.disabled = !volumes.has(element.dataset.volume || element.value); });
+  $("#reset-filters").hidden = state.theme === "all" && !state.yearFrom && !state.yearTo;
+}
+
+function changeFilters() {
+  state.theme = $("#theme-filter").value;
+  state.yearFrom = $("#year-from").value;
+  state.yearTo = $("#year-to").value;
+  if (state.yearFrom && state.yearTo && Number(state.yearFrom) > Number(state.yearTo)) {
+    state.yearTo = state.yearFrom;
+    $("#year-to").value = state.yearTo;
   }
-}
-
-function attachDetails(root) {
-  root.querySelectorAll(".article-card").forEach((element) => element.addEventListener("toggle", expandArticle));
+  state.focusHandle = state.articleHandle = null;
+  applyIssueFilters();
+  if (state.mode === "search") runSearch(state.searchQuery);
+  else renderBrowse();
 }
 
 function placeholder() {
@@ -76,8 +97,10 @@ async function loadIssue(key) {
   state.pending.set(key, controller);
   shell.querySelector(".issue-body").innerHTML = `<p class="issue-loading">Loading articles…</p>${placeholder()}`;
   try {
-    const response = await fetch(`api/issue?volume=${encodeURIComponent(issue.volume)}&number=${encodeURIComponent(issue.number)}`, {signal: controller.signal});
-    if (!response.ok) throw new Error("Issue could not be loaded.");
+    const params = filterParams();
+    params.set("volume", issue.volume); params.set("number", issue.number);
+    const response = await fetch(`api/issue?${params}`, {signal: controller.signal});
+    if (!response.ok) throw new Error(await responseError(response, "Issue could not be loaded."));
     const data = await response.json();
     if (sequence !== state.sequence || state.mode !== "browse" || !shell.isConnected) return;
     shell.querySelector(".issue-body").innerHTML = data.articles.map((item) => articleCard(item)).join("");
@@ -85,11 +108,20 @@ async function loadIssue(key) {
     shell.style.height = "";
     state.loaded.add(key);
     attachDetails(shell);
+    if (state.focusHandle) {
+      const focused = [...shell.querySelectorAll(".article-card")].find((card) => card.dataset.handle === state.focusHandle);
+      if (focused) {
+        focused.open = true;
+        focused.scrollIntoView?.({block: "start", behavior: "auto"});
+        focused.querySelector("summary").focus();
+        state.focusHandle = null;
+      }
+    }
     scheduleScrollCheck();
   } catch (error) {
     if (error.name === "AbortError" || sequence !== state.sequence || !shell.isConnected) return;
     state.failed.add(key);
-    shell.querySelector(".issue-body").innerHTML = `<div class="issue-error">This issue could not be loaded. <button type="button" data-retry="${escapeHtml(key)}">Retry</button></div>`;
+    shell.querySelector(".issue-body").innerHTML = `<div class="issue-error">${escapeHtml(error.message)} <button type="button" data-retry="${escapeHtml(key)}">Retry</button></div>`;
   } finally {
     if (state.pending.get(key) === controller) state.pending.delete(key);
   }
@@ -131,7 +163,7 @@ function checkViewport() {
       button.classList.toggle("active", selected);
       button.setAttribute("aria-current", selected ? "page" : "false");
     });
-    history.replaceState(null, "", `?volume=${encodeURIComponent(active.volume)}&issue=${encodeURIComponent(active.number)}`);
+    updateLocation({volume: active.volume, issue: active.number});
   }
 }
 
@@ -141,17 +173,24 @@ function scheduleScrollCheck() {
   requestAnimationFrame(() => { state.scrollScheduled = false; checkViewport(); });
 }
 
-function renderBrowse(targetKey = state.lastBrowse || state.issues[0].key) {
+function renderBrowse(targetKey = state.lastBrowse) {
   state.sequence++;
   stopBrowse();
   state.mode = "browse";
   state.active = null;
+  applyIssueFilters();
   $("#view-kicker").textContent = "Browse by issue";
-  $("#view-title").textContent = "All issues";
-  $("#view-description").textContent = `${state.catalog.count.toLocaleString()} articles · newest issues first. Scroll to explore earlier volumes.`;
+  $("#view-title").textContent = state.theme === "all" ? "All issues" : "Articles by theme";
+  const count = state.issues.reduce((sum, issue) => sum + issue.count, 0);
+  $("#view-description").textContent = `${count.toLocaleString()} articles · ${filterDescription()} · newest issues first.`;
   $("#clear-search").hidden = true;
   $("#status").textContent = "";
   $("#results").innerHTML = state.issues.map(issueShell).join("");
+  if (!state.issues.length) {
+    $("#results").innerHTML = '<div class="empty">No articles match these filters. Choose a different theme or publication period.</div>';
+    updateLocation();
+    return;
+  }
   state.issues.forEach((issue) => state.nodes.set(issue.key, document.getElementById(`issue-${issue.volume}-${issue.number}`)));
   if ("IntersectionObserver" in window) {
     state.observer = new IntersectionObserver((entries) => {
@@ -160,6 +199,8 @@ function renderBrowse(targetKey = state.lastBrowse || state.issues[0].key) {
     state.nodes.forEach((node) => state.observer.observe(node));
   }
   const target = state.nodes.get(targetKey) || state.nodes.get(state.issues[0].key);
+  const targetIssue = state.issues.find((issue) => state.nodes.get(issue.key) === target);
+  updateLocation({volume: targetIssue.volume, issue: targetIssue.number});
   if (targetKey !== state.issues[0].key) target.scrollIntoView({block: "start", behavior: "auto"});
   scheduleScrollCheck();
 }
@@ -167,6 +208,7 @@ function renderBrowse(targetKey = state.lastBrowse || state.issues[0].key) {
 function chooseVolume(number) {
   const issue = state.issues.find((item) => item.volume === number);
   if (!issue) return;
+  state.articleHandle = state.focusHandle = null;
   $("#search-input").value = "";
   if (state.mode !== "browse") renderBrowse(issue.key);
   else {
@@ -180,16 +222,18 @@ async function runSearch(query) {
   const sequence = state.sequence;
   stopBrowse();
   state.mode = "search";
+  state.searchQuery = query;
   $("#view-kicker").textContent = "Semantic search";
   $("#view-title").textContent = `Results for “${query}”`;
-  $("#view-description").textContent = "Ranked by relevance across article titles and abstracts.";
+  $("#view-description").textContent = `Ranked by relevance · ${filterDescription()}.`;
   $("#clear-search").hidden = false;
   $("#status").textContent = "Searching the article index…";
   $("#results").innerHTML = "";
-  history.replaceState(null, "", `?q=${encodeURIComponent(query)}`);
+  updateLocation({q: query});
   try {
-    const response = await fetch(`api/search?q=${encodeURIComponent(query)}`);
-    if (!response.ok) throw new Error("Search is unavailable right now.");
+    const params = filterParams(); params.set("q", query);
+    const response = await fetch(`api/search?${params}`);
+    if (!response.ok) throw new Error(await responseError(response, "Search is unavailable right now."));
     const data = await response.json();
     if (sequence !== state.sequence) return;
     $("#status").textContent = "";
@@ -202,13 +246,13 @@ async function runSearch(query) {
 
 async function init() {
   try {
-    const [catalogResponse, sourceResponse] = await Promise.all([fetch("api/catalog"), fetch("api/source")]);
+    const [catalogResponse, sourceResponse, themesResponse] = await Promise.all([fetch("api/catalog"), fetch("api/source"), fetch("api/themes").catch(() => null)]);
     if (!catalogResponse.ok) throw new Error("The catalog could not be loaded.");
     state.catalog = await catalogResponse.json();
     if (!state.catalog.count) throw new Error("The article index is being prepared. Please try again shortly.");
     $("#article-count").textContent = state.catalog.count.toLocaleString();
     $("#volume-count").textContent = state.catalog.volumes.length;
-    state.issues = state.catalog.volumes.flatMap((volume) => [...volume.issues].sort((a, b) => parseInt(b.number, 10) - parseInt(a.number, 10)).map((issue) => ({
+    state.allIssues = state.catalog.volumes.flatMap((volume) => [...volume.issues].sort((a, b) => parseInt(b.number, 10) - parseInt(a.number, 10)).map((issue) => ({
       key: keyFor(volume.number, issue.number), volume: volume.number, number: issue.number,
       year: volume.years.join("–"), count: issue.count,
     })));
@@ -225,8 +269,29 @@ async function init() {
       if (source.synced_at) $("#updated-at").textContent = `Updated ${new Date(source.synced_at).toLocaleDateString(undefined, {year:"numeric",month:"long",day:"numeric"})}.`;
     }
     const params = new URLSearchParams(location.search);
+    let themes;
+    try { themes = themesResponse?.ok ? await themesResponse.json() : null; } catch { themes = null; }
+    if (themes?.status === "ready") {
+      state.themes = themes;
+      $("#theme-filter").innerHTML = '<option value="all">All themes · includes articles without abstracts</option>' + themes.topics.map((topic) => `<option value="${topic.id}">${escapeHtml(topic.label)} (${topic.count})</option>`).join("") + `<option value="-1">Unassigned abstracts (${themes.articles.filter((article) => article.topic === -1).length})</option>`;
+      const observedYears = themes.articles.map((article) => Number(article.year)).filter((year) => Number.isInteger(year) && year >= 1500 && year <= 2500);
+      const linkedYears = [params.get("year_from"), params.get("year_to")].filter((year) => /^\d{4}$/.test(year || "") && Number(year) >= 1500 && Number(year) <= 2500).map(Number);
+      const years = [...new Set([...observedYears, ...linkedYears])].sort((a, b) => a - b).map(String);
+      for (const id of (['#year-from', '#year-to'])) $(id).innerHTML = '<option value="">Any year</option>' + years.map((year) => `<option value="${year}">${year}</option>`).join("");
+      const validTheme = params.get("theme") === "-1" || themes.topics.some((topic) => String(topic.id) === params.get("theme"));
+      const oldRun = params.has("theme") && params.get("run") !== themes.run_id;
+      state.theme = validTheme && !oldRun ? params.get("theme") : "all";
+      state.yearFrom = years.includes(params.get("year_from")) ? params.get("year_from") : "";
+      state.yearTo = years.includes(params.get("year_to")) ? params.get("year_to") : "";
+      if (state.yearFrom && state.yearTo && Number(state.yearFrom) > Number(state.yearTo)) state.yearTo = state.yearFrom;
+      $("#theme-filter").value = state.theme; $("#year-from").value = state.yearFrom; $("#year-to").value = state.yearTo;
+      document.querySelectorAll(".article-filters select").forEach((select) => { select.disabled = false; });
+      $("#theme-note").textContent = oldRun ? "The linked theme belongs to an earlier model. Showing all themes; choose a current theme above." : `${themes.stale ? "The catalog has changed since modelling. " : ""}Themes use the last published model. Articles without a model assignment remain available under All themes.`;
+    } else $("#theme-note").textContent = themes?.status === "not_built" ? "Theme filtering will be available after the first topic model is built." : "Theme filtering is temporarily unavailable. Issue browsing and search remain available.";
+    state.focusHandle = state.articleHandle = params.get("article");
+    applyIssueFilters();
     const deepLink = keyFor(params.get("volume"), params.get("issue"));
-    const target = state.issues.find((item) => item.key === deepLink)?.key || state.issues.find((item) => item.volume === params.get("volume"))?.key || state.issues[0].key;
+    const target = state.issues.find((item) => item.key === deepLink)?.key || state.issues.find((item) => item.volume === params.get("volume"))?.key || state.issues[0]?.key;
     state.lastBrowse = target;
     if (params.get("q")) { $("#search-input").value = params.get("q"); runSearch(params.get("q")); }
     else renderBrowse(target);
@@ -238,6 +303,10 @@ async function init() {
 
 $("#search-form").addEventListener("submit", (event) => { event.preventDefault(); const query = $("#search-input").value.trim(); if (query.length >= 2) runSearch(query); });
 $("#clear-search").addEventListener("click", () => { $("#search-input").value = ""; renderBrowse(); });
+document.querySelectorAll(".article-filters select").forEach((select) => select.addEventListener("change", changeFilters));
+$("#reset-filters").addEventListener("click", () => {
+  $("#theme-filter").value = "all"; $("#year-from").value = $("#year-to").value = ""; changeFilters();
+});
 window.addEventListener("scroll", scheduleScrollCheck, {passive: true});
 window.addEventListener("resize", () => {
   if (state.mode !== "browse") return;

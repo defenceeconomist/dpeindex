@@ -14,6 +14,8 @@ from functools import lru_cache
 
 import redis
 
+from .topic_store import corpus_fingerprint, FINGERPRINT
+
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/4")
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333").rstrip("/")
 COLLECTION = "dpe_articles"
@@ -135,6 +137,7 @@ def sync_articles(articles: list[dict], *, source_url: str) -> dict:
         pipeline.sadd(PREFIX + "ids", *new_ids)
     catalog = catalog_for(articles)
     pipeline.set(PREFIX + "catalog", json.dumps(catalog, ensure_ascii=False))
+    pipeline.set(FINGERPRINT, corpus_fingerprint(articles))
     pipeline.set(PREFIX + "source", json.dumps({
         "url": source_url, "synced_at": datetime.now(timezone.utc).isoformat(),
         "count": len(articles),
@@ -171,12 +174,17 @@ def load_article(handle: str) -> dict | None:
     return json.loads(raw) if raw else None
 
 
-def semantic_search(query: str, limit: int = 30) -> list[dict]:
+def semantic_search(query: str, limit: int = 30, allowed_handles: set[str] | None = None) -> list[dict]:
+    if allowed_handles is not None and not allowed_handles:
+        return []
     model = embedding_model()
     vector = [float(value) for value in next(iter(model.query_embed(query)))]
-    results = qdrant("POST", f"/collections/{COLLECTION}/points/query", {
+    request = {
         "query": vector, "limit": limit, "with_payload": True,
-    })["result"]["points"]
+    }
+    if allowed_handles is not None:
+        request["filter"] = {"must": [{"has_id": [point_id(handle) for handle in sorted(allowed_handles)]}]}
+    results = qdrant("POST", f"/collections/{COLLECTION}/points/query", request)["result"]["points"]
     client = redis_client()
     pipeline = client.pipeline()
     for item in results:
