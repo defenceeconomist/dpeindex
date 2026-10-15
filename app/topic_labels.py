@@ -22,8 +22,8 @@ def label_manifest():
         return None
 
 
-def apply_display_labels(snapshot):
-    manifest = label_manifest()
+def apply_display_labels(snapshot, manifest=None, source=None):
+    manifest = manifest if manifest is not None else label_manifest()
     metadata = snapshot["metadata"]
     if not manifest or any(metadata.get(key) != manifest.get(key) for key in ("run_id", "corpus_fingerprint")):
         return snapshot
@@ -37,7 +37,7 @@ def apply_display_labels(snapshot):
         return snapshot
     fingerprint = hashlib.sha256(json.dumps(manifest, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     return {**snapshot,
-            "metadata": {**metadata, "display_labels": {"source": LABELS.name, "basis": manifest["basis"], "fingerprint": fingerprint}},
+            "metadata": {**metadata, "display_labels": {"source": source or LABELS.name, "basis": manifest["basis"], "fingerprint": fingerprint}},
             "topics": [{**item, "keyword_label": item["label"], "label": topics[item["id"]]["label"]} for item in snapshot["topics"]],
             "hierarchy": [{**node, "keyword_label": node["label"],
                            "label": branches[tuple(sorted(node["topics"]))] if node["children"] else topics[node["topics"][0]]["label"]}

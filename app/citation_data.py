@@ -68,7 +68,7 @@ def cache_path(root, doi):
     return Path(root) / "crossref" / (hashlib.sha256(normalize_doi(doi).encode()).hexdigest() + ".json")
 
 
-def fetch_record(doi, root, *, refresh=False, contact=""):
+def fetch_record(doi, root, *, refresh=False, contact="", stats=None):
     doi = normalize_doi(doi)
     path = cache_path(root, doi)
     if path.exists() and not refresh:
@@ -76,6 +76,8 @@ def fetch_record(doi, root, *, refresh=False, contact=""):
         if cached["status"] in {"ok", "not_found"}:
             if cached.get("sha256") != digest(cached.get("message")):
                 raise ValueError(f"Corrupt Crossref cache for {doi}")
+            if stats is not None:
+                stats["cached"] = 1
             return cached
     url = "https://api.crossref.org/works/" + urllib.parse.quote(doi, safe="/")
     if contact:
@@ -85,6 +87,8 @@ def fetch_record(doi, root, *, refresh=False, contact=""):
     result = {"doi": doi, "url": url, "retrieved_at": now(), "status": "error", "message": None}
     for attempt in range(5):
         try:
+            if stats is not None:
+                stats["external_requests"] = stats.get("external_requests", 0) + 1
             with urllib.request.urlopen(request, timeout=45) as response:
                 result.update(status="ok", http_status=response.status, message=json.load(response)["message"])
             break
@@ -109,8 +113,9 @@ def collect(articles, root, decisions, *, refresh=False, contact="", workers=3):
     dois = sorted({normalize_doi(decisions.get("identities", {}).get(a["handle"], {}).get("doi", a["doi"]))
                    for a in articles} - {""})
     errors = []
+    statistics = {doi: {} for doi in dois}
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {executor.submit(fetch_record, doi, root, refresh=refresh, contact=contact): doi for doi in dois}
+        futures = {executor.submit(fetch_record, doi, root, refresh=refresh, contact=contact, stats=statistics[doi]): doi for doi in dois}
         for index, future in enumerate(as_completed(futures), 1):
             result = future.result()
             if result["status"] == "error":
@@ -119,6 +124,8 @@ def collect(articles, root, decisions, *, refresh=False, contact="", workers=3):
                 print(f"Crossref {index}/{len(dois)}; transient failures: {len(errors)}", flush=True)
     if errors:
         raise RuntimeError(f"{len(errors)} Crossref requests failed; rerun collection to resume.")
+    return {"records": len(dois), "cached": sum(s.get("cached", 0) for s in statistics.values()),
+            "external_requests": sum(s.get("external_requests", 0) for s in statistics.values())}
 
 
 def read_records(articles, root, decisions):
@@ -240,9 +247,13 @@ def build_edges(articles, records, decisions):
                     raise ValueError(f"Reviewed reference changed: {reference_id}")
                 if not override.get("evidence"):
                     raise ValueError(f"Missing reference review evidence: {reference_id}")
-                if override.get("target") is not None and override["target"] not in eligible_handles:
-                    raise ValueError("Reviewed target is not an eligible article")
                 target, method = override.get("target"), "reviewed"
+                if target is not None and target not in eligible_handles:
+                    # A valid review remains evidence when its target is outside
+                    # a deliberately reduced catalogue. It cannot create an edge.
+                    if target not in decisions.get("outside_catalogue_handles", []):
+                        raise ValueError("Reviewed target is not an eligible article")
+                    target, method = None, "reviewed_outside_catalogue"
             evidence = {"reference_id": reference_id, "reference": ref, "method": method,
                         "retrieved_at": record.get("retrieved_at"), "response_sha256": record.get("sha256")}
             if override:

@@ -1,16 +1,26 @@
 import {test, expect} from "@playwright/test";
+import {mkdir} from "node:fs/promises";
+import {join} from "node:path";
+async function screenshot(page, testInfo, name) {
+  if (!process.env.DPE_SCREENSHOT_DIR) return;
+  await mkdir(process.env.DPE_SCREENSHOT_DIR, {recursive: true});
+  await page.screenshot({path: join(process.env.DPE_SCREENSHOT_DIR, `${testInfo.project.name}-${name}.png`)});
+}
 const prefix = "/dpeindex/";
-test("all public views, article details, filters and downloads work on a static server", async ({page, request}) => {
+test("all public views, article details, filters and downloads work on a static server", async ({page, request}, info) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const requests = [];
   page.on("request", (r) => requests.push(r.url()));
   await page.goto(prefix);
-  await expect(page.locator("#article-count")).toHaveText("1,221");
+  const releaseInfo = await (await request.get(prefix + "release.json")).json();
+  const datasetInfo = await (await request.get(prefix + releaseInfo.manifest)).json();
+  await expect(page.locator("#article-count")).toHaveText(datasetInfo.article_count.toLocaleString("en-US"));
   await expect(page.locator(".article-card").first()).toBeVisible();
   await page.locator(".article-card summary").first().click();
   await expect(page.locator(".article-card[open] .detail-grid")).toBeVisible();
   expect(requests.some((r) => r.includes(".onnx"))).toBe(false);
+  await screenshot(page, info, "articles");
   await page.selectOption("#theme-filter", "-1");
   await expect(page.locator("#view-title")).toHaveText("Articles by theme");
   await page.goto(prefix + "?theme=0&run=old-run");
@@ -18,9 +28,11 @@ test("all public views, article details, filters and downloads work on a static 
   await page.goto(prefix + "topics/");
   await expect(page.locator("#datamap .plot-container")).toBeVisible();
   await expect(page.locator("#topic-timeline .plot-container").first()).toBeVisible();
+  await screenshot(page, info, "topics");
   await page.goto(prefix + "citations/");
   await expect(page.locator("#citation-network .plot-container")).toBeVisible();
   await expect(page.locator("#citation-ranking-rows tr")).toHaveCount(25);
+  await screenshot(page, info, "citations");
   await page.selectOption("#citation-page-size", "50");
   await expect(page.locator("#citation-ranking-rows tr")).toHaveCount(50);
   const release = await (await request.get(prefix + "release.json")).json();
@@ -31,7 +43,7 @@ test("all public views, article details, filters and downloads work on a static 
   expect(requests.some((r) => /\/api\/(catalog|article|issue|topics|citations)(?:\?|$)/.test(r))).toBe(false);
   expect(errors).toEqual([]);
   if (!process.env.DPE_PUBLIC_URL) {
-    await page.goto("/"); await expect(page.locator("#article-count")).toHaveText("1,221");
+    await page.goto("/"); await expect(page.locator("#article-count")).toHaveText(datasetInfo.article_count.toLocaleString("en-US"));
   }
 });
 
@@ -92,7 +104,7 @@ test("model failure offers keyword search and successful retry", async ({page}) 
   await expect(page.locator("#view-kicker")).toHaveText("Semantic search");
 });
 
-test("mobile navigation and article filters remain usable", async ({page}) => {
+test("mobile navigation and article filters remain usable", async ({page}, info) => {
   await page.setViewportSize({width: 390, height: 844});
   await page.goto(prefix);
   await expect(page.locator("#volume-select")).toBeVisible();
@@ -103,4 +115,5 @@ test("mobile navigation and article filters remain usable", async ({page}) => {
   await page.getByRole("link", {name: "Topics", exact: true}).click();
   await expect(page.locator("#datamap .plot-container")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await screenshot(page, info, "mobile");
 });

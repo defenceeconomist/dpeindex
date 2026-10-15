@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 data/topic-artifacts/
 data/citation-artifacts/
+data/update-artifacts/
 node_modules/
 dist/
 .static-cache/

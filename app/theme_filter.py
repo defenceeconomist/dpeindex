@@ -14,7 +14,7 @@ def selection_handles(catalog, theme=None, run=None, year_from=None, year_to=Non
         snapshot = snapshot if snapshot is not None else load_topics()
         if snapshot.get("status") != "ready":
             raise HTTPException(409, "Themes are not available until the first topic model is built.")
-        if run != snapshot["metadata"]["run_id"]:
+        if run not in {snapshot["metadata"]["run_id"], snapshot["metadata"].get("model_id", snapshot["metadata"]["run_id"])}:
             raise HTTPException(409, "The topic model has changed. Reload the page to use its current themes.")
         if theme not in {item["id"] for item in snapshot["topics"]} | {-1}:
             raise HTTPException(404, "Theme not found in this model.")
@@ -32,6 +32,7 @@ def theme_options(snapshot, catalog):
     articles = [{**{key: article[key] for key in ("handle", "volume", "issue", "year")},
                  "topic": assignments.get(article["handle"])} for article in catalog["articles"]]
     return {"status": "ready", "run_id": snapshot["metadata"]["run_id"],
+            "model_id": snapshot["metadata"].get("model_id", snapshot["metadata"]["run_id"]),
             "built_at": snapshot["metadata"]["built_at"], "stale": snapshot["stale"],
             "topics": [{"id": item["id"], "label": item["label"],
                         "count": sum(article["topic"] == item["id"] for article in articles)} for item in snapshot["topics"]],

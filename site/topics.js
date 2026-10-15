@@ -80,7 +80,7 @@ function selectNode(id) {
 
 function articleUrl(paper = null, topic = paper?.topic) {
   const params = new URLSearchParams();
-  if (topic !== undefined) { params.set("theme", topic); params.set("run", state.data.metadata.run_id); }
+  if (topic !== undefined) { params.set("theme", topic); params.set("run", state.data.metadata.model_id || state.data.metadata.run_id); }
   if (paper) { params.set("volume", paper.volume); params.set("issue", paper.issue); params.set("article", paper.handle); }
   return `../?${params}`;
 }
@@ -200,6 +200,10 @@ async function init() {
     $("#explorer").hidden = false;
     renderTopicControls();
     renderMethod();
+    if (data.metadata.update_mode === "incremental") {
+      $("#model-date").textContent = `Model trained ${new Date(data.metadata.trained_at).toLocaleDateString()}; assignments updated ${new Date(data.metadata.built_at).toLocaleDateString()}`;
+      $("#model-method").innerHTML = `<p>The themes, hierarchy and original map positions are frozen from ${escapeHtml(data.metadata.model_id)}. New or changed abstracts are embedded in full and classified against frozen topic centroids; uncertain matches remain unassigned. New map points use the saved projection. Topic keywords and the timeline describe the current assignments. The original training corpus contained ${data.metadata.training_abstract_count} abstracts; this snapshot covers ${data.metadata.abstract_count}.</p><p>The calibration measures agreement with baseline clusters, not independently verified accuracy. Model trained ${escapeHtml(data.metadata.trained_at)}; assignments updated ${escapeHtml(data.metadata.built_at)}.</p><p>Similarity threshold: ${data.metadata.classifier.threshold.toFixed(3)}; minimum margin: ${data.metadata.classifier.margin.toFixed(3)}. Model: <code>${escapeHtml(data.metadata.model_id)}</code>; snapshot: <code>${escapeHtml(data.metadata.run_id)}</code>.</p>`;
+    }
     $("#reset-selection").addEventListener("click", () => selectTopics(null, null, "All topics"));
     if (!window.Plotly && document.readyState !== "complete") await new Promise((resolve) => window.addEventListener("load", resolve, {once: true}));
     if (!window.Plotly) throw new Error("The charts could not be loaded. Please reload the page.");

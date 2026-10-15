@@ -108,13 +108,13 @@ def sync_articles(articles: list[dict], *, source_url: str) -> dict:
     if stale:
         qdrant("POST", f"/collections/{COLLECTION}/points/delete?wait=true", {"points": list(stale)})
 
-    model = embedding_model()
     changed = []
     for article in articles:
         digest = hashlib.sha256(embed_text(article).encode()).hexdigest()
         if client.get(PREFIX + "digest:" + point_id(article["handle"])) != digest:
             changed.append((article, digest))
     for offset in range(0, len(changed), 48):
+        model = embedding_model()
         batch = changed[offset:offset + 48]
         vectors = model.passage_embed([embed_text(article) for article, _ in batch])
         points = [{

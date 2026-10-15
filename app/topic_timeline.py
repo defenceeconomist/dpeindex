@@ -42,7 +42,7 @@ def build_timeline(snapshot, articles):
     model.update_topics(docs, vectorizer_model=CountVectorizer(stop_words="english", ngram_range=(1, 2)),
                         ctfidf_model=ClassTfidfTransformer(reduce_frequent_words=True))
     for topic in snapshot["topics"]:
-        if [word for word, _ in model.get_topic(topic["id"])] != [word["term"] for word in topic["keywords"]]:
+        if topic["count"] and [word for word, _ in model.get_topic(topic["id"])] != [word["term"] for word in topic["keywords"]]:
             raise ValueError("Restored keyword representation differs from the published model.")
     dated = [index for index, document in enumerate(documents) if publication_year(document) is not None]
     if not dated:

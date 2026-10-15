@@ -12,7 +12,7 @@ const keyFor = (volume, issue) => `${volume}:${issue}`;
 
 function filterParams() {
   const params = new URLSearchParams();
-  if (state.theme !== "all") { params.set("theme", state.theme); params.set("run", state.themes.run_id); }
+  if (state.theme !== "all") { params.set("theme", state.theme); params.set("run", state.themes.model_id || state.themes.run_id); }
   if (state.yearFrom) params.set("year_from", state.yearFrom);
   if (state.yearTo) params.set("year_to", state.yearTo);
   return params;
@@ -277,7 +277,7 @@ async function init() {
       const years = [...new Set([...observedYears, ...linkedYears])].sort((a, b) => a - b).map(String);
       for (const id of (['#year-from', '#year-to'])) $(id).innerHTML = '<option value="">Any year</option>' + years.map((year) => `<option value="${year}">${year}</option>`).join("");
       const validTheme = params.get("theme") === "-1" || themes.topics.some((topic) => String(topic.id) === params.get("theme"));
-      const oldRun = params.has("theme") && params.get("run") !== themes.run_id;
+      const oldRun = params.has("theme") && ![themes.model_id || themes.run_id, themes.run_id].includes(params.get("run"));
       state.theme = validTheme && !oldRun ? params.get("theme") : "all";
       state.yearFrom = years.includes(params.get("year_from")) ? params.get("year_from") : "";
       state.yearTo = years.includes(params.get("year_to")) ? params.get("year_to") : "";

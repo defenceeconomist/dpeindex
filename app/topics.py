@@ -77,6 +77,7 @@ def encode_abstracts(articles: list[dict], revision: str, artifacts: Path,
             missing.append(i)
     log(f"Token coverage checked: {coverage['max_tokens']} maximum / {limit} limit; "
         f"{len(missing)} embeddings to compute, {len(articles) - len(missing)} cached")
+    coverage.update(encoded_count=len(missing), cache_hits=len(articles) - len(missing))
     if not missing:
         return np.stack(vectors), coverage
     import torch
@@ -325,7 +326,7 @@ def topic_label(words):
 
 
 def make_snapshot(model, articles, all_articles, embeddings, original, final, similarities,
-                  params, token_coverage, revision, run_id, report):
+                  params, token_coverage, revision, run_id, report, map_projection=None):
     import numpy as np
     docs = [a["abstract"] for a in articles]
     model.update_topics(docs, topics=final, vectorizer_model=model.vectorizer_model,
@@ -336,7 +337,8 @@ def make_snapshot(model, articles, all_articles, embeddings, original, final, si
                                         for topic in sorted(set(final))])
     # A distinct two-dimensional fit is only for display, never for clustering/scoring.
     map_params = {"n_neighbors": 20, "n_components": 2}
-    coords = projection(embeddings, map_params, 42, dimensions=2)
+    coords = (map_projection.embedding_ if map_projection is not None else
+              projection(embeddings, map_params, 42, dimensions=2))
     labels = np.asarray(final)
     topics, hierarchy = [], []
     for topic in sorted(set(final) - {-1}):

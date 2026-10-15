@@ -225,3 +225,63 @@ Publishing requires an authenticated Git push to `origin`. The publishing comman
 In the repository's **Settings → Pages**, select **Deploy from a branch**, branch **gh-pages**, folder **/(root)**. The generated `.nojekyll` file makes GitHub's managed Pages workflow publish the prepared files directly. No custom domain or additional paid service is required.
 
 For rollback, check out the desired earlier `gh-pages` commit into a separate temporary worktree and pass its directory to `npm run static:publish -- /path/to/previous-site`. The publisher restores that release as a new commit while retaining newer immutable citation downloads. Do not reset or force-push the publishing branch.
+
+## Complete staged updates and the two-issue experiment
+
+`python -m app.update` prepares a complete release in a private Docker Compose project. It never writes to the live Redis/Qdrant services, edits `data/defpea.redif`, or pushes Pages. It reads the live catalogue, published model settings, citation evidence and search vectors, then keeps frozen inputs, logs, hashes and outputs under the ignored `data/update-artifacts/` directory. Successful preparation stops its private containers and retains their volumes for recovery.
+
+Prerequisites are the running existing `dpe-index` service, the web and citations images built with the normal Compose file, Node dependencies, and a Python environment containing the base and topic requirements. By default the topic interpreter is `data/topic-artifacts/host-venv/bin/python`; override it with `--topic-python` or `DPE_TOPIC_PYTHON`. Model weights and baseline embeddings are copied from the existing caches. Source cache volumes are mounted read-only. Topic and citation workers use separate environments because their pinned NumPy requirements differ. Use `--device mps` for native Apple Silicon inference; CPU is the default.
+
+Bootstrap a persisted model and website, then prepare subsequent complete RePEc snapshots:
+
+```sh
+python3 -m app.update refresh --source data/defpea.redif --mode rebuild \
+  --output data/update-artifacts/initial --device mps
+python3 -m app.update refresh --fetch --previous data/update-artifacts/initial \
+  --output data/update-artifacts/next --device mps
+```
+
+A source must contain the complete catalogue, rather than only the new issue. The updater reports added, changed and removed handles. Removals require `--allow-removals`. Abstract corrections trigger reclassification; other metadata corrections update the displayed records and applicable search vectors. Papers without abstracts remain browsable without an assignment. An unchanged incremental refresh reuses the previous release with zero document encodings. `--mode rebuild` deliberately refits all current abstracts using the saved parameters and encoder revision; it does not run the tuning search.
+
+Incremental updates freeze the model's topic IDs, centroids, labels, hierarchy and original map positions. They encode only uncached abstract texts, classify new or corrected abstracts using calibrated similarity and margin thresholds, and place new points with the saved UMAP projection. Calibration requires the existing 95% held-out cluster-agreement policy; this is not independently measured classification accuracy. Inadequate calibration or ambiguous matches leave papers unassigned. Current keyword descriptions and timeline counts are recalculated from the latest assignments, independently of frozen training evidence.
+
+Every assignment snapshot has a unique `run_id` and a stable `model_id`. Theme links use the model identity, so an incremental release preserves their meaning. Full refits create a different model identity and old links receive the existing reset explanation. Legacy snapshots continue to use their run ID as their model identity. A reviewed label manifest can be supplied with `--labels FILE`; it applies only when the baseline corpus, extracted keywords, representative papers and hierarchy membership match exactly.
+
+References are fetched only when absent from the verified cache. Use `--refresh-references` to deliberately refresh existing deposits; changed evidence may require renewed review. Citation topology is rebuilt against the complete current catalogue. Changed community membership cannot inherit an old interpretation. A reviewed reference pointing outside a deliberately reduced catalogue retains its evidence but supplies no edge. The update command stops at required identity, eligibility, recovered-reference or DOI-audit review gates:
+
+```sh
+python3 -m app.update status data/update-artifacts/next
+# Inspect the reported review.json, edit the workspace's inputs/decisions.json.
+python3 -m app.update resume data/update-artifacts/next
+```
+
+Frozen original decisions are retained separately. Resume verifies completed artifact hashes, reuses completed stages and reruns citation-dependent stages after a review correction. Corrupt completed outputs require a new workspace; corrupt per-document embedding cache entries are recomputed. Concurrent updates cannot share a workspace. Only trusted, verified local model artifacts are loaded.
+
+The static builder caches document vectors independently by full search text and the pinned encoding settings. It reassembles the ordered matrix without re-encoding unchanged papers. Individual checkpoint builds and previews can be selected explicitly:
+
+```sh
+npm run static:build -- --dataset PATH_TO_DATASET --output PATH_TO_SITE --cache PATH_TO_CACHE
+python3 scripts/preview_static.py --directory PATH_TO_SITE --port 8791
+npm run static:validate -- PATH_TO_SITE
+```
+
+Each release is checked in Chromium, Firefox and WebKit, including real semantic inference, filters, links, charts, downloads and mobile layouts. Browser totals come from the dataset manifest. Screenshots and the JSON browser report are saved beside its website.
+
+After inspecting a prepared release, publish that site's directory using the existing explicit publisher:
+
+```sh
+npm run static:publish -- data/update-artifacts/next/release/site
+```
+
+This publishes the prepared static dataset; it does not promote the private experimental datastores into the Mac service. The publisher retains immutable earlier citation downloads and enforces the existing size limits. Reference archives account for substantial release growth; computationally incremental updates do not make those archives smaller.
+
+Run the reproducible two-issue experiment with:
+
+```sh
+python3 -m app.update simulate --issues 37:5 37:6 \
+  --output data/update-artifacts/two-issue --device mps
+```
+
+This withholds fourteen articles, fits the 1,207-article baseline, then restores Issue 5 and Issue 6 to reach 1,214 and 1,221 articles. Each addition produces both an incremental release and an independent full refit. Only baseline vectors seed the caches, so each arrival exercises seven real new-document encodings in catalogue, topic and browser-search indexing. Frozen Crossref records are replayed as articles arrive, avoiding changes in upstream deposits. Graph work is shared between the two model branches at each corpus checkpoint. The original website is retained as a reference when the existing local build matches the captured published model.
+
+The simulation creates five websites, full model/citation evidence, timing and cache measurements, a changes CSV and `report.html`/`report.json`. Topic comparisons use maximum-overlap matching and label-independent agreement; map displacement is also measured after alignment. Complete-abstract qualitative reviews can be recorded as an array of `{ "handle": "...", "review": "..." }` in the workspace's `article-review.json` before report generation. They do not establish gold-standard classification accuracy. The state records before/after live datastore fingerprints and the `gh-pages` reference to demonstrate isolation. Repeating `resume` on an unchanged completed experiment verifies its artifacts and performs no document encoding. Passing a simulation workspace as `--previous` selects its final incremental release; a particular comparison checkpoint can also be named explicitly.

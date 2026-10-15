@@ -156,6 +156,7 @@ def export_dataset(directory, values, archives):
     manifest = {"schema_version": 1, "generated_at": datetime.now(timezone.utc).isoformat(),
                 "corpus_fingerprint": fingerprint, "article_count": len(articles),
                 "topic_run_id": topics["metadata"]["run_id"],
+                "topic_model_id": topics["metadata"].get("model_id", topics["metadata"]["run_id"]),
                 "citation_run_id": citations["metadata"]["run_id"], "issues": issues,
                 "files": file_hashes(directory)}
     manifest["downloads"] = {path: info for path, info in manifest["files"].items() if path.startswith("api/citations/")}

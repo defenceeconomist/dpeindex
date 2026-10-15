@@ -37,6 +37,24 @@ def fixture():
 
 
 class MatchingTests(unittest.TestCase):
+    def test_reviewed_target_withheld_from_catalogue_keeps_evidence_without_an_edge(self):
+        articles, records = fixture()
+        source, target = articles[2], articles[0]
+        ref = {"DOI": target["doi"]}
+        records[source["handle"]] = record(source, [ref])
+        decision = {"references": {source["handle"]+"#0": {"target": target["handle"],
+            "reference_sha256": digest(ref), "evidence": "Verified target DOI"}},
+            "outside_catalogue_handles": [target["handle"]]}
+        subset = articles[1:]
+        _, edges, _, _, unmatched = build_edges(subset, records, decision)
+        self.assertFalse(any(e["source"] == source["handle"] for e in edges))
+        row = next(r for r in unmatched if r["source"] == source["handle"])
+        self.assertEqual(row["status"], "reviewed_outside_catalogue")
+        self.assertEqual(row["review"]["target"], target["handle"])
+        decision["outside_catalogue_handles"] = []
+        with self.assertRaisesRegex(ValueError, "not an eligible"):
+            build_edges(subset, records, decision)
+
     def test_normalization_html_ordinals_and_doi(self):
         self.assertEqual(normalize_doi(" DOI: https://doi.org/10.1234/HELLO "), "10.1234/hello")
         self.assertEqual(normalize_doi("https://dx.doi.org/10.1234/HELLO"), "10.1234/hello")

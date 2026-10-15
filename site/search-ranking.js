@@ -4,7 +4,7 @@ export function matchesFilters(article, params, themes) {
   if (get("year_from") && (!/^\d{4}$/.test(article.year) || Number(article.year) < Number(get("year_from")))) return false;
   if (get("year_to") && (!/^\d{4}$/.test(article.year) || Number(article.year) > Number(get("year_to")))) return false;
   if (get("theme") !== null) {
-    if (themes.status !== "ready" || get("run") !== themes.run_id) throw new Error("The topic model has changed. Reload the page to use its current themes.");
+    if (themes.status !== "ready" || ![themes.model_id || themes.run_id, themes.run_id].includes(get("run"))) throw new Error("The topic model has changed. Reload the page to use its current themes.");
     if (!themes.topics.some((t) => t.id === Number(get("theme"))) && get("theme") !== "-1") throw new Error("Theme not found in this model.");
     return themes.articles.find((a) => a.handle === article.handle)?.topic === Number(get("theme"));
   }

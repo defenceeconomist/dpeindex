@@ -19,6 +19,12 @@ SNAPSHOT = {"status": "ready", "stale": False, "metadata": {"run_id": "run-a", "
 
 
 class ThemeFilterTests(unittest.TestCase):
+    def test_model_id_survives_new_assignment_snapshot(self):
+        snapshot = {**SNAPSHOT, "metadata": {**SNAPSHOT["metadata"], "model_id": "frozen-model"}}
+        self.assertEqual(selection_handles(CATALOG, 0, "frozen-model", snapshot=snapshot), {"article-a"})
+        self.assertEqual(selection_handles(CATALOG, 0, "run-a", snapshot=snapshot), {"article-a"})
+        self.assertEqual(theme_options(snapshot, CATALOG)["model_id"], "frozen-model")
+
     def test_intersect_theme_year_and_current_catalog(self):
         self.assertIsNone(selection_handles(CATALOG))
         self.assertEqual(selection_handles(CATALOG, 0, "run-a", snapshot=SNAPSHOT), {"article-a"})
