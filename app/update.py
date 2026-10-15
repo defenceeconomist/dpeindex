@@ -43,6 +43,16 @@ def verify_release(directory):
     return manifest
 
 
+def citation_decisions_match(previous, decisions):
+    """Only reuse a release when its reviewed citation inputs also match."""
+    manifest = read(previous / 'release-manifest.json')
+    expected = manifest.get('citation_decisions_sha256')
+    if expected is None:
+        legacy = previous.parent / 'inputs/decisions.json'
+        expected = digest(read(legacy)) if legacy.exists() else None
+    return expected is not None and expected == digest(read(decisions))
+
+
 @contextmanager
 def lease(directory):
     directory.mkdir(parents=True, exist_ok=True)
@@ -161,6 +171,7 @@ def run(state):
         # Exact replay uses the verified prior release, with no model or site work.
         if (previous and not any(changes[k] for k in ('added', 'changed', 'removed'))
                 and state['operation'] == 'refresh'
+                and (not state['citations'] or citation_decisions_match(previous, directory / 'inputs/decisions.json'))
                 and state['citations'] == (read(previous / 'citations.json').get('status') == 'ready')
                 and (not state['browser_tests'] or (previous / 'browser-results.json').exists())):
             state.update(finished=True, reused_release=str(previous), encoded_count=0)
@@ -175,13 +186,19 @@ def run(state):
                 prior = read(previous / 'topics.json')
                 prior['_articles'] = old
                 shutil.copytree(previous / 'model', release / 'model', dirs_exist_ok=True)
-                snapshot, coverage = incremental(articles, prior, release / 'model', Path(state['topic_cache']), state['device'])
+                if not any(changes[k] for k in ('added', 'changed', 'removed')):
+                    snapshot = read(previous / 'topics.json')
+                    coverage = read(previous / 'coverage.json')
+                    coverage.update(encoded_count=0, cache_hits=coverage['checked_abstracts'])
+                else:
+                    snapshot, coverage = incremental(articles, prior, release / 'model', Path(state['topic_cache']), state['device'])
             else:
                 settings = {'model_revision': REVISION}
                 labels = read(directory / 'inputs/labels.json') if (directory / 'inputs/labels.json').exists() else None
                 snapshot, coverage = train(articles, settings, release / 'model', Path(state['topic_cache']), state['device'], label_seed=labels)
             snapshot.update(status='ready', stale=False)
-            snapshot['timeline'] = build_timeline(snapshot, articles)
+            if not (previous and state['operation'] == 'refresh' and not any(changes[k] for k in ('added', 'changed', 'removed'))):
+                snapshot['timeline'] = build_timeline(snapshot, articles)
             validate_snapshot(snapshot)
             write_json(release / 'topics.json', snapshot)
             write_json(release / 'coverage.json', coverage)
@@ -214,7 +231,7 @@ def run(state):
                   'new_assignments': [d for d in topics['documents'] if d['handle'] in changes['added']],
                   'stages': {k: v['seconds'] for k, v in state['completed'].items()}}
         write_json(release / 'update-report.json', report)
-        write_json(release / 'release-manifest.json', {'corpus_fingerprint': corpus_fingerprint(articles), 'files': {k: v for k, v in hashes(release).items() if k != 'release-manifest.json'}})
+        write_json(release / 'release-manifest.json', {'corpus_fingerprint': corpus_fingerprint(articles), 'citation_decisions_sha256': digest(read(directory / 'inputs/decisions.json')) if state['citations'] else None, 'files': {k: v for k, v in hashes(release).items() if k != 'release-manifest.json'}})
         state['finished'] = True
         write_json(directory / 'state.json', state)
         write_json(ARTIFACTS / 'current.json', {'release': str(release)})

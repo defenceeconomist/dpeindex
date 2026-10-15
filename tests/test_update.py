@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from app.update import ARTIFACTS, ROOT, diff_articles, hashes, lease, run, stage
+from app.update import citation_decisions_match, ARTIFACTS, ROOT, diff_articles, hashes, lease, run, stage
 from app.update_topics import centroid_classifier, classify, incremental
 
 
@@ -41,6 +41,27 @@ class UpdateTests(unittest.TestCase):
             diff_articles([a], [a, a])
 
 
+
+    def test_changed_citation_labels_invalidate_reuse_without_corpus_changes(self):
+        from app.citation_data import digest
+        previous = self.directory / 'release'
+        previous.mkdir()
+        decisions = self.directory / 'decisions.json'
+        original = {'communities': {'membership': {'label': 'Old label'}}}
+        decisions.write_text(json.dumps(original))
+        manifest = previous / 'release-manifest.json'
+        manifest.write_text(json.dumps({'citation_decisions_sha256': digest(original)}))
+        self.assertTrue(citation_decisions_match(previous, decisions))
+        decisions.write_text(json.dumps({'communities': {'membership': {'label': 'Reviewed label'}}}))
+        self.assertFalse(citation_decisions_match(previous, decisions))
+        manifest.write_text('{}')
+        self.assertFalse(citation_decisions_match(previous, decisions))
+        inputs = self.directory / 'inputs'
+        inputs.mkdir()
+        (inputs / 'decisions.json').write_text(json.dumps(original))
+        self.assertFalse(citation_decisions_match(previous, decisions))
+        decisions.write_text(json.dumps(original))
+        self.assertTrue(citation_decisions_match(previous, decisions))
 
     def test_workspace_lock_prevents_concurrent_updates(self):
         with lease(self.directory), self.assertRaisesRegex(RuntimeError, "Another update"):

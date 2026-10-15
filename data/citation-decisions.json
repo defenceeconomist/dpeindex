@@ -404,10 +404,10 @@
       ]
     },
     "49d47172bffd0fc6db3ee3a2e3e51c188124da80cc6f954118204d807defeca8": {
-      "label": "Conflict exposure and education",
-      "interpretation": "Leading papers estimate effects of armed conflict on schooling, child labour and gender differences in human-capital accumulation.",
+      "label": "Conflict exposure, education and economic growth",
+      "interpretation": "This small group connects schooling, child labour and gender differences in education with a study of violence and economic growth in Colombia.",
       "provisional": true,
-      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "evidence": "Reviewed the complete available abstracts and titles of the first 3 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation. Current member titles reviewed 2026-10-15; scope broadened to include every member.",
       "reviewed_handles": [
         "RePEc:taf:defpea:v:23:y:2012:i:2:p:161-184",
         "RePEc:taf:defpea:v:35:y:2024:i:3:p:320-338",
@@ -457,10 +457,10 @@
       ]
     },
     "f649973cd724306052a21c3a70d2dae4522137d8f2ee47478431343b1faf594f": {
-      "label": "Combat deployment, health and education",
-      "interpretation": "Leading papers study the consequences of deployment and combat exposure for mental health and subsequent education.",
+      "label": "Deployment selection, health and education",
+      "interpretation": "This small group connects selection into deployment with mental health and educational outcomes of deployment and combat.",
       "provisional": true,
-      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation.",
+      "evidence": "Reviewed the complete available abstracts and titles of the first 2 papers ranked by incoming citations, then total degree; 2026-10-15. Scope descriptions remain provisional and are not full-text citation-context validation. Current member titles reviewed 2026-10-15; scope broadened to include every member.",
       "reviewed_handles": [
         "RePEc:taf:defpea:v:29:y:2018:i:1:p:62-77",
         "RePEc:taf:defpea:v:31:y:2020:i:1:p:34-47"
@@ -624,6 +624,127 @@
       "reviewed_handles": [
         "RePEc:taf:defpea:v:35:y:2024:i:5:p:622-637",
         "RePEc:taf:defpea:v:37:y:2026:i:1:p:94-116"
+      ]
+    },
+    "f539614473b3703cb6a4aae5cfb87ccf1decbf57f9e38ccef3a020e32878f78c": {
+      "label": "Military spending and economic growth",
+      "interpretation": "Growth-model specification and heterogeneous economic effects of military expenditure.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:16:y:2005:i:6:p:449-461",
+        "RePEc:taf:defpea:v:16:y:2005:i:4:p:283-295",
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:15-31"
+      ]
+    },
+    "0e224c70f07472d80ee81d9076361198712427f8fd37e04ce5e2f0f59df6499e": {
+      "label": "Terrorism, counterterrorism and economic costs",
+      "interpretation": "Terrorist recruitment, deterrence and political policies, and economic costs of terrorism.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:6:p:401-412",
+        "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
+        "RePEc:taf:defpea:v:30:y:2019:i:5:p:609-631"
+      ]
+    },
+    "07b5043c6dbbb90d8891ac68e0ed8e26477ebc9f74eb29c55a0f00f06e70dd31": {
+      "label": "Defence industries, innovation and European cooperation",
+      "interpretation": "European defence policy, industrial collaboration, contractor performance and defence innovation.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:2:p:107-115",
+        "RePEc:taf:defpea:v:19:y:2008:i:4:p:303-315",
+        "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192"
+      ]
+    },
+    "1a2d92f78a8a6903fef91cc314d22232bdef6fc85e7552683187543cd5a9682b": {
+      "label": "Defence spending, alliances and arms races",
+      "interpretation": "Demand for military expenditure, alliance burden sharing and strategic rivalry, including Greece and Turkey.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:19:y:2008:i:4:p:273-292",
+        "RePEc:taf:defpea:v:14:y:2003:i:6:p:461-474",
+        "RePEc:taf:defpea:v:13:y:2002:i:2:p:85-107"
+      ]
+    },
+    "21805f9f79e7abd1e8eac0dce4f778024f57e035474e0f37361dd2ccd2d89e3d": {
+      "label": "Defence budgets, equipment costs and force planning",
+      "interpretation": "Country surveys and defence budgeting connect to equipment costs, inflation and replacement decisions.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:15:y:2004:i:3:p:259-273",
+        "RePEc:taf:defpea:v:8:y:1997:i:3:p:267-306",
+        "RePEc:taf:defpea:v:14:y:2003:i:1:p:19-36"
+      ]
+    },
+    "dd32dccf07b134031d73de413d440ca9a837d2ba80c1a4ac079680540be89cd7": {
+      "label": "Geopolitical risk, sanctions and financial markets",
+      "interpretation": "This mixed community connects geopolitical risk and market responses with sanctions and political regimes.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:30:y:2019:i:3:p:367-379",
+        "RePEc:taf:defpea:v:30:y:2019:i:3:p:253-268",
+        "RePEc:taf:defpea:v:26:y:2015:i:6:p:634-648"
+      ]
+    },
+    "e7c4b9c7088defbd709010da1e8faa2c441748a5a3ea6e52716acc0aadb329ec": {
+      "label": "Arms trade, military technology and arms races",
+      "interpretation": "Strategic arms trade and procurement, defence R&D and equipment quality, and asymmetric arms races.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:10:y:1999:i:3:p:273-303",
+        "RePEc:taf:defpea:v:17:y:2006:i:2:p:117-139",
+        "RePEc:taf:defpea:v:16:y:2005:i:5:p:331-346"
+      ]
+    },
+    "751846fb0d7fac4f138d28417616a79b98eb16e392de5efdc51df5eb07f8e15d": {
+      "label": "Military spending and public debt",
+      "interpretation": "Military spending and external or government debt, with panel and country studies.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+        "RePEc:taf:defpea:v:17:y:2006:i:1:p:47-57",
+        "RePEc:taf:defpea:v:15:y:2004:i:2:p:173-187"
+      ]
+    },
+    "16832df80d84fdfbb6eee8823589709b76fce602664c6d559b35786d52924b3e": {
+      "label": "Military recruitment, retention and conscription",
+      "interpretation": "Recruitment incentives, retention, deployment and the choice of military service systems.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
+        "RePEc:taf:defpea:v:14:y:2003:i:5:p:343-355",
+        "RePEc:taf:defpea:v:15:y:2004:i:5:p:433-451"
+      ]
+    },
+    "7bf40d9554e10ca09a179f7495b5ebcd8e7b16768302721f27f922d819cba183": {
+      "label": "Civil war and the economic costs of conflict",
+      "interpretation": "Civil-war determinants, economic losses and regional spillovers of armed conflict.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:13:y:2002:i:3:p:215-243",
+        "RePEc:taf:defpea:v:21:y:2010:i:2:p:149-164",
+        "RePEc:taf:defpea:v:24:y:2013:i:6:p:503-519"
+      ]
+    },
+    "8bbe5c8e39067f93e37789d996d46b9d892e382741782805dda56ffd0f5574a3": {
+      "label": "Military spending, welfare and inequality",
+      "interpretation": "Military expenditure, social spending, income inequality and employment.",
+      "provisional": false,
+      "evidence": "Reviewed current membership and leading titles; read the complete available abstracts of the three highest-ranked papers (incoming citations, then degree). 2026-10-15. Labels summarize citation communities, not uniform subject classifications.",
+      "reviewed_handles": [
+        "RePEc:taf:defpea:v:26:y:2015:i:1:p:33-48",
+        "RePEc:taf:defpea:v:23:y:2012:i:6:p:575-589",
+        "RePEc:taf:defpea:v:18:y:2007:i:6:p:519-535"
       ]
     }
   },

@@ -52,7 +52,7 @@ The completed experiment and measured results are documented in [docs/rebuild-ev
 
 ```sh
 python -m app.update refresh --source data/defpea.redif --through 37:6 \
-  --previous data/local-artifacts/issue-5-min10/release \
+  --previous data/local-artifacts/community-labels/release \
   --output data/local-artifacts/issue-6
 python -m app.update status data/local-artifacts/issue-6
 python3 scripts/preview_static.py \
@@ -72,7 +72,7 @@ python -m app.update resume data/local-artifacts/issue-5-min10
 
 Each workspace has a nonblocking local lock. Completed stages have SHA-256 manifests and are verified on resume; damaged completed artifacts require a new workspace. Failed work does not replace the current local release. Review `review.json` when citation publication stops, correct `inputs/decisions.json`, then resume. Decisions remain editable until citation completion; subsequent changes require a fresh workspace. Reference records are frozen in `inputs/records.json` for replay. Existing verified Crossref deposits are cached; missing deposits are collected through the public API. `CROSSREF_MAILTO` optionally supplies contact information.
 
-Citation identity, eligibility, recovered links and DOI samples retain their review gates. Community interpretations are reused only for exactly matching membership. Withheld articles create no graph nodes or edges, even when retained evidence refers to them. Each citation release includes its own immutable downloads and a comparison against its current topic assignments.
+Citation identity, eligibility, recovered links and DOI samples retain their review gates. Community interpretations are reused only for exactly matching membership. These are summaries of citation-linked groups, distinct from BERTopic labels; mixed groups can span several subjects. Before publishing a new corpus, inspect the community leading papers in `release/citations/review.json` and review any generic `Community N` labels. Store names, interpretations and reviewed handles in `data/citation-decisions.json`, keyed by `membership_sha256`, never by the numeric community ID. Run another refresh into a fresh workspace with the same corpus and corrected decisions to publish the labels. A decisions-only refresh rebuilds citation outputs while preserving the topic snapshot and performing zero document encodings. Withheld articles create no graph nodes or edges, even when retained evidence refers to them. Each citation release includes its own immutable downloads and a comparison against its current topic assignments.
 
 `data/local-artifacts/current.json` points to the last complete release. Releases contain corpus, source provenance, model files, topic snapshots, citation artifacts, dataset, static site, browser evidence, and an integrity manifest. Model files are trusted local artifacts: do not load untrusted serialized projections. Keep older release directories for rollback. To preview or publish an earlier release, pass its explicit site path; no model retraining or source changes are required.
 
