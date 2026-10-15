@@ -6,6 +6,7 @@ export function installDomHelpers(window) {
     set(value) { this.querySelectorAll("option").forEach((option) => option.toggleAttribute("selected", option.value === String(value))); },
   });
   window.HTMLElement.prototype.scrollIntoView = function () { window.lastScrolled = this; };
+  window.scrollTo = () => {};
   window.HTMLElement.prototype.getBoundingClientRect = () => ({top: 100, bottom: 300, height: 200});
   window.matchMedia = () => ({matches: false});
   window.innerHeight = 800;

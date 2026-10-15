@@ -7,6 +7,20 @@ async function screenshot(page, testInfo, name) {
   await page.screenshot({path: join(process.env.DPE_SCREENSHOT_DIR, `${testInfo.project.name}-${name}.png`)});
 }
 const prefix = "/dpeindex/";
+test("bare URL resets an older issue's scroll position and explicit issue links still work", async ({page}) => {
+  await page.goto(prefix + "?volume=37&issue=5");
+  await expect(page.locator("#issue-37-5 .article-card").first()).toBeVisible();
+  await expect(page).toHaveURL(/issue=5/);
+  await page.evaluate(() => history.replaceState(null, "", location.pathname));
+  await page.reload();
+  await expect(page.locator("#issue-37-6 .article-card")).toHaveCount(7);
+  await expect(page).toHaveURL(/volume=37&issue=6/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await page.goto(prefix + "?volume=37&issue=5");
+  await expect(page.locator("#issue-37-5 .article-card").first()).toBeVisible();
+  await expect(page).toHaveURL(/issue=5/);
+});
+
 test("all public views, article details, filters and downloads work on a static server", async ({page, request}, info) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));

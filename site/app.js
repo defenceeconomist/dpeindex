@@ -196,7 +196,10 @@ function renderBrowse(targetKey = state.lastBrowse) {
   const target = state.nodes.get(targetKey) || state.nodes.get(state.issues[0].key);
   const targetIssue = state.issues.find((issue) => state.nodes.get(issue.key) === target);
   updateLocation({volume: targetIssue.volume, issue: targetIssue.number});
-  if (targetKey !== state.issues[0].key) target.scrollIntoView({block: "start", behavior: "auto"});
+  // Position before viewport tracking can replace the requested issue in the URL.
+  // Instant scrolling also overrides the page's CSS smooth-scroll behaviour.
+  if (targetIssue.key === state.issues[0].key) window.scrollTo({top: 0, behavior: "instant"});
+  else target.scrollIntoView({block: "start", behavior: "instant"});
   scheduleScrollCheck();
 }
 
