@@ -1,0 +1,468 @@
+{
+  "schema_version": 1,
+  "topics": [
+    {
+      "id": "expenditure-demand",
+      "name": "Models and demand for defence expenditure",
+      "terms": [
+        "military expenditure",
+        "defence expenditure",
+        "demand",
+        "spending determination",
+        "expenditure patterns"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Defence expenditure studies"
+        },
+        {
+          "period": "second",
+          "category": "Models of defence expenditures"
+        },
+        {
+          "period": "third",
+          "category": "Models of defence expenditures"
+        }
+      ]
+    },
+    {
+      "id": "economy-growth",
+      "name": "Economic effects and growth",
+      "terms": [
+        "defence and economy",
+        "economic growth",
+        "military spending",
+        "macroeconomic effects",
+        "economic consequences"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Defence expenditure studies"
+        },
+        {
+          "period": "first",
+          "category": "Defence and growth"
+        },
+        {
+          "period": "second",
+          "category": "Defence and the economy"
+        },
+        {
+          "period": "third",
+          "category": "Defence and the economy"
+        }
+      ]
+    },
+    {
+      "id": "procurement-policy",
+      "name": "Procurement and defence policy",
+      "terms": [
+        "defence procurement",
+        "procurement incentives",
+        "defence planning",
+        "defence policy",
+        "defence budgets",
+        "military posture",
+        "resource allocation"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Procurement processes and policies"
+        },
+        {
+          "period": "first",
+          "category": "Military posture and strategic policy"
+        },
+        {
+          "period": "first",
+          "category": "Defence budgets"
+        },
+        {
+          "period": "second",
+          "category": "Defence policies, planning and management"
+        },
+        {
+          "period": "third",
+          "category": "Defence policies, planning and management"
+        }
+      ]
+    },
+    {
+      "id": "alliances",
+      "name": "Economics of alliances",
+      "terms": [
+        "military alliances",
+        "burden sharing",
+        "public goods",
+        "alliance contributions",
+        "european defence cooperation"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Economics of alliances"
+        },
+        {
+          "period": "second",
+          "category": "Economics of alliances"
+        },
+        {
+          "period": "third",
+          "category": "Economics of alliances"
+        }
+      ]
+    },
+    {
+      "id": "conversion",
+      "name": "Conversion to civilian uses",
+      "terms": [
+        "defence conversion",
+        "civilian uses",
+        "military resources",
+        "industrial adjustment",
+        "civilian industries"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Conversion"
+        }
+      ]
+    },
+    {
+      "id": "defence-industries",
+      "name": "Defence industries and industrial base",
+      "terms": [
+        "defence industries",
+        "industrial base",
+        "defence producers",
+        "industrial organisation",
+        "industry performance"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Defence industries and industrial base"
+        },
+        {
+          "period": "second",
+          "category": "Defence industries and industrial base"
+        },
+        {
+          "period": "third",
+          "category": "Defence industries and industrial base"
+        }
+      ]
+    },
+    {
+      "id": "military-personnel",
+      "name": "Military personnel and recruitment",
+      "terms": [
+        "military personnel",
+        "recruitment",
+        "retention",
+        "military labour",
+        "labour supply",
+        "service personnel"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Military manpower"
+        },
+        {
+          "period": "second",
+          "category": "Military personnel and recruitment"
+        },
+        {
+          "period": "third",
+          "category": "Military personnel and recruitment"
+        }
+      ]
+    },
+    {
+      "id": "terrorism",
+      "name": "Terrorism and counterterrorism",
+      "terms": [
+        "terrorism",
+        "terrorist behaviour",
+        "counterterrorism",
+        "terrorist consequences"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Terrorism, guerrilla warfare, and insurgencies"
+        },
+        {
+          "period": "second",
+          "category": "Terrorism"
+        },
+        {
+          "period": "third",
+          "category": "Terrorism"
+        }
+      ]
+    },
+    {
+      "id": "conflict-civil-wars",
+      "name": "Conflict, civil wars and insurgencies",
+      "terms": [
+        "civil wars",
+        "armed conflict",
+        "insurgency",
+        "guerrilla warfare",
+        "conflict causes",
+        "conflict consequences"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Terrorism, guerrilla warfare, and insurgencies"
+        },
+        {
+          "period": "second",
+          "category": "Conflict and civil wars"
+        },
+        {
+          "period": "third",
+          "category": "Conflict and civil wars"
+        }
+      ]
+    },
+    {
+      "id": "public-choice",
+      "name": "Public choice and defence",
+      "terms": [
+        "public choice",
+        "political decision making",
+        "political incentives",
+        "collective choice",
+        "defence decisions"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Public choice and defence"
+        }
+      ]
+    },
+    {
+      "id": "regional-economics",
+      "name": "Regional economics and defence",
+      "terms": [
+        "regional economics",
+        "local economy",
+        "regional defence activity",
+        "regional expenditure"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Regional economics and defence"
+        },
+        {
+          "period": "second",
+          "category": "Regional economics and defence"
+        },
+        {
+          "period": "third",
+          "category": "Regional economics and defence"
+        }
+      ]
+    },
+    {
+      "id": "research-technology",
+      "name": "Defence R&D and technology",
+      "terms": [
+        "defence research",
+        "research and development",
+        "technological change",
+        "weapon development",
+        "military equipment development"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Defence R&D, technological change, and weapon development"
+        },
+        {
+          "period": "second",
+          "category": "Defence R&D and technology"
+        },
+        {
+          "period": "third",
+          "category": "Defence R&D and technology"
+        }
+      ]
+    },
+    {
+      "id": "arms-races-control",
+      "name": "Arms races, arms control and disarmament",
+      "terms": [
+        "arms races",
+        "arms control",
+        "disarmament",
+        "armaments competition",
+        "strategic interaction",
+        "limiting armaments"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Arms races"
+        },
+        {
+          "period": "first",
+          "category": "Disarmament and arms control"
+        },
+        {
+          "period": "second",
+          "category": "Arms races, arms control and disarmament"
+        },
+        {
+          "period": "third",
+          "category": "Arms races, arms control and disarmament"
+        }
+      ]
+    },
+    {
+      "id": "arms-trade-production",
+      "name": "Arms trade and production",
+      "terms": [
+        "arms trade",
+        "weapons transfers",
+        "arms markets",
+        "armaments production",
+        "international arms transfers"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Arms trade"
+        },
+        {
+          "period": "second",
+          "category": "Arms trade"
+        },
+        {
+          "period": "third",
+          "category": "Arms trade and production"
+        }
+      ]
+    },
+    {
+      "id": "peacekeeping",
+      "name": "Peace and peacekeeping",
+      "terms": [
+        "peacekeeping",
+        "peace economics",
+        "maintaining peace",
+        "peace activities"
+      ],
+      "sources": [
+        {
+          "period": "second",
+          "category": "Peace and peacekeeping"
+        },
+        {
+          "period": "third",
+          "category": "Peace and peacekeeping"
+        }
+      ]
+    },
+    {
+      "id": "fiscal-effects",
+      "name": "Fiscal effects of defence spending",
+      "terms": [
+        "fiscal effects",
+        "military spending",
+        "public finance",
+        "budgetary consequences",
+        "fiscal consequences"
+      ],
+      "sources": [
+        {
+          "period": "second",
+          "category": "Fiscal effects of defence spending"
+        },
+        {
+          "period": "third",
+          "category": "Fiscal effects of defence spending"
+        }
+      ]
+    },
+    {
+      "id": "production-efficiency",
+      "name": "Military production and efficiency",
+      "terms": [
+        "military production function",
+        "military inputs",
+        "military outputs",
+        "productive efficiency"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Military production function"
+        }
+      ]
+    },
+    {
+      "id": "field-foundations",
+      "name": "Foundations of defence economics",
+      "terms": [
+        "nature of defence economics",
+        "conceptual foundations",
+        "scope of defence economics"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Nature of defence economics"
+        }
+      ]
+    },
+    {
+      "id": "developing-economies",
+      "name": "Defence in developing economies",
+      "terms": [
+        "developing countries",
+        "developing economies",
+        "defence economics",
+        "economic development"
+      ],
+      "sources": [
+        {
+          "period": "first",
+          "category": "Developing countries and defence"
+        }
+      ]
+    },
+    {
+      "id": "security-economics",
+      "name": "Security economics",
+      "terms": [
+        "security economics",
+        "sanctions",
+        "policing",
+        "piracy",
+        "security issues"
+      ],
+      "sources": [
+        {
+          "period": "third",
+          "category": "Security economics/issues"
+        }
+      ]
+    }
+  ],
+  "excluded_categories": [
+    "Others",
+    "Country surveys",
+    "Company surveys"
+  ]
+}

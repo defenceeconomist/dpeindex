@@ -18,6 +18,8 @@ COPY site ./site
 COPY tests ./tests
 COPY data/defpea.redif ./data/defpea.redif
 COPY data/retrospectives.json ./data/retrospectives.json
+COPY data/retrospectives-archive ./data/retrospectives-archive
+COPY data/topic-seeds.json ./data/topic-seeds.json
 ENTRYPOINT ["python", "-m", "app.topics"]
 
 FROM base AS citations
@@ -39,5 +41,6 @@ COPY site ./site
 COPY tests ./tests
 COPY data/defpea.redif ./data/defpea.redif
 COPY data/retrospectives.json ./data/retrospectives.json
+COPY data/retrospectives-archive ./data/retrospectives-archive
 EXPOSE 8789
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8789"]
