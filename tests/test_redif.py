@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 from app.redif import parse_file, parse_redif
-from app.store import catalog_for
+from app.store import catalog_for, issue_from_catalog
 
 
 class RedifTests(unittest.TestCase):
@@ -36,6 +36,14 @@ Handle: RePEc:taf:defpea:v:2:y:2002:i:3:p:9-11
         self.assertEqual(catalog["volumes"][0]["number"], "37")
         self.assertEqual(catalog["volumes"][-1]["number"], "8")
         self.assertEqual(sum(issue["count"] for volume in catalog["volumes"] for issue in volume["issues"]), len(articles))
+        volume_21 = next(volume for volume in catalog["volumes"] if volume["number"] == "21")
+        self.assertEqual(volume_21["issues"][-1]["number"], "5-6")
+        newest = catalog["volumes"][0]
+        issue = newest["issues"][-1]["number"]
+        records = issue_from_catalog(catalog, newest["number"], issue)
+        self.assertEqual(len(records), newest["issues"][-1]["count"])
+        self.assertTrue(all(item["volume"] == newest["number"] and item["issue"] == issue for item in records))
+        self.assertIsNone(issue_from_catalog(catalog, "999", "1"))
 
 
 if __name__ == "__main__":

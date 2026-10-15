@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 import uuid
@@ -59,10 +60,8 @@ def embedding_model():
 
 
 def _sort_number(value: str) -> int:
-    try:
-        return int(value)
-    except ValueError:
-        return -1
+    match = re.match(r"\d+", value)
+    return int(match.group()) if match else -1
 
 
 def catalog_for(articles: list[dict]) -> dict:
@@ -157,6 +156,14 @@ def collection_exists() -> bool:
 def load_catalog() -> dict:
     raw = redis_client().get(PREFIX + "catalog")
     return json.loads(raw) if raw else {"volumes": [], "articles": [], "count": 0}
+
+
+def issue_from_catalog(catalog: dict, volume: str, issue: str) -> list[dict] | None:
+    selected = next((item for item in catalog["volumes"] if item["number"] == volume), None)
+    if selected is None or not any(item["number"] == issue for item in selected["issues"]):
+        return None
+    return [item for item in catalog["articles"]
+            if item["volume"] == volume and item["issue"] == issue]
 
 
 def load_article(handle: str) -> dict | None:

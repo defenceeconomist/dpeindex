@@ -7,7 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 
-from .store import load_article, load_catalog, redis_client, semantic_search
+from .store import issue_from_catalog, load_article, load_catalog, redis_client, semantic_search
 
 SITE = Path(__file__).resolve().parent.parent / "site"
 app = FastAPI(title="Defence and Peace Economics Index", docs_url=None, redoc_url=None)
@@ -25,7 +25,17 @@ def health():
 
 @app.get("/api/catalog")
 def catalog():
-    return load_catalog()
+    data = load_catalog()
+    return {"count": data["count"], "volumes": data["volumes"]}
+
+
+@app.get("/api/issue")
+def issue(volume: str = Query(min_length=1, max_length=10),
+          number: str = Query(min_length=1, max_length=10)):
+    articles = issue_from_catalog(load_catalog(), volume, number)
+    if articles is None:
+        raise HTTPException(404, "Issue not found")
+    return {"volume": volume, "issue": number, "articles": articles}
 
 
 @app.get("/api/source")
@@ -64,12 +74,19 @@ def search(q: str = Query(min_length=2, max_length=250)):
         -int(query.casefold() in item["title"].casefold()),
         -item["score"],
     ))
-    return {"query": query, "results": values[:40], "total": len(values)}
+    summary_fields = ("handle", "title", "authors", "volume", "issue", "year", "pages", "doi")
+    results = [{key: item[key] for key in summary_fields} for item in values[:40]]
+    return {"query": query, "results": results, "total": len(values)}
 
 
 @app.get("/styles.css")
 def styles():
     return FileResponse(SITE / "styles.css", media_type="text/css")
+
+
+@app.get("/scroll.css")
+def scroll_styles():
+    return FileResponse(SITE / "scroll.css", media_type="text/css")
 
 
 @app.get("/app.js")
