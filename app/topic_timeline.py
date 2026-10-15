@@ -10,7 +10,6 @@ from datetime import datetime, timezone
 from redis.exceptions import RedisError
 
 from .topic_store import CURRENT, corpus_fingerprint
-from .topic_guidance import seed_topic_list, validate_guidance
 
 PREFIX = "dpe:topics:timeline:"
 WIDTHS = {"year": 1, "five_years": 5, "decade": 10}
@@ -36,8 +35,7 @@ def build_timeline(snapshot, articles):
     if any(not text.strip() for text in docs):
         raise ValueError("Every modelled document must retain its complete abstract.")
     labels = [document["topic"] for document in documents]
-    guidance = validate_guidance(snapshot["metadata"].get("guidance"))
-    model = BERTopic(embedding_model=None, top_n_words=10, seed_topic_list=seed_topic_list(guidance))
+    model = BERTopic(embedding_model=None, top_n_words=10)
     # Restore the already published assignments. update_topics only recalculates
     # their c-TF-IDF representation; it does not run the encoder, UMAP or HDBSCAN.
     model.topics_ = labels

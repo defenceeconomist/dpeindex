@@ -26,9 +26,6 @@ def validate_reference(data: dict) -> None:
     topics = {topic["id"] for topic in data["audited_topics"]}
     if len(topics) != len(data["audited_topics"]):
         raise ValueError("Duplicate audited topic IDs")
-    keys = [topic.get("key") for topic in data["audited_topics"]]
-    if any(keys) and (not all(keys) or len(set(keys)) != len(keys)):
-        raise ValueError("Audited topic interpretation keys must be complete and distinct")
     for period in data["periods"]:
         if sum(category["count"] for category in period["categories"]) != period["classified_total"]:
             raise ValueError("Editorial counts must sum to the original classified-paper total")
@@ -69,8 +66,6 @@ def validate_audited_snapshot(snapshot: dict, reference: dict) -> None:
     binding, metadata = reference["audited_model"], snapshot["metadata"]
     if any(metadata[key] != binding[key] for key in ("run_id", "corpus_fingerprint")):
         raise ValueError("Comparison must use its audited run and corpus")
-    if binding.get("guidance_fingerprint") and metadata.get("guidance", {}).get("fingerprint") != binding["guidance_fingerprint"]:
-        raise ValueError("Comparison must use its audited seed guidance")
     expected = {topic["id"]: topic["keywords"] for topic in reference["audited_topics"]}
     actual = {topic["id"]: [word["term"] for word in topic["keywords"]] for topic in snapshot["topics"]}
     if expected != actual:
@@ -86,19 +81,6 @@ def validate_audited_snapshot(snapshot: dict, reference: dict) -> None:
         raise ValueError("Audited catalog coverage is inconsistent")
     if not {document["topic"] for document in documents} <= set(expected) | {-1}:
         raise ValueError("Unknown audited topic assignment")
-    by_handle = {document["handle"]: document for document in documents}
-    periods = {period["id"]: period for period in reference["periods"]}
-    for collection in ("reviewed_examples", "additional_reviewed_examples"):
-        for period_id, examples in reference.get(collection, {}).items():
-            if period_id not in periods:
-                raise ValueError("Reviewed evidence refers to an unknown period")
-            for topic, handles in examples.items():
-                if int(topic) not in expected or len(set(handles)) != len(handles):
-                    raise ValueError("Reviewed evidence refers to an unknown topic or duplicate paper")
-                for handle in handles:
-                    document = by_handle.get(handle)
-                    if document is None or document["topic"] != int(topic) or not in_period(document, periods[period_id]):
-                        raise ValueError("Reviewed example falls outside its period or topic")
 
 
 def period_comparison(snapshot: dict, reference: dict, period: dict) -> dict:
@@ -116,7 +98,7 @@ def period_comparison(snapshot: dict, reference: dict, period: dict) -> dict:
                 raise ValueError("Reviewed example falls outside its period or topic")
             examples.append({key: document[key] for key in ("handle", "title", "authors", "year", "volume", "issue")})
         count = counts[topic["id"]]
-        model_topics.append({"id": topic["id"], "key": topic.get("key", str(topic["id"])), "name": topic["name"], "count": count,
+        model_topics.append({"id": topic["id"], "name": topic["name"], "count": count,
                              "share": 100 * count / denominator if denominator else 0.0,
                              "examples": examples})
     # Each editorial row retains its individual overlapping matches. There is

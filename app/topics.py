@@ -16,13 +16,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .topic_store import SUMMARY_FIELDS, corpus_fingerprint, publish_snapshot, read_corpus, validate_snapshot
-from .topic_guidance import (GUIDED_WEIGHTS, QUALITY_WEIGHTS, alignment, cached_embedding_backend,
-                             load_guidance, period_alignment, saved_settings, seed_topic_list,
-                             validate_guidance)
 
 MODEL = "Qwen/Qwen3-Embedding-0.6B"
 SEEDS = [42, 7, 21]
-METRICS = QUALITY_WEIGHTS
+METRICS = {"coherence": 2, "silhouette": 2, "diversity": 1, "coverage": 1}
 GRID = {"n_neighbors": [10, 20, 40], "n_components": [5, 10],
         "min_cluster_size": [20, 35, 50], "min_samples": [1, 3, 5]}
 
@@ -132,82 +129,34 @@ class FrozenProjection:
         return self.reduced
 
 
-def projection(embeddings, params: dict, seed: int, dimensions=None, y=None):
+def projection(embeddings, params: dict, seed: int, dimensions=None):
     from umap import UMAP
     return UMAP(n_neighbors=params["n_neighbors"], n_components=dimensions or params["n_components"],
                 min_dist=0.0, metric="cosine", random_state=seed,
-                n_jobs=1, low_memory=True).fit_transform(embeddings, y=y)
+                n_jobs=1, low_memory=True).fit_transform(embeddings)
 
 
-class CachedProjection:
-    """Cache the actual native guided inputs, including UMAP supervision."""
-    def __init__(self, params, seed, cache, guidance=None):
-        self.params, self.seed, self.cache = params, seed, cache
-        self.guidance = guidance["fingerprint"] if guidance else None
-
-    def fit_transform(self, X, y=None):
-        import numpy as np
-        values = np.ascontiguousarray(X)
-        targets = np.ascontiguousarray(y) if y is not None else None
-        key = (self.params["n_neighbors"], self.params["n_components"], self.seed, self.guidance,
-               values.shape, values.dtype.str, hashlib.sha256(values.tobytes()).hexdigest(),
-               None if targets is None else (targets.shape, targets.dtype.str,
-                                             hashlib.sha256(targets.tobytes()).hexdigest()))
-        if key not in self.cache:
-            self.cache[key] = projection(X, self.params, self.seed, y=y)
-        return self.cache[key]
-
-
-def reset_centroids(model, labels, embeddings):
-    import numpy as np
-    labels = np.asarray(labels)
-    model.topic_embeddings_ = np.stack([embeddings[labels == topic].mean(axis=0)
-                                        for topic in sorted(set(labels.tolist()))])
-
-
-def refresh_topics(model, docs, labels, embeddings):
-    # Refresh keywords without encoding keyword strings into surrogate centroids.
-    backend, model.embedding_model = model.embedding_model, None
-    try:
-        model.update_topics(docs, topics=labels, vectorizer_model=model.vectorizer_model,
-                            ctfidf_model=model.ctfidf_model, n_gram_range=(1, 2), top_n_words=model.top_n_words)
-    finally:
-        model.embedding_model = backend
-    reset_centroids(model, labels, embeddings)
-
-
-def fit_model(docs, embeddings, reduced, params, guidance=None, backend=None, cache=None, seed=42):
+def fit_model(docs, embeddings, reduced, params):
     from bertopic import BERTopic
     from bertopic.vectorizers import ClassTfidfTransformer
     from hdbscan import HDBSCAN
     from sklearn.feature_extraction.text import CountVectorizer
-    if guidance and backend is None:
-        raise ValueError("Native seed guidance requires its embedding backend")
-    reducer = (FrozenProjection(reduced) if reduced is not None and not guidance else
-               CachedProjection(params, seed, cache if cache is not None else {}, guidance))
-    model = BERTopic(embedding_model=backend if guidance else None, umap_model=reducer,
-                     seed_topic_list=seed_topic_list(guidance),
+    model = BERTopic(embedding_model=None, umap_model=FrozenProjection(reduced),
                      hdbscan_model=HDBSCAN(min_cluster_size=params["min_cluster_size"],
                                            min_samples=params["min_samples"], metric="euclidean",
                                            cluster_selection_method="eom", prediction_data=True),
                      vectorizer_model=CountVectorizer(stop_words="english", ngram_range=(1, 2), min_df=1),
                      ctfidf_model=ClassTfidfTransformer(reduce_frequent_words=True),
                      top_n_words=10, calculate_probabilities=False)
-    # BERTopic sets language=None for custom embedding backends, which otherwise
-    # changes punctuation preprocessing relative to the unseeded/control model.
-    model.language = "english"
-    # BERTopic's native guidance mutates its input array in place.
-    labels, _ = model.fit_transform(docs, embeddings.copy())
-    reset_centroids(model, labels, embeddings)
+    labels, _ = model.fit_transform(docs, embeddings)
     return model, labels
 
 
 class Evaluator:
-    def __init__(self, docs, embeddings, guidance=None, seed_embeddings=None):
+    def __init__(self, docs, embeddings):
         from sklearn.feature_extraction.text import CountVectorizer
         self.embeddings = embeddings
         self.count = len(docs)
-        self.guidance, self.seed_embeddings = guidance, seed_embeddings
         analyzer = CountVectorizer(stop_words="english", ngram_range=(1, 2)).build_analyzer()
         self.occurrences = defaultdict(set)
         for i, doc in enumerate(docs):
@@ -235,19 +184,16 @@ class Evaluator:
         separation = -1.0
         if len(ids) >= 2 and selected.sum() > len(ids):
             separation = float(silhouette_score(self.embeddings[selected], np.asarray(labels)[selected], metric="cosine"))
-        result = {"topic_count": len(ids), "outliers": int((~selected).sum()),
+        return {"topic_count": len(ids), "outliers": int((~selected).sum()),
                 "coherence": float(np.mean(coherence)) if coherence else -1.0,
                 "silhouette": separation,
                 "diversity": len(set(itertools.chain.from_iterable(words))) / max(1, sum(map(len, words))),
                 "coverage": float(selected.mean())}
-        if self.guidance:
-            result["alignment"] = alignment(labels, self.embeddings, self.guidance, self.seed_embeddings)["score"]
-        return result
 
 
-def score(metrics, bounds, weights=METRICS):
+def score(metrics, bounds):
     return sum(weight * max(0, min(1, (metrics[key] - bounds[key][0]) / max(1e-9, bounds[key][1] - bounds[key][0])))
-               for key, weight in weights.items()) / sum(weights.values())
+               for key, weight in METRICS.items()) / sum(METRICS.values())
 
 
 def representative_review(model, labels, embeddings, articles):
@@ -266,58 +212,51 @@ def representative_review(model, labels, embeddings, articles):
     return review
 
 
-def tune(docs, embeddings, evaluator, articles, run_dir, guidance=None, backend=None, cache=None):
+def tune(docs, embeddings, evaluator, articles, run_dir):
     import numpy as np
     from sklearn.metrics import adjusted_mutual_info_score
-    cache = cache if cache is not None else {}
-    modes = {"unseeded": None, "seeded": guidance} if guidance else {"unseeded": None}
-    weights = GUIDED_WEIGHTS if guidance else METRICS
-    trials = {name: [] for name in modes}
+    trials = []
     keys = list(GRID)
-    for name, mode in modes.items():
-        for values in itertools.product(*(GRID[key] for key in keys)):
-            params = dict(zip(keys, values, strict=True))
-            model, labels = fit_model(docs, embeddings, None, params, mode, backend, cache)
-            metrics = evaluator.measure(model, labels)
-            trials[name].append({"params": params, "seed": 42, "metrics": metrics})
-            log(f"{name} trial {len(trials[name])}/54: {metrics['topic_count']} topics, "
-                f"{metrics['outliers']} outliers, coherence {metrics['coherence']:.3f}, "
-                f"silhouette {metrics['silhouette']:.3f}" +
-                (f", alignment {metrics['alignment']:.3f}" if guidance else ""))
-            write_json(run_dir / ("trials.json" if name == "seeded" or not guidance else "control-trials.json"), trials[name])
-    valid = [trial for mode in trials.values() for trial in mode if trial["metrics"]["topic_count"] >= 2]
+    reduced_cache = {}
+    for values in itertools.product(*(GRID[key] for key in keys)):
+        params = dict(zip(keys, values, strict=True))
+        projection_key = (params["n_neighbors"], params["n_components"])
+        if projection_key not in reduced_cache:
+            reduced_cache[projection_key] = projection(embeddings, params, 42)
+        model, labels = fit_model(docs, embeddings, reduced_cache[projection_key], params)
+        metrics = evaluator.measure(model, labels)
+        trials.append({"params": params, "seed": 42, "metrics": metrics})
+        log(f"Trial {len(trials)}/54: {params} -> {metrics['topic_count']} topics, "
+            f"{metrics['outliers']} outliers, coherence {metrics['coherence']:.3f}, silhouette {metrics['silhouette']:.3f}")
+        write_json(run_dir / "trials.json", trials)
+    valid = [trial for trial in trials if trial["metrics"]["topic_count"] >= 2]
     if not valid:
         raise RuntimeError("Tuning found no multi-topic model; the previous published run is unchanged.")
-    bounds = {key: [min(t["metrics"][key] for t in valid), max(t["metrics"][key] for t in valid)] for key in weights}
-    winners = {}
-    for name, mode in modes.items():
-        eligible = [trial for trial in trials[name] if trial["metrics"]["topic_count"] >= 2]
-        if not eligible:
-            raise RuntimeError(f"No multi-topic model in the {name} comparison arm")
-        for trial in eligible:
-            trial["score"] = score(trial["metrics"], bounds, weights)
-        validation = []
-        for trial in sorted(eligible, key=lambda item: item["score"], reverse=True)[:3]:
-            params, seed_metrics, seed_labels = trial["params"], [], []
-            for seed in SEEDS:
-                model, labels = fit_model(docs, embeddings, None, params, mode, backend, cache, seed)
-                seed_metrics.append({"seed": seed, "metrics": evaluator.measure(model, labels)})
-                seed_labels.append(labels)
-            stability = float(np.mean([adjusted_mutual_info_score(a, b) for a, b in itertools.combinations(seed_labels, 2)]))
-            validation.append({"params": params, "seeds": seed_metrics, "stability_ami": stability,
-                               "mean_score": float(np.mean([score(item["metrics"], bounds, weights) for item in seed_metrics])),
-                               "review": representative_review(model, labels, embeddings, articles)})
-            log(f"{name} finalist {params}: score {validation[-1]['mean_score']:.3f}, stability {stability:.3f}")
-        selected = max(validation, key=lambda item: (item["mean_score"], item["stability_ami"]))
-        params = selected["params"]
-        model, labels = fit_model(docs, embeddings, None, params, mode, backend, cache)
-        report = {"trials": trials[name], "finalists": validation, "metric_weights": weights, "metric_bounds": bounds,
-                  "selection": "Mean weighted normalised quality and alignment across three seeds; stability breaks ties. No topic-count preference."
-                  if guidance else "Mean weighted normalised quality across three seeds; stability breaks ties. No topic-count preference."}
-        winners[name] = (model, labels, params, report)
-        write_json(run_dir / ("trials.json" if name == "seeded" or not guidance else "control-trials.json"), trials[name])
-    chosen = winners["seeded" if guidance else "unseeded"]
-    return (*chosen, winners.get("unseeded") if guidance else None)
+    bounds = {key: [min(t["metrics"][key] for t in valid), max(t["metrics"][key] for t in valid)] for key in METRICS}
+    for trial in valid:
+        trial["score"] = score(trial["metrics"], bounds)
+    preferred = [trial for trial in valid if 10 <= trial["metrics"]["topic_count"] <= 20]
+    finalists = sorted(preferred or valid, key=lambda t: t["score"], reverse=True)[:3]
+    validation = []
+    for trial in finalists:
+        params, seed_metrics, seed_labels = trial["params"], [], []
+        for seed in SEEDS:
+            reduced = (reduced_cache[(params["n_neighbors"], params["n_components"])] if seed == 42
+                       else projection(embeddings, params, seed))
+            model, labels = fit_model(docs, embeddings, reduced, params)
+            seed_metrics.append({"seed": seed, "metrics": evaluator.measure(model, labels)})
+            seed_labels.append(labels)
+        stability = float(np.mean([adjusted_mutual_info_score(a, b) for a, b in itertools.combinations(seed_labels, 2)]))
+        validation.append({"params": params, "seeds": seed_metrics, "stability_ami": stability,
+                           "mean_score": float(np.mean([score(item["metrics"], bounds) for item in seed_metrics])),
+                           "review": representative_review(model, labels, embeddings, articles)})
+        log(f"Finalist {params}: mean score {validation[-1]['mean_score']:.3f}, stability {stability:.3f}")
+    selected = max(validation, key=lambda item: (item["mean_score"], item["stability_ami"]))
+    params = selected["params"]
+    model, labels = fit_model(docs, embeddings, reduced_cache[(params["n_neighbors"], params["n_components"])], params)
+    return model, labels, params, {"trials": trials, "finalists": validation,
+                                  "metric_weights": METRICS, "metric_bounds": bounds,
+                                  "selection": "Prefer 10–20 topics, then mean weighted normalised score across three seeds; stability breaks ties."}
 
 
 def calibrate_outliers(model, labels, embeddings, docs):
@@ -325,9 +264,6 @@ def calibrate_outliers(model, labels, embeddings, docs):
     import numpy as np
     labels = np.asarray(labels)
     ids = sorted(set(labels) - {-1})
-    if len(ids) < 2:
-        raise ValueError("Outlier calibration needs at least two topics")
-    reset_centroids(model, labels, embeddings)
     strengths = np.asarray(model.probabilities_)
     rng = np.random.default_rng(42)
     held_out, centers = [], []
@@ -392,7 +328,12 @@ def make_snapshot(model, articles, all_articles, embeddings, original, final, si
                   params, token_coverage, revision, run_id, report):
     import numpy as np
     docs = [a["abstract"] for a in articles]
-    refresh_topics(model, docs, final, embeddings)
+    model.update_topics(docs, topics=final, vectorizer_model=model.vectorizer_model,
+                        ctfidf_model=model.ctfidf_model, n_gram_range=(1, 2), top_n_words=model.top_n_words)
+    # update_topics() refreshes c-TF-IDF but cannot rebuild document centroids without
+    # an embedding backend. Rebuild them explicitly from the final full-text members.
+    model.topic_embeddings_ = np.stack([embeddings[np.asarray(final) == topic].mean(axis=0)
+                                        for topic in sorted(set(final))])
     # A distinct two-dimensional fit is only for display, never for clustering/scoring.
     map_params = {"n_neighbors": 20, "n_components": 2}
     coords = projection(embeddings, map_params, 42, dimensions=2)
@@ -437,82 +378,19 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-def compare_runs(candidate, control, docs, embeddings, evaluator, articles, guidance, backend,
-                 cache, run_dir, metadata, audited=None):
-    """Complete both selected arms across all validation seeds, without publishing."""
-    import numpy as np
-    from .topic_guidance import REFERENCE
-    reference = json.loads(REFERENCE.read_text(encoding="utf-8"))
-    bounds = candidate[3]["metric_bounds"]
-
-    def diagnostics(labels):
-        return {"alignment": alignment(labels, embeddings, guidance, evaluator.seed_embeddings),
-                "periods": period_alignment(articles, labels, embeddings, guidance, evaluator.seed_embeddings, reference)}
-
-    comparison = {"guidance_fingerprint": guidance["fingerprint"], "metric_bounds": bounds,
-                  "quality_weights": METRICS, "selection_weights": GUIDED_WEIGHTS,
-                  "method": "One-to-one seed/centroid cosine matching in original embeddings; unmatched seeds score zero. "
-                            "Seed alignment is a diagnostic, not independently verified classification accuracy. "
-                            "Periods use the original retrospective volume/issue boundaries; first-period coverage is incomplete."}
-    for name, selected, mode in (("seeded", candidate, guidance), ("unseeded", control, None)):
-        records = []
-        for seed in SEEDS:
-            model, original = fit_model(docs, embeddings, None, selected[2], mode, backend, cache, seed)
-            before = evaluator.measure(model, original)
-            before_diagnostics = diagnostics(original)
-            final, _, outliers = calibrate_outliers(model, original, embeddings, docs)
-            refresh_topics(model, docs, final, embeddings)
-            records.append({"seed": seed, "before": before, "after": evaluator.measure(model, final),
-                            "before_diagnostics": before_diagnostics, "after_diagnostics": diagnostics(final),
-                            "outliers": outliers, "review": representative_review(model, final, embeddings, articles)})
-            if name == "unseeded" and seed == 42:
-                write_json(run_dir / "control-assignments.json", [
-                    {"handle": article["handle"], "original_topic": int(original[i]), "topic": int(final[i])}
-                    for i, article in enumerate(articles)])
-        comparison[name] = {"params": selected[2], "runs": records,
-                            "mean_after": {key: float(np.mean([record["after"][key] for record in records]))
-                                           for key in records[0]["after"]},
-                            "mean_quality_score": float(np.mean([score(record["after"], bounds) for record in records]))}
-        if name == "unseeded":
-            write_json(run_dir / "control-report.json", selected[3])
-    seeded, unseeded = comparison["seeded"], comparison["unseeded"]
-    comparison["improved"] = (seeded["mean_after"]["alignment"] > unseeded["mean_after"]["alignment"] and
-                              seeded["mean_quality_score"] >= unseeded["mean_quality_score"])
-    comparison["audited"] = {"status": "unavailable_or_different_corpus"}
-    if audited and all(audited["metadata"].get(key) == metadata[key]
-                       for key in ("corpus_fingerprint", "model_revision")):
-        documents = {document["handle"]: document for document in audited["documents"]}
-        if set(documents) == {article["handle"] for article in articles}:
-            class PublishedKeywords:
-                def get_topic(self, topic):
-                    return [(word["term"], word["weight"]) for item in audited["topics"] if item["id"] == topic
-                            for word in item["keywords"]]
-            labels = [documents[article["handle"]]["topic"] for article in articles]
-            metrics = evaluator.measure(PublishedKeywords(), labels)
-            comparison["audited"] = {"status": "comparable", "run_id": audited["metadata"]["run_id"],
-                                     "metrics": metrics, "quality_score": score(metrics, bounds), **diagnostics(labels)}
-    write_json(run_dir / "comparison.json", comparison)
-    return {"improved": comparison["improved"],
-            **{name: {key: value for key, value in comparison[name].items() if key != "runs"}
-               for name in ("seeded", "unseeded")}, "audited": comparison["audited"]}
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     operation = parser.add_mutually_exclusive_group(required=True)
-    operation.add_argument("--tune", action="store_true", help="Search 54 configurations per arm and publish unless --no-publish is set")
+    operation.add_argument("--tune", action="store_true", help="Run the 54-candidate parameter search and publish the best validated model")
     operation.add_argument("--rebuild", action="store_true", help="Refit the last successful parameters and model revision")
     operation.add_argument("--publish-run", help="Publish a completed, reviewed run from the artifact volume")
     operation.add_argument("--timeline", action="store_true", help="Calculate topics over time for the current assignments without rebuilding the model")
     parser.add_argument("--no-publish", action="store_true", help="Save a complete run for review without replacing the live model")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--batch-size", type=int, default=8)
-    parser.add_argument("--seed-topics", type=Path, help="Editorial seed manifest; --tune also builds an unseeded comparison")
     args = parser.parse_args()
     if args.batch_size < 1:
         parser.error("--batch-size must be positive")
-    if args.seed_topics and not args.tune:
-        parser.error("--seed-topics requires --tune; --rebuild uses its frozen saved guidance")
     from .store import redis_client
     client = redis_client()
     lock = client.lock("dpe:topics:build-lock", timeout=300, blocking=False, thread_local=False)
@@ -524,9 +402,9 @@ def main():
         while not stop_renewal.wait(60):
             try:
                 lock.reacquire()
-            except Exception as exc:
+            except Exception:
                 lost_lock.set()
-                log(f"Build lease lost ({exc}); this process will not replace the live model.")
+                log("Build lease lost; this process will not replace the live model.")
                 return
 
     def interrupted(signum, frame):
@@ -562,14 +440,13 @@ def main():
             snapshot = json.loads((artifacts / "runs" / args.publish_run / "snapshot.json").read_text())
             publish_snapshot(snapshot, client)
             meta = snapshot["metadata"]
-            write_json(config_path, saved_settings(meta))
+            write_json(config_path, {"params": meta["params"], "revision": meta["model_revision"], "run_id": meta["run_id"]})
             log(f"Published reviewed run {meta['run_id']}")
             return
         from huggingface_hub import HfApi
         saved = json.loads(config_path.read_text()) if args.rebuild and config_path.exists() else None
         if args.rebuild and not saved:
             raise RuntimeError("No saved settings. Run --tune first.")
-        guidance = load_guidance(args.seed_topics) if args.seed_topics else validate_guidance((saved or {}).get("guidance"))
         revision = saved["revision"] if saved else os.getenv("TOPIC_MODEL_REVISION") or HfApi().model_info(MODEL).sha
         all_articles = read_corpus(client)
         articles = [a for a in all_articles if a["abstract"].strip()]
@@ -583,33 +460,18 @@ def main():
         embeddings, token_coverage = encode_abstracts(articles, revision, artifacts, args.device, args.batch_size)
         write_json(run_dir / "token-coverage.json", token_coverage)
         docs = [a["abstract"] for a in articles]
-        backend, seed_embeddings = None, None
-        if guidance:
-            write_json(run_dir / "seeds.json", guidance)
-
-            def encode_seed_texts(texts):
-                records = [{"handle": f"seed-text-{i}", "abstract": text} for i, text in enumerate(texts)]
-                vectors, coverage = encode_abstracts(records, revision, artifacts, args.device, args.batch_size)
-                write_json(run_dir / "seed-token-coverage.json", coverage)
-                return vectors
-
-            backend = cached_embedding_backend(encode_seed_texts)
-            seed_embeddings = backend.embed([" ".join(terms) for terms in seed_topic_list(guidance)])
-        evaluator = Evaluator(docs, embeddings, guidance, seed_embeddings)
-        projection_cache = {}
+        evaluator = Evaluator(docs, embeddings)
         # Hold keyword processing constant: compare parameter tuning, not stopword policies.
         baseline_params = {"n_neighbors": 15, "n_components": 5, "min_cluster_size": 10, "min_samples": 10}
-        baseline, baseline_labels = fit_model(docs, embeddings, None, baseline_params, guidance, backend, projection_cache)
+        baseline, baseline_labels = fit_model(docs, embeddings, projection(embeddings, baseline_params, 42), baseline_params)
         baseline_metrics = evaluator.measure(baseline, baseline_labels)
         log(f"Untuned baseline: {baseline_metrics}")
         del baseline
-        control = None
         if args.tune:
-            model, original, params, tuning_report, control = tune(
-                docs, embeddings, evaluator, articles, run_dir, guidance, backend, projection_cache)
+            model, original, params, tuning_report = tune(docs, embeddings, evaluator, articles, run_dir)
         else:
             params = saved["params"]
-            model, original = fit_model(docs, embeddings, None, params, guidance, backend, projection_cache)
+            model, original = fit_model(docs, embeddings, projection(embeddings, params, 42), params)
             tuning_report = {"rebuild_from": saved["run_id"], "trials": [], "finalists": []}
         before_metrics = evaluator.measure(model, original)
         final, similarities, outliers = calibrate_outliers(model, original, embeddings, docs)
@@ -618,32 +480,19 @@ def main():
         review = representative_review(model, final, embeddings, articles)
         report = {**tuning_report, "baseline": baseline_metrics, "selected_before_reassignment": before_metrics,
                   "outliers": outliers, "token_coverage": token_coverage, "review": review}
-        if guidance:
-            report["guidance"] = guidance
         from importlib.metadata import version
         report["library_versions"] = {name: version(name) for name in
                                       ("bertopic", "sentence-transformers", "transformers", "torch", "umap-learn", "hdbscan", "scikit-learn", "numpy")}
         report["encoding"] = {"device": args.device, "dtype": "float32", "normalised": True, "batch_size": args.batch_size}
         snapshot = make_snapshot(model, articles, all_articles, embeddings, original, final, similarities,
                                  params, token_coverage, revision, run_id, report)
-        if guidance:
-            snapshot["metadata"]["guidance"] = guidance
         report["review"] = representative_review(model, final, embeddings, articles)
         report["selected_after_reassignment"] = evaluator.measure(model, final)
-        if control:
-            binding = json.loads((Path(__file__).resolve().parent.parent / "data" / "retrospectives.json").read_text())["audited_model"]
-            archived = client.get("dpe:topics:run:" + binding["run_id"])
-            audited = json.loads(archived) if archived else None
-            report["comparison"] = compare_runs(
-                (model, original, params, tuning_report), control, docs, embeddings, evaluator, articles,
-                guidance, backend, projection_cache, run_dir, snapshot["metadata"], audited)
         report["elapsed_seconds"] = round(time.monotonic() - started, 2)
         from .topic_timeline import build_timeline
         snapshot["timeline"] = build_timeline(snapshot, all_articles)
         # Compact API report; full audit with representative abstracts stays in the artifact volume.
         snapshot["report"].update(selected_after_reassignment=report["selected_after_reassignment"], elapsed_seconds=report["elapsed_seconds"])
-        if control:
-            snapshot["report"]["comparison"] = report["comparison"]
         validate_snapshot(snapshot)
         write_json(run_dir / "report.json", report)
         write_json(run_dir / "snapshot.json", snapshot)
@@ -653,7 +502,7 @@ def main():
             if lost_lock.is_set() or not lock.owned():
                 raise RuntimeError("Build lease lost. Complete artifacts were saved for review; the live model is unchanged.")
             publish_snapshot(snapshot, client)
-            write_json(config_path, saved_settings(snapshot["metadata"]))
+            write_json(config_path, {"params": params, "revision": revision, "run_id": run_id})
         log(f"{'Saved for review' if args.no_publish else 'Published'} {run_id}: {len(snapshot['topics'])} topics; outliers {outliers['before']} -> {outliers['after']}; "
             f"{report['elapsed_seconds']} seconds. Audit: {run_dir}")
     finally:

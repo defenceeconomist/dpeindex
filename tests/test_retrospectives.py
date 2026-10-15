@@ -14,7 +14,7 @@ from app.retrospectives import (build_comparison, in_period, load_comparison,
                                reference_data, validate_reference)
 
 ROOT = Path(__file__).resolve().parents[1]
-AUDITED = Path(os.environ.get("DPE_AUDITED_SNAPSHOT", ROOT / "data/topic-artifacts/runs/20261015T154322Z-6505198a/snapshot.json"))
+AUDITED = Path(os.environ.get("DPE_AUDITED_SNAPSHOT", ROOT / "data/topic-artifacts/review/20261015T112751Z-f48f8afb/snapshot.json"))
 
 
 def fixture():
@@ -26,12 +26,10 @@ def fixture():
         {"handle": "missing-3", "volume": "21", "issue": "1"},
         {"handle": "missing-excluded-31", "volume": "31", "issue": "1"},
     ]
-    reference["reviewed_examples"] = {"first": {"7": ["paper-0"]}, "second": {"1": ["paper-3"]}, "third": {"2": ["paper-5"]}}
-    reference["additional_reviewed_examples"] = {}
-    records = [(8, 1, 7), (10, 2, -1), (10, 3, 1), (11, 1, 1), (20, 6, -1), (21, 1, 2), (30, 6, 0), (31, 1, 9)]
+    reference["reviewed_examples"] = {"first": {"3": ["paper-0"]}, "second": {"2": ["paper-3"]}, "third": {"0": ["paper-5"]}}
+    records = [(8, 1, 3), (10, 2, -1), (10, 3, 2), (11, 1, 2), (20, 6, -1), (21, 1, 0), (30, 6, 1), (31, 1, 8)]
     snapshot = {"status": "ready", "metadata": {**reference["audited_model"], "abstract_count": len(records),
-                 "missing_abstract_count": 5, "article_count": len(records) + 5,
-                 "guidance": {"fingerprint": reference["audited_model"]["guidance_fingerprint"]}},
+                 "missing_abstract_count": 5, "article_count": len(records) + 5},
                 "topics": [{"id": item["id"], "keywords": [{"term": term} for term in item["keywords"]]} for item in reference["audited_topics"]],
                 "documents": [{"handle": f"paper-{index}", "volume": str(volume), "issue": str(issue), "topic": topic,
                                "title": f"Paper {index}", "authors": ["A Researcher"], "year": "2025"}
@@ -52,18 +50,6 @@ class Archive:
 class ComparisonTests(unittest.TestCase):
     def setUp(self):
         self.snapshot, self.reference = fixture()
-
-    def test_additional_review_evidence_must_belong_to_its_period_and_topic(self):
-        reference = copy.deepcopy(self.reference)
-        reference["additional_reviewed_examples"] = {"first": {"7": ["paper-0"]}}
-        self.assertEqual(build_comparison(self.snapshot, reference, self.snapshot)["status"], "ready")
-        reference["additional_reviewed_examples"]["first"]["7"] = ["paper-3"]
-        with self.assertRaises(ValueError): build_comparison(self.snapshot, reference, self.snapshot)
-
-    def test_interpretation_keys_are_distinct(self):
-        reference = copy.deepcopy(self.reference)
-        reference["audited_topics"][1]["key"] = reference["audited_topics"][0]["key"]
-        with self.assertRaises(ValueError): validate_reference(reference)
 
     def test_period_boundaries_and_combined_issues(self):
         first, second, third = self.reference["periods"]
@@ -94,29 +80,28 @@ class ComparisonTests(unittest.TestCase):
             self.assertAlmostEqual(sum(row["share"] for row in period["model_topics"]) + coverage["unassigned_share"], 100)
             self.assertAlmostEqual(sum(row["share"] for row in period["categories"]), 100)
         self.assertEqual(first["coverage"]["unassigned_share"], 50)
-        self.assertEqual(first["model_topics"][7]["share"], 50)
+        self.assertEqual(first["model_topics"][3]["share"], 50)
         self.assertAlmostEqual(first["categories"][0]["share"], 100 * 29 / 207)
         self.assertEqual(second["coverage"]["unassigned_count"], 1)
         self.assertEqual(third["coverage"]["unassigned_count"], 0)
-        self.assertEqual(first["model_topics"][7]["examples"][0]["handle"], "paper-0")
+        self.assertEqual(first["model_topics"][3]["examples"][0]["handle"], "paper-0")
 
     def test_overlapping_mappings_are_retained_without_combined_totals(self):
         first = build_comparison(self.snapshot, self.reference, self.snapshot)["periods"][0]
-        industry_rows = [row for row in first["categories"] if 7 in row["topic_ids"]]
+        industry_rows = [row for row in first["categories"] if 3 in row["topic_ids"]]
         self.assertGreater(len(industry_rows), 2)
-        self.assertEqual(first["model_topics"][7]["count"], 1)
+        self.assertEqual(first["model_topics"][3]["count"], 1)
         self.assertNotIn("matched_total", first)
         self.assertTrue(any(not row["topic_ids"] for row in first["categories"]))
 
     def test_model_binding_keywords_and_example_membership_are_checked(self):
-        for mutation in ("run", "corpus", "keywords", "example", "coverage", "guidance"):
+        for mutation in ("run", "corpus", "keywords", "example", "coverage"):
             snapshot, reference = copy.deepcopy(self.snapshot), copy.deepcopy(self.reference)
             if mutation == "run": snapshot["metadata"]["run_id"] = "wrong-run"
             if mutation == "corpus": snapshot["metadata"]["corpus_fingerprint"] = "wrong-corpus"
             if mutation == "keywords": snapshot["topics"][0]["keywords"][0]["term"] = "different meaning"
-            if mutation == "example": reference["reviewed_examples"]["first"]["7"] = ["paper-3"]
+            if mutation == "example": reference["reviewed_examples"]["first"]["3"] = ["paper-3"]
             if mutation == "coverage": snapshot["metadata"]["article_count"] += 1
-            if mutation == "guidance": snapshot["metadata"]["guidance"]["fingerprint"] = "different-seeds"
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 build_comparison(snapshot, reference, self.snapshot)
 
@@ -166,15 +151,6 @@ class ComparisonTests(unittest.TestCase):
 
 
 class SourceTranscriptionTests(unittest.TestCase):
-    def test_previous_crosswalk_is_archived_and_editorial_evidence_is_unchanged(self):
-        archive = json.loads((ROOT / "data/retrospectives-archive/20261015T112751Z-f48f8afb.json").read_text())
-        validate_reference(archive)
-        self.assertEqual(len(archive["audited_topics"]), 10)
-        for previous, current in zip(archive["periods"], reference_data()["periods"], strict=True):
-            self.assertEqual(previous["source"], current["source"])
-            self.assertEqual([(c["name"], c["count"], c["definition"]) for c in previous["categories"]],
-                             [(c["name"], c["count"], c["definition"]) for c in current["categories"]])
-
     def test_original_tables_and_discrepancy_are_preserved(self):
         reference = reference_data()
         # Independent transcription in source table order: original 2000 Table 1,
@@ -206,8 +182,8 @@ class PublishedRunTests(unittest.TestCase):
     def test_audited_period_totals_assignments_and_reviewed_abstracts(self):
         snapshot = json.loads(AUDITED.read_text())
         result = build_comparison(snapshot, reference_data(), snapshot)
-        expected_counts = [[8, 0, 1, 0, 3, 1, 5, 3, 8, 0, 1, 0, 4, 0, 0], [60, 37, 23, 20, 27, 18, 17, 17, 11, 0, 17, 8, 18, 12, 3], [68, 56, 48, 33, 15, 22, 12, 16, 5, 5, 12, 17, 12, 8, 12]]
-        for period, abstracts, missing, outliers, counts in zip(result["periods"], (45, 330, 381), (3, 31, 26), (11, 42, 40), expected_counts):
+        expected_counts = [[3, 11, 0, 17, 0, 4, 3, 0, 0, 0], [51, 82, 37, 48, 17, 20, 22, 13, 1, 13], [78, 100, 57, 32, 30, 11, 12, 24, 5, 9]]
+        for period, abstracts, missing, outliers, counts in zip(result["periods"], (45, 330, 381), (3, 31, 26), (7, 26, 23), expected_counts):
             self.assertEqual(period["coverage"]["abstract_count"], abstracts)
             self.assertEqual(period["coverage"]["missing_abstract_count"], missing)
             self.assertEqual(period["coverage"]["unassigned_count"], outliers)
@@ -215,9 +191,7 @@ class PublishedRunTests(unittest.TestCase):
             for topic in period["model_topics"]:
                 self.assertEqual(bool(topic["examples"]), topic["count"] > 0)
             self.assertAlmostEqual(sum(topic["share"] for topic in period["model_topics"]) + period["coverage"]["unassigned_share"], 100)
-        self.assertEqual(result["audited_model"]["run_id"], "20261015T154322Z-6505198a")
-        self.assertTrue(result["links_enabled"])
-        self.assertIn("not independent validation", result["method"]["independence"])
+        self.assertEqual(result["audited_model"]["run_id"], "20261015T112751Z-f48f8afb")
 
 
 if __name__ == "__main__":

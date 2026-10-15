@@ -30,22 +30,6 @@ async function mount(data = fixture, fail = false, mobile = false) {
   await settle(); return window.document;
 }
 
-test("method text distinguishes guided runs and includes alignment diagnostics", async () => {
-  const data = structuredClone(fixture);
-  data.metadata.guidance = {manifest: {topics: Array.from({length: 20}, () => ({}))}};
-  data.report.selection = "No topic-count preference.";
-  data.report.comparison = {};
-  data.report.trials = Array.from({length: 54}, () => ({}));
-  for (const key of ["baseline", "selected_before_reassignment", "selected_after_reassignment"]) data.report[key].alignment = .5;
-  const doc = await mount(data);
-  const method = doc.querySelector("#model-method").textContent;
-  assert.match(method, /20 consolidated themes from the three retrospectives/);
-  assert.match(method, /matched unseeded search/);
-  assert.match(method, /No topic-count preference/);
-  assert.match(method, /Retrospective alignment/);
-  assert.doesNotMatch(method, /favours 10–20/);
-});
-
 test("map and hierarchy link to Articles, with no research reader on Topics", async () => {
   const doc = await mount();
   assert.equal(doc.querySelector("#explorer").hidden, false);

@@ -42,10 +42,8 @@ def read_corpus(client=None) -> list[dict]:
 
 def validate_snapshot(snapshot: dict) -> None:
     import math
-    from .topic_guidance import validate_guidance
     documents, topics, hierarchy = snapshot["documents"], snapshot["topics"], snapshot["hierarchy"]
     metadata = snapshot["metadata"]
-    validate_guidance(metadata.get("guidance"))
     if metadata["abstract_count"] + metadata["missing_abstract_count"] != metadata["article_count"]:
         raise ValueError("Corpus coverage counts do not match.")
     if metadata["token_coverage"]["truncated_abstracts"] != 0:

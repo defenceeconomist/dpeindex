@@ -1,268 +1,171 @@
 {
   "schema_version": 1,
   "audited_model": {
-    "run_id": "20261015T154322Z-6505198a",
+    "run_id": "20261015T112751Z-f48f8afb",
     "corpus_fingerprint": "8fbc178755a8095efffc2b3c0f8cc0eaf2f08fcccca494987657d1c2add28852",
-    "built_at": "2026-10-15T15:44:42.230314+00:00",
+    "built_at": "2026-10-15T11:28:46.448724+00:00",
     "model": "Qwen/Qwen3-Embedding-0.6B",
-    "model_revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
-    "guidance_fingerprint": "443045bed703ea7518422cfc486426d16d63348f53425224b64ef789ff997e99",
-    "seed_theme_count": 20
+    "model_revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
   },
   "audited_topics": [
     {
       "id": 0,
-      "key": "economic_effects",
-      "name": "Defence spending and economic growth",
+      "name": "Conflict, war and peace",
       "keywords": [
-        "economic growth",
-        "growth",
-        "military expenditure",
-        "spending",
-        "military spending",
-        "expenditure",
+        "conflict",
+        "war",
+        "civil",
+        "peace",
+        "violence",
+        "conflicts",
+        "civil war",
         "economic",
-        "military",
-        "relationship",
-        "causality"
+        "armed",
+        "model"
       ]
     },
     {
       "id": 1,
-      "key": "terrorism",
-      "name": "Terrorism and counterterrorism",
+      "name": "Military spending and growth",
       "keywords": [
-        "terrorism",
-        "terrorist",
-        "attacks",
-        "terrorist groups",
-        "groups",
-        "terrorists",
-        "terrorist attacks",
-        "activity",
-        "attack",
-        "suicide"
+        "spending",
+        "military",
+        "growth",
+        "expenditure",
+        "military spending",
+        "economic growth",
+        "military expenditure",
+        "economic",
+        "expenditures",
+        "relationship"
       ]
     },
     {
       "id": 2,
-      "key": "civil_conflict",
-      "name": "Civil conflict, war and peace",
+      "name": "Terrorism",
       "keywords": [
-        "conflict",
-        "civil",
-        "war",
-        "violence",
-        "civil war",
-        "peace",
-        "conflicts",
-        "civil wars",
-        "armed conflict",
-        "wars"
+        "terrorism",
+        "terrorist",
+        "attacks",
+        "groups",
+        "terrorist groups",
+        "terrorist attacks",
+        "terrorists",
+        "activity",
+        "attack",
+        "political"
       ]
     },
     {
       "id": 3,
-      "key": "personnel",
-      "name": "Military personnel and labour",
+      "name": "Defence industry and procurement",
+      "keywords": [
+        "defence",
+        "industry",
+        "industrial",
+        "firms",
+        "procurement",
+        "european",
+        "rd",
+        "defense",
+        "policy",
+        "defence industry"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Personnel, service and veterans",
       "keywords": [
         "veterans",
         "service",
         "personnel",
         "conscription",
         "women",
-        "retention",
         "reenlistment",
-        "job",
         "labor",
-        "navy"
-      ]
-    },
-    {
-      "id": 4,
-      "key": "arms",
-      "name": "Arms markets, races and weapons",
-      "keywords": [
-        "arms",
-        "arms trade",
-        "weapons",
-        "exports",
-        "race",
-        "arms race",
-        "intelligence",
-        "trade",
-        "security",
-        "missile"
+        "navy",
+        "likely",
+        "soldiers"
       ]
     },
     {
       "id": 5,
-      "key": "strategic_conflict",
-      "name": "Strategic conflict, contests and intervention",
-      "keywords": [
-        "conflict",
-        "equilibrium",
-        "intervention",
-        "contest",
-        "game",
-        "players",
-        "model",
-        "group",
-        "agent",
-        "party"
-      ]
-    },
-    {
-      "id": 6,
-      "key": "alliances",
-      "name": "Alliances and burden sharing",
+      "name": "NATO and alliances",
       "keywords": [
         "nato",
+        "alliance",
         "burden sharing",
         "sharing",
-        "alliance",
         "allies",
         "member",
         "burden",
         "defense",
         "public",
-        "member states"
+        "states"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Arms races, trade and production",
+      "keywords": [
+        "arms",
+        "weapons",
+        "exports",
+        "race",
+        "arms race",
+        "trade",
+        "arms trade",
+        "intelligence",
+        "security",
+        "imports"
       ]
     },
     {
       "id": 7,
-      "key": "industry",
-      "name": "Defence industries, firms and innovation",
+      "name": "Equipment costs",
       "keywords": [
-        "firms",
-        "industry",
-        "innovation",
-        "industrial",
-        "rd",
-        "defence",
-        "defense",
-        "companies",
-        "firm",
-        "technological"
+        "cost",
+        "aircraft",
+        "costs",
+        "equipment",
+        "cost escalation",
+        "escalation",
+        "unit",
+        "type",
+        "twvs",
+        "defence"
       ]
     },
     {
       "id": 8,
-      "key": "procurement",
-      "name": "Procurement and industrial cooperation",
-      "keywords": [
-        "procurement",
-        "defence procurement",
-        "defence",
-        "european",
-        "industry",
-        "industrial",
-        "european defence",
-        "offset",
-        "offsets",
-        "defence industry"
-      ]
-    },
-    {
-      "id": 9,
-      "key": "geopolitical_risk",
-      "name": "Geopolitical risk and financial markets",
+      "name": "Geopolitical risk and markets",
       "keywords": [
         "geopolitical",
         "geopolitical risk",
         "gpr",
         "stock",
         "risk",
-        "returns",
         "volatility",
-        "oil",
+        "returns",
         "market",
-        "geopolitical risks"
+        "markets",
+        "oil"
       ]
     },
     {
-      "id": 10,
-      "key": "expenditure_demand",
-      "name": "Expenditure demand and strategic interactions",
-      "keywords": [
-        "demand",
-        "greece",
-        "military spending",
-        "military expenditure",
-        "arms race",
-        "race",
-        "demand military",
-        "military",
-        "greek",
-        "region"
-      ]
-    },
-    {
-      "id": 11,
-      "key": "equipment_costs",
-      "name": "Equipment costs and replacement",
-      "keywords": [
-        "cost",
-        "aircraft",
-        "equipment",
-        "cost escalation",
-        "costs",
-        "escalation",
-        "type",
-        "twvs",
-        "unit",
-        "life"
-      ]
-    },
-    {
-      "id": 12,
-      "key": "defence_policy",
-      "name": "Defence budgets and national policy",
-      "keywords": [
-        "defence",
-        "defence policy",
-        "budget",
-        "canadian",
-        "canada",
-        "defence budget",
-        "force",
-        "policy",
-        "spending",
-        "defense"
-      ]
-    },
-    {
-      "id": 13,
-      "key": "debt",
+      "id": 9,
       "name": "Military spending and debt",
       "keywords": [
         "debt",
         "external debt",
         "external",
         "military spending",
+        "spending",
         "spending external",
         "default",
-        "military expenditure",
         "deficits",
-        "government debt",
-        "domestic debt"
-      ]
-    },
-    {
-      "id": 14,
-      "key": "political_economy",
-      "name": "Political institutions, inequality and corruption",
-      "keywords": [
-        "corruption",
-        "military spending",
-        "military expenditure",
         "military",
-        "spending",
-        "inequality",
-        "autocrats",
-        "expenditure",
-        "democracy",
-        "political"
+        "government debt"
       ]
     }
   ],
@@ -699,65 +602,62 @@
           "name": "Defence expenditure studies",
           "count": 29,
           "topic_ids": [
-            0,
-            10,
-            12
+            1,
+            9
           ],
           "relationship": "partial",
-          "note": "Expenditure research is split between spending/growth, demand and strategic interactions, and national budget-policy topics. The first-period Greek expenditure model sits in spending/growth, so these are overlapping scope correspondences rather than exclusive classifications.",
+          "note": "The editorial category includes demand, time-series properties and macroeconomic consequences of spending; the model separates a broad spending/growth topic from a narrower debt topic.",
           "definition": "Demand for military expenditure, its economic consequences and the behaviour of spending over time."
         },
         {
           "name": "Procurement processes and policies",
           "count": 21,
           "topic_ids": [
-            8,
-            11,
-            5
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "Procurement and industrial cooperation now form a distinct topic. Equipment costs form another, with no assignments in this early sample. The reviewed government repair-contract model is assigned to strategic models; procurement incentives are therefore still split across topics.",
+          "note": "Procurement is spread across the industry/industrial-base topic and the more specific equipment-cost topic. Neither topic is an exclusive procurement category.",
           "definition": "How defence equipment is purchased and how procurement arrangements and incentives operate."
         },
         {
           "name": "Economics of alliances",
           "count": 18,
           "topic_ids": [
-            6
+            5
           ],
           "relationship": "close",
-          "note": "Alliance public goods, burden sharing and contribution incentives are recognisable. The reviewed NATO peacekeeping and international-status studies also show that this topic is broader than any single alliance activity.",
+          "note": "Alliance contributions, burden sharing and public goods are recognisable in the model. Similar scope does not imply identical article assignments.",
           "definition": "Alliance provision and contributions, including burden sharing and public goods; later retrospectives also include common European defence cooperation."
         },
         {
           "name": "Conversion",
           "count": 17,
           "topic_ids": [
-            7
+            3
           ],
           "relationship": "broader",
-          "note": "The Kaliningrad conversion paper is assigned to the wider industries/firms/innovation topic. Conversion is represented within that topic but is not a separate cluster.",
+          "note": "Conversion is absorbed into the broader industry topic, rather than recovered as a separate cluster.",
           "definition": "The adjustment of military resources and industries towards civilian uses."
         },
         {
           "name": "Defence industries and industrial base",
           "count": 16,
           "topic_ids": [
-            7,
-            8
+            3
           ],
-          "relationship": "partial",
-          "note": "Industry structure and innovation sit in one topic; procurement-driven industrial policy and cooperation sit in another. The Dutch industry interface and Spanish procurement examples illustrate the overlap.",
+          "relationship": "broader",
+          "note": "The industry topic also captures conversion, procurement, R&D and some country surveys.",
           "definition": "The structure, organisation and performance of defence producers and their industrial base."
         },
         {
           "name": "Military manpower",
           "count": 14,
           "topic_ids": [
-            3
+            4
           ],
           "relationship": "close",
-          "note": "Recruitment, retention, service and military labour form a recognisable pooled topic, but it has no assigned abstracts in the available first-period sample.",
+          "note": "Personnel, enlistment, labour-market and veterans research form a recognisable model topic; this topic has no assigned papers in the available first-period sample.",
           "definition": "Military labour supply, recruitment, retention and the organisation of service personnel."
         },
         {
@@ -765,40 +665,36 @@
           "count": 11,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Country surveys remain a publication format rather than a separate substantive cluster. The reviewed Turkey survey is assigned to spending/growth; surveys cannot be counted by using that entire topic.",
+          "note": "This is a publication format rather than a single abstract theme. Country survey IX: Spain is assigned to the industry topic; country surveys are not a distinct cluster.",
           "definition": "Country-focused surveys of defence economics; a survey format rather than a single substantive topic."
         },
         {
           "name": "Terrorism, guerrilla warfare, and insurgencies",
           "count": 11,
           "topic_ids": [
-            1,
             2,
-            5
+            0
           ],
           "relationship": "partial",
-          "note": "The combined category spans the separate terrorism, civil-conflict and strategic-model topics. The early sample has no terrorism assignments; its civil-conflict example concerns democracy and peace, while its strategic-model example concerns contracting. These counts do not establish first-decade insurgency prevalence.",
+          "note": "The combined editorial category crosses the separate terrorism and broad conflict topics. Zero terrorism assignments in this small late-decade sample do not establish absence across the 1990s.",
           "definition": "Economic analysis of terrorism and armed insurgency, combined in the original first-decade grouping."
         },
         {
           "name": "Defence and growth",
           "count": 9,
           "topic_ids": [
-            0
+            1
           ],
           "relationship": "broader",
-          "note": "Growth is prominent in the spending/growth topic, including the reviewed Turkey country survey, but the early topic also contains a Greek expenditure-demand model. Its count is not an exclusive growth-paper total.",
+          "note": "The broad model topic combines growth with other spending and economic-effect studies.",
           "definition": "The relationship between defence expenditure and economic growth."
         },
         {
           "name": "Public choice and defence",
           "count": 8,
-          "topic_ids": [
-            14,
-            5
-          ],
-          "relationship": "partial",
-          "note": "Political institutions and distributional questions form a separate pooled topic, while incentive and principal-agent models can occur in the strategic topic. No political-economy abstracts are assigned in this early sample; the strategic example is government contracting, not a standalone public-choice category.",
+          "topic_ids": [],
+          "relationship": "not_resolved",
+          "note": "Public choice is not separately resolved by the ten-topic model; it may be present within several substantive topics.",
           "definition": "Political decision making, incentives and collective choice applied to defence."
         },
         {
@@ -806,60 +702,56 @@
           "count": 7,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Regional economics is not independently resolved. The Kaliningrad conversion example occurs within the industry topic; that entire topic cannot be treated as regional research.",
+          "note": "Regional studies do not form a distinct model topic. This does not establish that regional research is absent.",
           "definition": "Regional and local economic dimensions of defence activity and expenditure."
         },
         {
           "name": "Defence R&D, technological change, and weapon development",
           "count": 6,
           "topic_ids": [
-            7,
-            8,
-            11
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "Innovation, industrial procurement and equipment capability/cost research overlap the R&D category across three topics. None is an exclusive R&D cluster, and equipment-cost assignments are absent from the available early sample.",
+          "note": "Industrial organisation and equipment costs capture related content, but the model does not isolate R&D as an editorial category.",
           "definition": "Research, technological progress and the development of military equipment."
         },
         {
           "name": "Military posture and strategic policy",
           "count": 6,
-          "topic_ids": [
-            12
-          ],
-          "relationship": "broader",
-          "note": "National defence budgets and policy now form a recognisable topic. The reviewed French policy and force-structure papers support this overlap, but the cluster extends beyond military posture alone.",
+          "topic_ids": [],
+          "relationship": "not_resolved",
+          "note": "Strategic policy is not an independent model topic; policy content is dispersed across substantive clusters.",
           "definition": "The economic dimensions of strategic choices and the configuration of military forces."
         },
         {
           "name": "Arms races",
           "count": 6,
           "topic_ids": [
-            4,
-            10
+            6
           ],
           "relationship": "partial",
-          "note": "The weapons/arms topic includes the reviewed increasing-returns arms-race model; the expenditure-interaction topic includes the Greek-Turkish arms-race study. The two clusters also contain work outside arms racing.",
+          "note": "The model combines arms-race, weapons-production and arms-trade content. The reviewed increasing-returns arms-race paper illustrates this overlap.",
           "definition": "Strategic interaction and competitive accumulation of armaments."
         },
         {
           "name": "Arms trade",
           "count": 5,
           "topic_ids": [
-            4
+            6
           ],
           "relationship": "broader",
-          "note": "The arms topic combines trade, production, arms races and weapons strategy. The reviewed production-in-less-industrialised-countries paper illustrates its wider scope. The original first retrospective reports five arms-trade papers, whereas the later summary reports six.",
+          "note": "The model arms topic also includes arms races and weapons production. The original first retrospective reports five trade papers; later summaries report six.",
           "definition": "International transfers of weapons and the economics of arms markets."
         },
         {
           "name": "Disarmament and arms control",
           "count": 5,
           "topic_ids": [
-            4
+            6
           ],
           "relationship": "partial",
-          "note": "The increasing-returns arms-race paper explicitly discusses arms-control agreements, but arms control is not independently resolved from the wider weapons/arms topic.",
+          "note": "Arms control overlaps the mixed arms topic, without being independently resolved.",
           "definition": "The economics of reducing and limiting armaments."
         },
         {
@@ -867,18 +759,18 @@
           "count": 5,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "The residual editorial category is not a coherent thematic seed or a single model cluster. Unassigned model abstracts are a different concept and are not equated with Others.",
+          "note": "A residual editorial category has no one-to-one thematic model equivalent.",
           "definition": "Residual papers outside the named categories; not a single research theme."
         },
         {
           "name": "Military production function",
           "count": 4,
           "topic_ids": [
-            7,
-            11
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "Firm productivity/efficiency and equipment cost-effectiveness provide related scope, but neither cluster is an exclusive military input-output production-function category.",
+          "note": "Production and efficiency content overlaps industry and equipment costs, rather than forming a standalone model category.",
           "definition": "The relationship between military inputs, outputs and productive efficiency."
         },
         {
@@ -886,27 +778,28 @@
           "count": 4,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Seeding the conceptual-foundations theme did not produce an independently resolved foundations/history cluster. Similarity-based seed matches are not used as editorial labels.",
+          "note": "History and scope of the field are not independently resolved. The reviewed Adam Smith article illustrates content outside the dominant interpretation of the broad conflict cluster.",
           "definition": "The scope and conceptual foundations of defence economics as a field."
         },
         {
           "name": "Defence budgets",
           "count": 3,
           "topic_ids": [
-            12
+            1,
+            9
           ],
-          "relationship": "broader",
-          "note": "The national budget-policy topic includes budgeting, force structure and strategic choices. It is a wider topic than budget formulation and allocation alone.",
+          "relationship": "partial",
+          "note": "Budget-related content can fall within spending or debt; the model does not isolate budgeting as a category.",
           "definition": "The formulation and allocation of defence budgets."
         },
         {
           "name": "Developing countries and defence",
           "count": 2,
           "topic_ids": [
-            0
+            1
           ],
           "relationship": "broader",
-          "note": "The reviewed Turkey spending/growth survey illustrates a developing-economy application within a wider macroeconomic topic. That topic is not an exclusive developing-country classification.",
+          "note": "The reviewed Turkey growth study illustrates a country-specific application inside the broad spending/growth topic.",
           "definition": "Defence economics questions focused on developing economies."
         }
       ],
@@ -936,141 +829,133 @@
           "name": "Defence and the economy",
           "count": 56,
           "topic_ids": [
-            0
+            1
           ],
-          "relationship": "narrower",
-          "note": "The most direct correspondence is the defence-spending/growth topic. The editorial category covers wider macroeconomic effects, while debt and political/distributional effects appear in separate topics. This is not a complete count of economic-impact studies.",
+          "relationship": "broader",
+          "note": "The model spending/growth cluster also contains expenditure-demand and other macroeconomic studies that the editors separate into additional categories.",
           "definition": "The broad economic impact and effects of defence expenditure, including growth and other macroeconomic outcomes."
         },
         {
           "name": "Terrorism",
           "count": 37,
           "topic_ids": [
-            1
+            2
           ],
           "relationship": "close",
-          "note": "Terrorist behaviour, its determinants and counterterrorism form a recognisable theme. Some financial-market consequences occur in the risk/markets topic; close scope does not establish article-level agreement.",
+          "note": "Both groupings identify a terrorism theme. Similar counts or shares are thematic correspondence, not verified article-level agreement.",
           "definition": "Economic analysis of terrorist behaviour, its consequences and counterterrorism."
         },
         {
           "name": "Defence policies, planning and management",
           "count": 30,
           "topic_ids": [
-            8,
-            11,
-            12
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "This broad editorial grouping is split across procurement/industrial cooperation, equipment costs/replacement, and national budgets/policy. Each whole-topic count also includes content beyond the editorial category.",
+          "note": "Procurement and management content is distributed across industry and equipment-cost topics; neither has the same editorial scope.",
           "definition": "A broad policy grouping including procurement, budgeting and allocation, military policy and posture."
         },
         {
           "name": "Conflict and civil wars",
           "count": 29,
           "topic_ids": [
-            2,
-            5
+            0
           ],
-          "relationship": "partial",
-          "note": "Conflict is now split between civil-conflict/war/peace research and strategic contest/intervention models. The former also includes peacekeeping and other conflict research; the latter includes broader game-theoretic models. Their scopes are not identical to the editorial category.",
+          "relationship": "broader",
+          "note": "The model conflict/war/peace topic extends beyond civil wars to other conflict and peace-related work.",
           "definition": "The economics of conflict and civil war, including their causes and consequences."
         },
         {
           "name": "Defence industries and industrial base",
           "count": 25,
           "topic_ids": [
-            7,
-            8
+            3
           ],
-          "relationship": "partial",
-          "note": "Firms, industrial performance and innovation form one topic, while industrial procurement/cooperation forms another. These topics also overlap R&D and policy; neither count is an exclusive industrial-base total.",
+          "relationship": "broader",
+          "note": "The model industry topic also contains conversion, R&D, procurement and country or company surveys.",
           "definition": "The structure, organisation and performance of defence producers and their industrial base."
         },
         {
           "name": "Peace and peacekeeping",
           "count": 23,
           "topic_ids": [
-            2,
-            5,
-            6
+            0,
+            5
           ],
           "relationship": "partial",
-          "note": "Peacekeeping financing and post-conflict peace overlap civil-conflict research, strategic intervention and collective-contribution models. Personnel and country-policy studies also contain peacekeeping applications. There is no standalone peacekeeping cluster, so these whole-topic series cannot verify the editorial decline.",
+          "note": "Peace-related work can fall within conflict or alliance topics. The model has no standalone peacekeeping cluster, so the editorial decline cannot be verified from a dedicated model series.",
           "definition": "Economic analysis of peace and activities that maintain peace."
         },
         {
           "name": "Arms races, arms control and disarmament",
           "count": 22,
           "topic_ids": [
-            4,
-            10
+            6
           ],
           "relationship": "partial",
-          "note": "Arms competition/control overlaps the mixed weapons/arms topic and expenditure-interaction research. Trade, production and other spending-demand studies are also present; neither topic is an exclusive arms-control category.",
+          "note": "The mixed arms topic includes arms trade and production as well as arms races and control; its count is not a count of this editorial category.",
           "definition": "Arms competition together with policies and agreements to constrain or reduce armaments."
         },
         {
           "name": "Economics of alliances",
           "count": 20,
           "topic_ids": [
-            6
+            5
           ],
           "relationship": "close",
-          "note": "Alliance public goods, contributions and burden sharing remain recognisable, including NATO and historical alliances. The topic also includes some collective peacekeeping-finance research, while industrial cooperation can occur in the procurement topic.",
+          "note": "Alliance public goods, burden sharing and contributions are recognisable; the model includes both NATO and other alliances.",
           "definition": "Alliance provision and contributions, including burden sharing and public goods; later retrospectives also include common European defence cooperation."
         },
         {
           "name": "Defence R&D and technology",
           "count": 17,
           "topic_ids": [
-            7,
-            8,
-            11
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "The reviewed procurement-driven technological-change, collaborative-development and capability/cost studies illustrate research distributed across industry/innovation, procurement/cooperation and equipment-cost topics. The model has no exclusive R&D cluster.",
+          "note": "R&D overlaps industry and equipment-cost research but does not form a separate model cluster.",
           "definition": "Research and development and technological change in the defence sector."
         },
         {
           "name": "Fiscal effects of defence spending",
           "count": 16,
           "topic_ids": [
-            13
+            9
           ],
           "relationship": "narrower",
-          "note": "The debt topic isolates a narrower public-finance theme, with reviewed military-spending/external-debt studies. Other budgetary and fiscal consequences are not captured by its count alone.",
+          "note": "The model debt topic is a narrower fiscal theme; the editorial category also includes other budgetary and fiscal effects.",
           "definition": "Public-finance consequences of military spending, rather than all macroeconomic effects."
         },
         {
           "name": "Military personnel and recruitment",
           "count": 14,
           "topic_ids": [
-            3
+            4
           ],
           "relationship": "close",
-          "note": "Recruitment, retention, military service, training and labour-market outcomes are recognisable. The topic also contains some peacekeeping and other labour applications, so the scopes are not identical.",
+          "note": "Recruiting, attrition, labour-market outcomes, military service and veterans research form a recognisable topic.",
           "definition": "Military labour, recruitment, retention and personnel issues."
         },
         {
           "name": "Models of defence expenditures",
           "count": 12,
           "topic_ids": [
-            10,
-            12,
-            14
+            1
           ],
-          "relationship": "partial",
-          "note": "Demand and strategic expenditure interactions form a distinct topic, but national budget-policy models and political-regime determinants also occupy separate topics. The reviewed Greece-Turkey, national-policy and regime studies illustrate the split.",
+          "relationship": "broader",
+          "note": "Demand and expenditure models are absorbed into the broad model spending/growth topic.",
           "definition": "Modelling and explaining the determination and patterns of defence expenditure."
         },
         {
           "name": "Arms trade",
           "count": 10,
           "topic_ids": [
-            4
+            6
           ],
           "relationship": "broader",
-          "note": "Trade is embedded in a wider weapons/arms topic that also includes arms racing, intelligence and production. Its whole-topic count must not be read as an arms-trade-paper total.",
+          "note": "The model arms topic also covers arms races and control; it is not an exclusive trade category.",
           "definition": "International transfers of weapons and the economics of arms markets."
         },
         {
@@ -1078,7 +963,7 @@
           "count": 9,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Country surveys remain dispersed by substantive content. The reviewed Canadian and Norwegian policy surveys illustrate national-policy assignments; other surveys occur in spending, industry or alliance topics. There is no survey-format cluster.",
+          "note": "Country surveys are organised by substantive abstract content. The reviewed Spain and UK surveys appear within industry, not in a distinct survey cluster.",
           "definition": "Country-focused surveys of defence economics; a survey format rather than a single substantive topic."
         },
         {
@@ -1086,7 +971,7 @@
           "count": 7,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "The residual editorial category is not a coherent thematic seed or a single model cluster. Unassigned model abstracts are a different concept and are not equated with Others.",
+          "note": "A residual editorial category has no one-to-one thematic model equivalent.",
           "definition": "Residual papers outside the named categories; not a single research theme."
         },
         {
@@ -1094,7 +979,7 @@
           "count": 4,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Regional studies are not independently resolved. The reviewed south-west England supply-chain and spatial-growth studies occur in broader industry or spending/growth topics, whose full counts cannot represent regional research.",
+          "note": "The model has no distinct regional-economics topic; papers may be dispersed across broader clusters.",
           "definition": "Regional and local economic dimensions of defence activity and expenditure."
         }
       ],
@@ -1124,142 +1009,133 @@
           "name": "Defence and the economy",
           "count": 65,
           "topic_ids": [
-            0
+            1
           ],
-          "relationship": "narrower",
-          "note": "The most direct correspondence is the defence-spending/growth topic. The editorial category covers wider macroeconomic effects, while debt and political/distributional effects appear in separate topics. This is not a complete count of economic-impact studies.",
+          "relationship": "broader",
+          "note": "The model spending/growth cluster also contains expenditure-demand and other macroeconomic studies that the editors separate into additional categories.",
           "definition": "The broad economic impact and effects of defence expenditure, including growth and other macroeconomic outcomes."
         },
         {
           "name": "Terrorism",
           "count": 55,
           "topic_ids": [
-            1
+            2
           ],
           "relationship": "close",
-          "note": "Terrorist behaviour, its determinants and counterterrorism form a recognisable theme. Some financial-market consequences occur in the risk/markets topic; close scope does not establish article-level agreement.",
+          "note": "Both groupings identify a terrorism theme. Similar counts or shares are thematic correspondence, not verified article-level agreement.",
           "definition": "Economic analysis of terrorist behaviour, its consequences and counterterrorism."
         },
         {
           "name": "Conflict and civil wars",
           "count": 70,
           "topic_ids": [
-            2,
-            5
+            0
           ],
-          "relationship": "partial",
-          "note": "Conflict is now split between civil-conflict/war/peace research and strategic contest/intervention models. The former also includes peacekeeping and other conflict research; the latter includes broader game-theoretic models. Their scopes are not identical to the editorial category.",
+          "relationship": "broader",
+          "note": "The model conflict/war/peace topic extends beyond civil wars to other conflict and peace-related work.",
           "definition": "The economics of conflict and civil war, including their causes and consequences."
         },
         {
           "name": "Defence policies, planning and management",
           "count": 33,
           "topic_ids": [
-            8,
-            11,
-            12
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "This broad editorial grouping is split across procurement/industrial cooperation, equipment costs/replacement, and national budgets/policy. Each whole-topic count also includes content beyond the editorial category.",
+          "note": "Procurement and management content is distributed across industry and equipment-cost topics; neither has the same editorial scope.",
           "definition": "A broad policy grouping including procurement, budgeting and allocation, military policy and posture."
         },
         {
           "name": "Defence industries and industrial base",
           "count": 15,
           "topic_ids": [
-            7,
-            8
+            3
           ],
-          "relationship": "partial",
-          "note": "Firms, industrial performance and innovation form one topic, while industrial procurement/cooperation forms another. These topics also overlap R&D and policy; neither count is an exclusive industrial-base total.",
+          "relationship": "broader",
+          "note": "The model industry topic also contains conversion, R&D, procurement and country or company surveys.",
           "definition": "The structure, organisation and performance of defence producers and their industrial base."
         },
         {
           "name": "Peace and peacekeeping",
           "count": 7,
           "topic_ids": [
-            2,
-            5,
-            6
+            0,
+            5
           ],
           "relationship": "partial",
-          "note": "Peacekeeping financing and post-conflict peace overlap civil-conflict research, strategic intervention and collective-contribution models. Personnel and country-policy studies also contain peacekeeping applications. There is no standalone peacekeeping cluster, so these whole-topic series cannot verify the editorial decline.",
+          "note": "Peace-related work can fall within conflict or alliance topics. The model has no standalone peacekeeping cluster, so the editorial decline cannot be verified from a dedicated model series.",
           "definition": "Economic analysis of peace and activities that maintain peace."
         },
         {
           "name": "Arms races, arms control and disarmament",
           "count": 12,
           "topic_ids": [
-            4,
-            10
+            6
           ],
           "relationship": "partial",
-          "note": "Arms competition/control overlaps the mixed weapons/arms topic and expenditure-interaction research. Trade, production and other spending-demand studies are also present; neither topic is an exclusive arms-control category.",
+          "note": "The mixed arms topic includes arms trade and production as well as arms races and control; its count is not a count of this editorial category.",
           "definition": "Arms competition together with policies and agreements to constrain or reduce armaments."
         },
         {
           "name": "Economics of alliances",
           "count": 9,
           "topic_ids": [
-            6
+            5
           ],
           "relationship": "close",
-          "note": "Alliance public goods, contributions and burden sharing remain recognisable, including NATO and historical alliances. The topic also includes some collective peacekeeping-finance research, while industrial cooperation can occur in the procurement topic.",
+          "note": "Alliance public goods, burden sharing and contributions are recognisable; the model includes both NATO and other alliances.",
           "definition": "Alliance provision and contributions, including burden sharing and public goods; later retrospectives also include common European defence cooperation."
         },
         {
           "name": "Defence R&D and technology",
           "count": 10,
           "topic_ids": [
-            7,
-            8,
-            11
+            3,
+            7
           ],
           "relationship": "partial",
-          "note": "The reviewed procurement-driven technological-change, collaborative-development and capability/cost studies illustrate research distributed across industry/innovation, procurement/cooperation and equipment-cost topics. The model has no exclusive R&D cluster.",
+          "note": "R&D overlaps industry and equipment-cost research but does not form a separate model cluster.",
           "definition": "Research and development and technological change in the defence sector."
         },
         {
           "name": "Fiscal effects of defence spending",
           "count": 15,
           "topic_ids": [
-            13
+            9
           ],
           "relationship": "narrower",
-          "note": "The debt topic isolates a narrower public-finance theme, with reviewed military-spending/external-debt studies. Other budgetary and fiscal consequences are not captured by its count alone.",
+          "note": "The model debt topic is a narrower fiscal theme; the editorial category also includes other budgetary and fiscal effects.",
           "definition": "Public-finance consequences of military spending, rather than all macroeconomic effects."
         },
         {
           "name": "Military personnel and recruitment",
           "count": 29,
           "topic_ids": [
-            3
+            4
           ],
           "relationship": "close",
-          "note": "Recruitment, retention, military service, training and labour-market outcomes are recognisable. The topic also contains some peacekeeping and other labour applications, so the scopes are not identical.",
+          "note": "Recruiting, attrition, labour-market outcomes, military service and veterans research form a recognisable topic.",
           "definition": "Military labour, recruitment, retention and personnel issues."
         },
         {
           "name": "Models of defence expenditures",
           "count": 29,
           "topic_ids": [
-            10,
-            12,
-            14
+            1
           ],
-          "relationship": "partial",
-          "note": "Demand and strategic expenditure interactions form a distinct topic, but national budget-policy models and political-regime determinants also occupy separate topics. The reviewed Greece-Turkey, national-policy and regime studies illustrate the split.",
+          "relationship": "broader",
+          "note": "Demand and expenditure models are absorbed into the broad model spending/growth topic.",
           "definition": "Modelling and explaining the determination and patterns of defence expenditure."
         },
         {
           "name": "Arms trade and production",
           "count": 6,
           "topic_ids": [
-            4,
-            7
+            6
           ],
-          "relationship": "partial",
-          "note": "The mixed arms topic includes international transfers and weapons production alongside arms races and intelligence. Firm/industrial production also overlaps the industries/innovation topic. Neither topic is an exclusive trade-and-production category.",
+          "relationship": "broader",
+          "note": "The model arms topic also covers arms races and control; it is not an exclusive trade category.",
           "definition": "The transfer and production of armaments, combined in the third-decade grouping."
         },
         {
@@ -1267,7 +1143,7 @@
           "count": 6,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Country surveys remain dispersed by substantive content. The reviewed Canadian and Norwegian policy surveys illustrate national-policy assignments; other surveys occur in spending, industry or alliance topics. There is no survey-format cluster.",
+          "note": "Country surveys are organised by substantive abstract content. The reviewed Spain and UK surveys appear within industry, not in a distinct survey cluster.",
           "definition": "Country-focused surveys of defence economics; a survey format rather than a single substantive topic."
         },
         {
@@ -1275,31 +1151,27 @@
           "count": 3,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "Regional studies are not independently resolved. The reviewed south-west England supply-chain and spatial-growth studies occur in broader industry or spending/growth topics, whose full counts cannot represent regional research.",
+          "note": "The model has no distinct regional-economics topic; papers may be dispersed across broader clusters.",
           "definition": "Regional and local economic dimensions of defence activity and expenditure."
         },
         {
           "name": "Security economics/issues",
           "count": 21,
           "topic_ids": [
-            9,
-            2,
-            3,
-            12,
-            14
+            8
           ],
-          "relationship": "partial",
-          "note": "Financial-market risk (9), sanctions and conflict (2), piracy/labour (3), police spending (12), and sanctions/regimes (14) occupy different broader topics. The reviewed examples support these overlaps; adding the topic counts would not reproduce the security category.",
+          "relationship": "narrower",
+          "note": "The model geopolitical-risk/markets topic captures only part of the editorial security category, which also includes sanctions, policing and piracy.",
           "definition": "A broad additional third-decade category including sanctions, policing, piracy and other security questions."
         },
         {
           "name": "Company surveys",
           "count": 2,
           "topic_ids": [
-            7
+            3
           ],
           "relationship": "broader",
-          "note": "The reviewed BAE Systems company survey is assigned to the wider industries/firms/innovation topic. The survey format has no separate cluster, and the whole industry count is not a company-survey total.",
+          "note": "Company surveys are grouped by industrial content; the model does not distinguish the survey format.",
           "definition": "Surveys of individual defence companies; an organisational focus rather than a single substantive theme."
         },
         {
@@ -1307,7 +1179,7 @@
           "count": 2,
           "topic_ids": [],
           "relationship": "not_resolved",
-          "note": "The residual editorial category is not a coherent thematic seed or a single model cluster. Unassigned model abstracts are a different concept and are not equated with Others.",
+          "note": "A residual editorial category has no one-to-one thematic model equivalent.",
           "definition": "Residual papers outside the named categories; not a single research theme."
         }
       ],
@@ -1326,205 +1198,115 @@
   "reviewed_examples": {
     "first": {
       "0": [
-        "RePEc:taf:defpea:v:8:y:1997:i:2:p:145-187",
-        "RePEc:taf:defpea:v:8:y:1997:i:4:p:381-409"
+        "RePEc:taf:defpea:v:10:y:1999:i:1:p:1-37",
+        "RePEc:taf:defpea:v:9:y:1998:i:3:p:299-316"
       ],
-      "2": [
-        "RePEc:taf:defpea:v:10:y:1999:i:1:p:1-37"
+      "1": [
+        "RePEc:taf:defpea:v:8:y:1997:i:2:p:189-204",
+        "RePEc:taf:defpea:v:8:y:1997:i:3:p:251-266"
       ],
-      "4": [
-        "RePEc:taf:defpea:v:10:y:1999:i:1:p:39-54",
-        "RePEc:taf:defpea:v:10:y:1999:i:2:p:139-169"
+      "3": [
+        "RePEc:taf:defpea:v:8:y:1997:i:3:p:267-306",
+        "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:83-97"
       ],
       "5": [
-        "RePEc:taf:defpea:v:10:y:1999:i:2:p:191-223"
-      ],
-      "6": [
         "RePEc:taf:defpea:v:8:y:1997:i:1:p:101-121",
         "RePEc:taf:defpea:v:8:y:1997:i:1:p:1-16"
       ],
-      "7": [
-        "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:83-97",
-        "RePEc:taf:defpea:v:9:y:1998:i:4:p:395-406"
-      ],
-      "8": [
-        "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:3-37",
-        "RePEc:taf:defpea:v:9:y:1998:i:1-2:p:63-81"
-      ],
-      "10": [
-        "RePEc:taf:defpea:v:8:y:1997:i:4:p:355-379"
-      ],
-      "12": [
-        "RePEc:taf:defpea:v:10:y:1999:i:1:p:79-102",
-        "RePEc:taf:defpea:v:8:y:1997:i:1:p:37-55"
+      "6": [
+        "RePEc:taf:defpea:v:10:y:1999:i:1:p:39-54",
+        "RePEc:taf:defpea:v:9:y:1998:i:3:p:223-236"
       ]
     },
     "second": {
       "0": [
+        "RePEc:taf:defpea:v:13:y:2002:i:6:p:435-450",
+        "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496"
+      ],
+      "1": [
         "RePEc:taf:defpea:v:13:y:2002:i:3:p:179-186",
         "RePEc:taf:defpea:v:14:y:2003:i:1:p:51-59"
       ],
-      "1": [
+      "2": [
         "RePEc:taf:defpea:v:16:y:2005:i:4:p:263-273",
         "RePEc:taf:defpea:v:17:y:2006:i:4:p:329-341"
       ],
-      "2": [
-        "RePEc:taf:defpea:v:13:y:2002:i:3:p:215-243",
-        "RePEc:taf:defpea:v:12:y:2001:i:6:p:497-535"
-      ],
       "3": [
+        "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
+        "RePEc:taf:defpea:v:12:y:2001:i:2:p:103-144"
+      ],
+      "4": [
         "RePEc:taf:defpea:v:14:y:2003:i:5:p:329-342",
         "RePEc:taf:defpea:v:18:y:2007:i:4:p:377-389"
       ],
-      "4": [
-        "RePEc:taf:defpea:v:11:y:2000:i:1:p:45-54",
-        "RePEc:taf:defpea:v:13:y:2002:i:2:p:137-143"
-      ],
       "5": [
-        "RePEc:taf:defpea:v:13:y:2002:i:6:p:485-496",
-        "RePEc:taf:defpea:v:20:y:2009:i:3:p:149-169"
-      ],
-      "6": [
         "RePEc:taf:defpea:v:14:y:2003:i:5:p:369-383",
         "RePEc:taf:defpea:v:15:y:2004:i:3:p:231-249"
       ],
+      "6": [
+        "RePEc:taf:defpea:v:13:y:2002:i:2:p:137-143",
+        "RePEc:taf:defpea:v:11:y:2000:i:1:p:45-54"
+      ],
       "7": [
-        "RePEc:taf:defpea:v:11:y:2000:i:1:p:313-328",
-        "RePEc:taf:defpea:v:12:y:2001:i:6:p:537-568"
+        "RePEc:taf:defpea:v:15:y:2004:i:3:p:259-273",
+        "RePEc:taf:defpea:v:15:y:2004:i:4:p:309-330"
       ],
       "8": [
-        "RePEc:taf:defpea:v:13:y:2002:i:4:p:311-319",
-        "RePEc:taf:defpea:v:15:y:2004:i:6:p:551-564"
+        "RePEc:taf:defpea:v:13:y:2002:i:5:p:417-427"
       ],
-      "10": [
-        "RePEc:taf:defpea:v:13:y:2002:i:5:p:405-416",
-        "RePEc:taf:defpea:v:13:y:2002:i:2:p:85-107"
-      ],
-      "11": [
-        "RePEc:taf:defpea:v:15:y:2004:i:5:p:421-431",
-        "RePEc:taf:defpea:v:14:y:2003:i:5:p:357-368"
-      ],
-      "12": [
-        "RePEc:taf:defpea:v:16:y:2005:i:4:p:297-315",
-        "RePEc:taf:defpea:v:16:y:2005:i:3:p:145-169"
-      ],
-      "13": [
-        "RePEc:taf:defpea:v:17:y:2006:i:1:p:47-57",
-        "RePEc:taf:defpea:v:15:y:2004:i:2:p:199-203"
-      ],
-      "14": [
-        "RePEc:taf:defpea:v:19:y:2008:i:1:p:27-35",
-        "RePEc:taf:defpea:v:18:y:2007:i:6:p:519-535"
+      "9": [
+        "RePEc:taf:defpea:v:15:y:2004:i:2:p:125-132",
+        "RePEc:taf:defpea:v:19:y:2008:i:1:p:77-87"
       ]
     },
     "third": {
       "0": [
-        "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193",
-        "RePEc:taf:defpea:v:27:y:2016:i:1:p:87-104"
+        "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283",
+        "RePEc:taf:defpea:v:27:y:2016:i:5:p:688-717"
       ],
       "1": [
-        "RePEc:taf:defpea:v:22:y:2011:i:5:p:493-508",
-        "RePEc:taf:defpea:v:21:y:2010:i:1:p:65-87"
+        "RePEc:taf:defpea:v:26:y:2015:i:4:p:443-456",
+        "RePEc:taf:defpea:v:24:y:2013:i:3:p:183-193"
       ],
       "2": [
-        "RePEc:taf:defpea:v:27:y:2016:i:4:p:453-479",
-        "RePEc:taf:defpea:v:21:y:2010:i:3:p:269-283"
+        "RePEc:taf:defpea:v:21:y:2010:i:1:p:65-87",
+        "RePEc:taf:defpea:v:27:y:2016:i:5:p:626-643"
       ],
       "3": [
+        "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192",
+        "RePEc:taf:defpea:v:21:y:2010:i:1:p:43-63"
+      ],
+      "4": [
         "RePEc:taf:defpea:v:25:y:2014:i:2:p:125-138",
         "RePEc:taf:defpea:v:21:y:2010:i:5-6:p:547-565"
       ],
-      "4": [
-        "RePEc:taf:defpea:v:28:y:2017:i:3:p:367-399",
-        "RePEc:taf:defpea:v:26:y:2015:i:2:p:179-211"
-      ],
       "5": [
-        "RePEc:taf:defpea:v:27:y:2016:i:4:p:520-534",
-        "RePEc:taf:defpea:v:25:y:2014:i:4:p:381-400"
+        "RePEc:taf:defpea:v:23:y:2012:idefpeap:321-330",
+        "RePEc:taf:defpea:v:25:y:2014:i:3:p:213-229"
       ],
       "6": [
-        "RePEc:taf:defpea:v:25:y:2014:i:3:p:213-229",
-        "RePEc:taf:defpea:v:23:y:2012:idefpeap:321-330"
+        "RePEc:taf:defpea:v:30:y:2019:i:1:p:2-26",
+        "RePEc:taf:defpea:v:25:y:2014:i:2:p:205-211"
       ],
       "7": [
-        "RePEc:taf:defpea:v:28:y:2017:i:6:p:652-668",
-        "RePEc:taf:defpea:v:25:y:2014:i:1:p:23-38"
+        "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
+        "RePEc:taf:defpea:v:27:y:2016:i:2:p:208-230"
       ],
       "8": [
-        "RePEc:taf:defpea:v:25:y:2014:i:6:p:535-548",
-        "RePEc:taf:defpea:v:21:y:2010:i:2:p:177-192"
+        "RePEc:taf:defpea:v:30:y:2019:i:3:p:367-379",
+        "RePEc:taf:defpea:v:21:y:2010:i:4:p:357-365"
       ],
       "9": [
-        "RePEc:taf:defpea:v:21:y:2010:i:4:p:357-365",
-        "RePEc:taf:defpea:v:30:y:2019:i:6:p:733-755"
-      ],
-      "10": [
-        "RePEc:taf:defpea:v:24:y:2013:i:1:p:73-87",
-        "RePEc:taf:defpea:v:21:y:2010:i:4:p:301-316"
-      ],
-      "11": [
-        "RePEc:taf:defpea:v:27:y:2016:i:2:p:280-298",
-        "RePEc:taf:defpea:v:24:y:2013:i:4:p:293-316"
-      ],
-      "12": [
-        "RePEc:taf:defpea:v:28:y:2017:i:6:p:669-685",
-        "RePEc:taf:defpea:v:22:y:2011:i:4:p:409-421"
-      ],
-      "13": [
         "RePEc:taf:defpea:v:28:y:2017:i:5:p:550-567",
         "RePEc:taf:defpea:v:23:y:2012:i:5:p:485-506"
-      ],
-      "14": [
-        "RePEc:taf:defpea:v:26:y:2015:i:1:p:49-74",
-        "RePEc:taf:defpea:v:26:y:2015:i:4:p:409-423"
       ]
     }
   },
   "method": {
-    "basis": "Fifteen fixed topics from the published pooled, retrospective-guided model, counted by publication volume and issue; no per-decade refits.",
-    "training": "The published BERTopic model was guided by 20 seed themes consolidated from the names and definitions in these same three retrospectives. Additional model themes were allowed; not all seeds became separate topics.",
-    "independence": "Correspondence is partly by design because the retrospectives supplied the seeds. This comparison is not independent validation of the model or a measure of classification accuracy.",
+    "basis": "Fixed topics from the published all-period model, split by publication volume and issue; no per-decade refits.",
     "model_denominator": "All abstract-bearing records in the matching period, including unassigned abstracts.",
     "editorial_denominator": "The classified-paper total in each original retrospective, excluding separately listed book reviews.",
-    "crosswalk": "Curated after reading period-specific representative abstracts and targeted scope examples. Mappings describe selected, overlapping scopes, not exclusive editorial assignments; topic counts repeat across rows and must not be added.",
-    "limits": "Editorial categories, fifteen guided model clusters and available abstracts are different classifications and populations. Seed similarity scores do not define this crosswalk. Similar counts are not accuracy estimates, and an unresolved seed does not establish that a research theme was absent.",
-    "review": "Two nearest original members to each period-specific final-topic centroid, falling back to final members where needed, were read in full; additional peacekeeping, sanctions, piracy and company-survey abstracts were checked. All distances used original document embeddings."
-  },
-  "additional_reviewed_examples": {
-    "second": {
-      "2": [
-        "RePEc:taf:defpea:v:17:y:2006:i:5:p:395-411",
-        "RePEc:taf:defpea:v:17:y:2006:i:5:p:413-419"
-      ],
-      "3": [
-        "RePEc:taf:defpea:v:17:y:2006:i:5:p:457-471"
-      ],
-      "5": [
-        "RePEc:taf:defpea:v:17:y:2006:i:5:p:473-485"
-      ],
-      "6": [
-        "RePEc:taf:defpea:v:16:y:2005:i:1:p:1-18"
-      ],
-      "12": [
-        "RePEc:taf:defpea:v:18:y:2007:i:3:p:281-302"
-      ]
-    },
-    "third": {
-      "2": [
-        "RePEc:taf:defpea:v:28:y:2017:i:2:p:250-270",
-        "RePEc:taf:defpea:v:29:y:2018:i:2:p:130-146",
-        "RePEc:taf:defpea:v:22:y:2011:i:4:p:423-448"
-      ],
-      "3": [
-        "RePEc:taf:defpea:v:29:y:2018:i:3:p:312-334",
-        "RePEc:taf:defpea:v:30:y:2019:i:3:p:309-323"
-      ],
-      "7": [
-        "RePEc:taf:defpea:v:23:y:2012:i:4:p:331-342"
-      ],
-      "14": [
-        "RePEc:taf:defpea:v:30:y:2019:i:6:p:648-665"
-      ]
-    }
+    "crosswalk": "Curated after reading period-specific representative abstracts. Mappings describe scope overlap; topic counts repeat across rows and must not be added.",
+    "limits": "Editorial categories, ten model clusters and available abstract-bearing records are not identical classifications or populations. Similar counts are not accuracy estimates. A missing standalone cluster does not mean a research theme was absent."
   }
 }

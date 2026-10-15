@@ -21,11 +21,11 @@ test("period selector, coverage, independent share charts and all crosswalk rows
   assert.equal(container.querySelector('[data-period="third"]').getAttribute("aria-pressed"), "true");
   let content = container.querySelector("#comparison-period-content");
   assert.match(content.textContent, /407/);
-  assert.match(content.textContent, /381 usable abstracts, including 40 unassigned/);
+  assert.match(content.textContent, /381 usable abstracts, including 23 unassigned/);
   assert.match(content.textContent, /389 classified papers/);
   assert.equal(content.querySelectorAll(".editorial-bars .share-row").length, 18);
-  assert.equal(content.querySelectorAll(".model-bars .share-row").length, 16);
-  assert.match(content.querySelector(".unassigned-share").textContent, /40 \/ 381 · 10.5%/);
+  assert.equal(content.querySelectorAll(".model-bars .share-row").length, 11);
+  assert.match(content.querySelector(".unassigned-share").textContent, /23 \/ 381 · 6.0%/);
   assert.match(content.textContent, /not matched pairs/);
   assert.equal(content.querySelectorAll("tbody tr").length, 18);
   assert.ok(content.querySelector(".not_resolved"));
@@ -38,16 +38,16 @@ test("period selector, coverage, independent share charts and all crosswalk rows
   assert.match(content.textContent, /Incomplete first-decade sample/);
   assert.match(content.textContent, /Volumes 1–7 are unavailable/);
   assert.match(content.textContent, /Volumes 10\(3–4\).*excluded/);
-  assert.match(content.textContent, /45 usable abstracts, including 11 unassigned/);
+  assert.match(content.textContent, /45 usable abstracts, including 7 unassigned/);
   assert.match(content.textContent, /207 classified papers/);
   assert.match(content.textContent, /208/);
   assert.equal(content.querySelectorAll("tbody tr").length, 21);
-  assert.match(content.querySelector(".unassigned-share").textContent, /11 \/ 45 · 24.4%/);
+  assert.match(content.querySelector(".unassigned-share").textContent, /7 \/ 45 · 15.6%/);
 
   container.querySelector('[data-period="second"]').click();
   content = container.querySelector("#comparison-period-content");
   assert.equal(content.querySelectorAll("tbody tr").length, 16);
-  assert.match(content.textContent, /330 usable abstracts, including 42 unassigned/);
+  assert.match(content.textContent, /330 usable abstracts, including 26 unassigned/);
   assert.match(content.textContent, /331 classified papers/);
 });
 
@@ -60,29 +60,13 @@ test("reviewed paper selection and primary source DOI citations", () => {
   assert.match(container.textContent, /Table I, p. 398/);
   assert.match(container.textContent, /cannot establish the first decade’s overall thematic distribution/);
   assert.match(container.textContent, /classification accuracy/);
-  assert.match(container.textContent, /15 fixed themes/);
-  assert.match(container.textContent, /20 seed themes/);
-  assert.match(container.textContent, /not independent validation/);
-  assert.doesNotMatch(container.textContent, /ten themes|10 themes|Policy, regional studies and country surveys have no standalone cluster/);
-});
-
-test("narrative follows reviewed meanings even when topic IDs change", () => {
-  const data = comparisonFixture();
-  for (const period of data.periods) {
-    for (const topic of period.model_topics) topic.id += 100;
-    for (const category of period.categories) category.topic_ids = category.topic_ids.map((id) => id + 100);
-  }
-  const {container} = mount(data);
-  assert.match(container.textContent, /12.6%/);
-  assert.match(container.textContent, /14.7%/);
-  assert.match(container.textContent, /15 themes \+ unassigned/);
 });
 
 test("new active model preserves dated interpretation and disables old article mappings", () => {
   const data = {...comparisonFixture(), status: "review_required", links_enabled: false};
   const {container, selected} = mount(data);
   assert.match(container.textContent, /Review needed after a model rebuild/);
-  assert.match(container.textContent, /20261015T154322Z-6505198a/);
+  assert.match(container.textContent, /20261015T112751Z-f48f8afb/);
   assert.match(container.textContent, /389 classified papers/);
   for (const button of container.querySelectorAll("[data-comparison-handle]")) {
     assert.equal(button.disabled, true);
