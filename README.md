@@ -138,13 +138,16 @@ Citation identity, eligibility, recovered links and DOI samples retain their rev
 
 ## Build, preview and publish
 
+Install the [documentation build dependencies](#python-documentation) first; every
+site build includes a fresh Sphinx render.
+
 ```sh
 npm run static:build       # build dist/ from the current local release's dataset
 npm run static:preview    # http://localhost:8790/ and /dpeindex/
 npm run static:validate
 ```
 
-The main navigation links to the research note at `research-note/`. Static builds
+The footer links to the research report at `research-note/`. Static builds
 include the self-contained render from `manuscript/manuscript.html` and its PDF. After editing
 the note, render both formats with `quarto render manuscript/manuscript.qmd --to all` before
 building the site; the site build does not rerun the manuscript analysis.
@@ -194,3 +197,11 @@ and refresh workflows, citation review, MCP jobs, artifact contracts, all 17
 application modules, and supporting preview/manuscript scripts. The build imports
 API definitions with the optional MCP transport mocked; it does not train models,
 fetch source data, launch jobs, or publish the documentation.
+
+`npm run static:build` also renders these docs into `dist/python-docs/` for
+GitHub Pages, failing on Sphinx warnings. Install `requirements-docs.txt` before
+building the site. The builder uses `.venv-docs/bin/python` when available,
+otherwise `python3`; set `DPE_DOCS_PYTHON` to use another Python executable.
+The rendered pages, source links, search index and assets are validated and
+published with the rest of the site. The site footer links to the Python docs,
+research report, GitHub repository and defenceeconomist.io.

@@ -14,6 +14,9 @@ autodoc_mock_imports = ['mcp', 'anyio', 'fcntl']
 autodoc_default_options = {'members': True, 'undoc-members': True, 'member-order': 'bysource'}
 autodoc_typehints = 'signature'
 autodoc_preserve_defaults = True
+# Keep source links in the documented app modules, rather than following mocked
+# MCP registration objects into nonexistent third-party source pages.
+viewcode_follow_imported_members = False
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'alabaster'
 html_title = project

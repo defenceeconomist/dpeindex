@@ -7,6 +7,30 @@ async function screenshot(page, testInfo, name) {
   await page.screenshot({path: join(process.env.DPE_SCREENSHOT_DIR, `${testInfo.project.name}-${name}.png`)});
 }
 const prefix = "/dpeindex/";
+test("footer links and published Python documentation work under the Pages prefix", async ({page}, info) => {
+  for (const path of ["?collection_type=country_survey&collection=country-canada", "topics/", "citations/"]) {
+    await page.goto(prefix + path);
+    const footer = page.getByRole("navigation", {name: "Footer navigation"});
+    await expect(footer.getByRole("link", {name: "GitHub", exact: true})).toHaveAttribute("href", "https://github.com/defenceeconomist/dpeindex");
+    await expect(footer.getByRole("link", {name: "defenceeconomist.io", exact: true})).toHaveAttribute("href", "https://defenceeconomist.io");
+    await expect(footer.getByRole("link", {name: "Python docs"})).toHaveAttribute("href", /python-docs\/$/);
+    await expect(footer.getByRole("link", {name: "Research report"})).toHaveAttribute("href", /research-note\/$/);
+    await expect(page.getByRole("navigation", {name: "Main navigation"}).getByRole("link", {name: /Research/})).toHaveCount(0);
+  }
+  await page.setViewportSize({width: 390, height: 844});
+  await page.locator("footer").scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await screenshot(page, info, "footer-mobile");
+  await page.locator("footer").getByRole("link", {name: "Python docs"}).click();
+  await expect(page.locator(".body h1")).toContainText("DPE Python documentation");
+  await page.goto(prefix + "python-docs/api/mcp_server.html");
+  await page.locator(".viewcode-link").first().click();
+  await expect(page).toHaveURL(/python-docs\/_modules\/app\/mcp_server.html#dpe_fetch_redif/);
+  await expect(page.locator(".viewcode-block").first()).toContainText("async def dpe_fetch_redif");
+  await page.goto(prefix + "python-docs/search.html?q=parse_redif");
+  await expect(page.locator("#search-results").getByRole("link").first()).toBeVisible();
+});
+
 test("verified collections combine with years, survive reload and fit mobile screens", async ({page}, info) => {
   await page.goto(prefix);
   await page.selectOption("#collection-type", "special_issue");

@@ -23,6 +23,12 @@ are not needed to build the documentation.
 With the environment activated, ``make -C docs/python html`` provides the same
 strict build. ``make -C docs/python doctest`` executes the small read-only examples.
 
+The website command ``npm run static:build`` also runs a fresh strict Sphinx build
+into ``dist/python-docs/``. Publishing the site includes these pages and their
+search and source-view assets on GitHub Pages. The builder uses
+``.venv-docs/bin/python`` when available, otherwise ``python3``; set
+``DPE_DOCS_PYTHON`` to select another Python executable with Sphinx installed.
+
 Python and optional stacks
 --------------------------
 

@@ -1,6 +1,7 @@
 import {cp, mkdir, readFile, readdir, rename, rm, writeFile, mkdtemp} from "node:fs/promises";
 import {createHash} from "node:crypto";
 import {execFileSync} from "node:child_process";
+import {existsSync} from "node:fs";
 import {resolve, join, relative} from "node:path";
 import {build} from "esbuild";
 import {parseArgs} from "node:util";
@@ -11,6 +12,7 @@ import {buildCollections} from "./build-collections.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 process.chdir(root);
+const docsPython = process.env.DPE_DOCS_PYTHON || (existsSync(".venv-docs/bin/python") ? resolve(".venv-docs/bin/python") : "python3");
 const {values: options} = parseArgs({options: {
   dataset: {type: "string"}, output: {type: "string"}, cache: {type: "string"},
   "skip-export": {type: "boolean", default: false}, metrics: {type: "string"},
@@ -28,6 +30,11 @@ if (output === join(root, ".git") || output.startsWith(join(root, ".git") + "/")
 }
 
 const manifest = JSON.parse(await readFile(join(dataset, "data/manifest.json")));
+try {
+  execFileSync(docsPython, ["-m", "sphinx", "--version"], {stdio: "pipe"});
+} catch {
+  throw new Error("Sphinx is required to publish Python docs. Install requirements-docs.txt in .venv-docs, or set DPE_DOCS_PYTHON to a Python executable with Sphinx installed.");
+}
 const inputFiles = await hashFiles(dataset);
 for (const [path, expected] of Object.entries(manifest.files)) {
   const actual = inputFiles[path];
@@ -97,6 +104,9 @@ try {
   const manuscript = await readFile("manuscript/manuscript.html", "utf8");
   await writeFile(join(staged, "research-note/index.html"), manuscript.replaceAll('href="../manuscript.pdf"', 'href="manuscript.pdf"'));
   await cp("manuscript/manuscript.pdf", join(staged, "research-note/manuscript.pdf"));
+  // Render documentation on every build so Pages never publishes stale API docs.
+  execFileSync(docsPython, ["-m", "sphinx", "-b", "html", "-E", "-W", "--keep-going",
+    "-d", join(cache, "sphinx-doctrees"), "docs/python", join(staged, "python-docs")], {stdio: "inherit"});
   for (const page of ["index.html", "topics/index.html", "citations/index.html"]) {
     const path = join(staged, page);
     let html = await readFile(path, "utf8");
