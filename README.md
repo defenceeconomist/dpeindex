@@ -138,6 +138,10 @@ Citation identity, eligibility, recovered links and DOI samples retain their rev
 
 ## Build, preview and publish
 
+For unattended Friday 09:00 checks on the Mac mini, including output logs,
+checked automatic publication and iCloud email notifications, see
+[weekly updates](docs/weekly-updates.md).
+
 Install the [documentation build dependencies](#python-documentation) first; every
 site build includes a fresh Sphinx render.
 
