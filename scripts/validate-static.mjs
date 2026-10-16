@@ -1,5 +1,6 @@
 import {readFile, readdir, stat} from "node:fs/promises";
 import {resolve, join, dirname, relative} from "node:path";
+import {parseHTML} from "linkedom";
 import {createHash} from "node:crypto";
 
 export async function hashFiles(root) {
@@ -45,13 +46,19 @@ export async function validateStatic(directory) {
   for (const path of Object.keys(files).filter((p) => /\.html$/.test(p) && !p.startsWith("api/"))) {
     const html = await readFile(join(root, path), "utf8");
     if (html.includes("Mac mini portal")) throw new Error(`Local portal link in ${path}`);
-    for (const [, target] of html.matchAll(/(?:href|src)="([^"#]+)"/g)) {
-      if (/^(?:[a-z]+:|\/\/)/i.test(target)) continue;
-      const plain = target.split(/[?#]/)[0];
-      const targetPath = resolve(root, dirname(path), plain);
-      if (target.startsWith("/") || (targetPath !== root && !targetPath.startsWith(root + "/"))) throw new Error(`Non-relative site link in ${path}: ${target}`);
-      const name = relative(root, targetPath);
-      if (!files[name] && !files[join(name, "index.html")]) throw new Error(`Broken link in ${path}: ${target}`);
+    // Inspect real elements, not link-like strings inside embedded Reveal.js scripts.
+    const {document} = parseHTML(html);
+    for (const element of document.querySelectorAll("[href], [src]")) {
+      for (const attribute of ["href", "src"]) {
+        const target = element.getAttribute(attribute);
+        if (!target || target.startsWith("#")) continue;
+        if (/^(?:[a-z]+:|\/\/)/i.test(target)) continue;
+        const plain = target.split(/[?#]/)[0];
+        const targetPath = resolve(root, dirname(path), plain);
+        if (target.startsWith("/") || (targetPath !== root && !targetPath.startsWith(root + "/"))) throw new Error(`Non-relative site link in ${path}: ${target}`);
+        const name = relative(root, targetPath);
+        if (!files[name] && !files[join(name, "index.html")]) throw new Error(`Broken link in ${path}: ${target}`);
+      }
     }
   }
   console.log(`Validated ${Object.keys(files).length} files, ${(size / 1e6).toFixed(1)} MB`);

@@ -104,6 +104,10 @@ try {
   const manuscript = await readFile("manuscript/manuscript.html", "utf8");
   await writeFile(join(staged, "research-note/index.html"), manuscript.replaceAll('href="../manuscript.pdf"', 'href="manuscript.pdf"'));
   await cp("manuscript/manuscript.pdf", join(staged, "research-note/manuscript.pdf"));
+  // Publish the reviewed, self-contained Quarto slides and their PDF export.
+  await mkdir(join(staged, "slides"));
+  await cp("slides/tool-guide.html", join(staged, "slides/index.html"));
+  await cp("slides/tool-guide.pdf", join(staged, "slides/tool-guide.pdf"));
   // Render documentation on every build so Pages never publishes stale API docs.
   execFileSync(docsPython, ["-m", "sphinx", "-b", "html", "-E", "-W", "--keep-going",
     "-d", join(cache, "sphinx-doctrees"), "docs/python", join(staged, "python-docs")], {stdio: "inherit"});

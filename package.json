@@ -5,6 +5,7 @@
   "scripts": {
     "test": "node --test tests/*ui.test.mjs tests/static*.test.mjs",
     "test:browser": "playwright test",
+    "slides:render": "node scripts/render-slides.mjs",
     "static:build": "node scripts/build-static.mjs",
     "static:preview": "python3 scripts/preview_static.py",
     "static:validate": "node scripts/validate-static.mjs",

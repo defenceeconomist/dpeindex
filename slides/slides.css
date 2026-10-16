@@ -1,0 +1,15 @@
+:root { --r-background-color: #f7f5ef; --r-main-color: #142f35; --r-heading-color: #142f35; --r-link-color: #98602b; --r-link-color-hover: #704019; --r-main-font: Arial, sans-serif; --r-heading-font: Georgia, serif; --r-main-font-size: 30px; }
+.reveal h1 { font-size: 2.1em; }
+.reveal h2 { font-size: 1.45em; margin-bottom: 0.6em; }
+.reveal p, .reveal li { line-height: 1.35; }
+.reveal li { margin-bottom: 0.4em; }
+.reveal strong { color: #265f63; }
+.reveal #title-slide { text-align: left; padding-top: 130px; }
+.reveal #title-slide .subtitle { color: #98602b; font-size: 1.2em; }
+.reveal .source { font-size: 0.59em; margin-top: 1.5em; }
+.reveal .search-image { max-height: 280px; width: auto; margin: 0 auto; }
+.reveal .map-image { max-height: 290px; width: auto; margin: 0 auto; }
+.reveal figure { margin: 0; }
+.reveal figcaption { display: none; }
+.reveal .footer { color: #52666b; font-size: 16px; }
+.reveal .slide-number { font-size: 16px; }

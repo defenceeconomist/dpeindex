@@ -14,6 +14,7 @@ test("footer links and published Python documentation work under the Pages prefi
     await expect(footer.getByRole("link", {name: "GitHub", exact: true})).toHaveAttribute("href", "https://github.com/defenceeconomist/dpeindex");
     await expect(footer.getByRole("link", {name: "defenceeconomist.io", exact: true})).toHaveAttribute("href", "https://defenceeconomist.github.io/");
     await expect(footer.getByRole("link", {name: "Python docs"})).toHaveAttribute("href", /python-docs\/$/);
+    await expect(footer.getByRole("link", {name: "Tool guide slides"})).toHaveAttribute("href", /slides\/$/);
     await expect(footer.getByRole("link", {name: "Research report"})).toHaveAttribute("href", /research-note\/$/);
     await expect(page.getByRole("navigation", {name: "Main navigation"}).getByRole("link", {name: /Research/})).toHaveCount(0);
   }
@@ -205,4 +206,21 @@ test("mobile navigation and article filters remain usable", async ({page}, info)
   await expect(page.locator("#datamap .plot-container")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await screenshot(page, info, "mobile");
+});
+
+
+test("Quarto guide opens from the footer and includes a PDF download", async ({page}) => {
+  await page.goto(prefix + "?collection_type=country_survey&collection=country-canada");
+  await expect(page.locator("#theme-filter")).toBeEnabled();
+  await expect(page.locator("#collection-type")).toBeEnabled();
+  await expect(page.locator("#results .article-card").first()).toBeVisible();
+  await page.locator("footer").getByRole("link", {name: "Tool guide slides"}).click();
+  await expect(page).toHaveURL(/slides\//);
+  await page.waitForFunction(() => window.Reveal?.isReady());
+  expect(await page.locator(".reveal .slides > section").count()).toBe(12);
+  await page.evaluate(() => window.Reveal.slide(11));
+  await expect(page.getByRole("link", {name: "Download these slides as PDF"})).toBeVisible();
+  const pdf = await page.request.get(prefix + "slides/tool-guide.pdf");
+  expect(pdf.ok()).toBe(true);
+  expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
 });
