@@ -12,7 +12,7 @@ test("footer links and published Python documentation work under the Pages prefi
     await page.goto(prefix + path);
     const footer = page.getByRole("navigation", {name: "Footer navigation"});
     await expect(footer.getByRole("link", {name: "GitHub", exact: true})).toHaveAttribute("href", "https://github.com/defenceeconomist/dpeindex");
-    await expect(footer.getByRole("link", {name: "defenceeconomist.io", exact: true})).toHaveAttribute("href", "https://defenceeconomist.io");
+    await expect(footer.getByRole("link", {name: "defenceeconomist.io", exact: true})).toHaveAttribute("href", "https://defenceeconomist.github.io/");
     await expect(footer.getByRole("link", {name: "Python docs"})).toHaveAttribute("href", /python-docs\/$/);
     await expect(footer.getByRole("link", {name: "Research report"})).toHaveAttribute("href", /research-note\/$/);
     await expect(page.getByRole("navigation", {name: "Main navigation"}).getByRole("link", {name: /Research/})).toHaveCount(0);
