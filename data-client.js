@@ -1,5 +1,6 @@
 import config from "./site-config.js";
 import {matchesFilters, rankArticles} from "./search-ranking.js";
+import {collectionHandles} from "./collection-filter.js";
 
 export function createDataClient(settings, root = new URL("./", import.meta.url), fetcher = (...args) => fetch(...args)) {
   const cache = new Map();
@@ -15,6 +16,8 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
   };
   const getThemes = () => read("data/themes.json");
   const getCatalog = () => read("data/catalog.json");
+  const getCollections = () => read("data/collections.json");
+  const getCollectionHandles = async (params) => params.has("collection_type") || params.has("collection") ? collectionHandles(await getCollections(), params) : null;
   const requestEmbedding = (query, onProgress, retry) => {
     if (retry) {
       for (const job of jobs.values()) job.reject(new Error("Search was restarted."));
@@ -43,16 +46,17 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
     });
   };
   return {
-    mode: "static", getCatalog, getThemes, getSource: () => read("data/source.json"),
+    mode: "static", getCatalog, getThemes, getCollections, getSource: () => read("data/source.json"),
     getTopics: () => read("data/topics.json"), getCitations: () => read("data/citations.json"),
     async getIssue(params, signal) {
       const [manifest, themes] = await Promise.all([read("data/manifest.json"), getThemes().catch(error => { if (params.has("theme")) throw error; return {status: "not_built"}; })]);
       const path = manifest.issues[`${params.get("volume")}:${params.get("number")}`];
       if (!path) throw new Error("Issue not found.");
       const data = await read(path);
+      const handles = await getCollectionHandles(params);
       if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
       const fields = ["handle", "title", "authors", "volume", "issue", "year", "pages", "doi"];
-      return {...data, articles: data.articles.filter((a) => matchesFilters(a, params, themes)).map((a) => Object.fromEntries(fields.map((key) => [key, a[key]])))};
+      return {...data, articles: data.articles.filter((a) => matchesFilters(a, params, themes, handles)).map((a) => Object.fromEntries(fields.map((key) => [key, a[key]])))};
     },
     async getArticle(handle) {
       const catalog = await getCatalog();
@@ -65,7 +69,7 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
     async search(params, {onProgress, retry = false} = {}) {
       const query = (params.get("q") || "").trim();
       if (query.length < 2 || query.length > 250) throw new Error("Enter between 2 and 250 characters.");
-      const [articles, themes, manifest] = await Promise.all([read("data/search.json"), getThemes(), read("data/manifest.json")]);
+      const [articles, themes, manifest, handles] = await Promise.all([read("data/search.json"), getThemes().catch(error => { if (params.has("theme")) throw error; return {status: "not_built"}; }), read("data/manifest.json"), getCollectionHandles(params)]);
       // Validate filters before starting a potentially expensive model download.
       articles.forEach((a) => matchesFilters(a, params, themes));
       try {
@@ -77,10 +81,10 @@ export function createDataClient(settings, root = new URL("./", import.meta.url)
         }).catch((error) => { vectorsPromise = null; throw error; });
         const vectors = await vectorsPromise;
         if (vectors.length !== articles.length * manifest.search.dimensions || vector.length !== manifest.search.dimensions) throw new Error("The search model and index do not match.");
-        return {...rankArticles(articles, query, params, themes, vector, vectors), mode: "semantic"};
+        return {...rankArticles(articles, query, params, themes, vector, vectors, handles), mode: "semantic"};
       } catch {
         failed = true;
-        return {...rankArticles(articles, query, params, themes), mode: "keyword"};
+        return {...rankArticles(articles, query, params, themes, null, null, handles), mode: "keyword"};
       }
     },
     downloadUrl: (run, name) => new URL(`api/citations/${encodeURIComponent(run)}/download/${encodeURIComponent(name)}`, root).href,
