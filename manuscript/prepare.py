@@ -127,9 +127,9 @@ def build():
     assert all(sum(n['community']==g['id'] for n in nodes.values())==g['count'] for g in c['communities'])
 
     gen=HERE/'generated'; figs=HERE/'figures'
-    table(gen/'topics.qmd',['Topic','Articles','Share (%)'],
-          [[t['label'],t['count'],f"{100*t['count']/1152:.1f}"] for t in topics]+[['Unassigned',82,f'{100*82/1152:.1f}']],
-          'Topic prevalence among 1,152 abstract-bearing records, including unassigned abstracts in the denominator. The 69 records without abstracts are excluded.', 'tbl-topics')
+    table(gen/'topics.qmd',['Topic','Abstracts','Share (%)'],
+          [[t['label'],t['count'],f"{100*t['count']/1152:.1f}"] for t in topics]+[['No topic assigned',82,f'{100*82/1152:.1f}']],
+          'How the 1,152 available abstracts are divided among topics. Percentages include abstracts with no assigned topic, but exclude the 69 records without abstracts.', 'tbl-topics')
     period_stats=[]; crosswalk=[]
     for p in e['retrospectives']:
         assert sum(x['count'] for x in p['categories'])==p['classified_total']
@@ -158,14 +158,14 @@ def build():
             editorial=next((x['count'] for x in p['categories'] if x['name']==name),'—')
             cells.append(f"{editorial} / {stats['counts'].get(str(topic),0)}")
         comparison_rows.append([label,*cells])
-    table(gen/'comparison.qmd',['Theme','First E / M','Second E / M','Third E / M'],comparison_rows,
-          'Selected thematic counts: editorial (E) / model (M). Editorial denominators are 207, 331 and 389; model denominators are 45, 330 and 381 abstracts. First-decade model coverage is partial. A dash indicates no separate editorial category. These are scope comparisons, not matched article-level classifications: first-decade terrorism includes guerrilla warfare and insurgencies; model conflict includes peace, alliances includes spending demand, industry includes procurement, and personnel includes veterans.', 'tbl-comparison')
+    table(gen/'comparison.qmd',['Theme','First decade','Second decade','Third decade'],comparison_rows,
+          'Selected subjects: each cell shows the review count / model count. The reviews classify 207, 331 and 389 papers; the model uses 45, 330 and 381 abstracts. First-decade coverage is incomplete. A dash means the review has no separate category. The subjects overlap but differ: the first review combines terrorism with guerrilla warfare and armed rebellions; model conflict includes peace, alliances includes reasons for defence spending, industry includes purchasing, and personnel includes veterans. Matching totals do not prove that the same papers were selected.', 'tbl-comparison')
     with (HERE/'data/crosswalk.csv').open('w',newline='') as f:
         w=csv.DictWriter(f,fieldnames=list(crosswalk[0]));w.writeheader();w.writerows(crosswalk)
-    table(gen/'periods.qmd',['Retrospective','Editorial papers','Catalogue','Abstracts','Unassigned'],
+    table(gen/'periods.qmd',['Review period','Review count','Catalogue','Abstracts','No topic'],
           [[p['label']+(' (partial)' if p['partial'] else ''),p['classified_total'],s['catalogue'],s['abstracts'],s['unassigned']] for p,s in zip(e['retrospectives'],period_stats)],
-          'Coverage of the retrospective cohorts. First: volumes 1–10 through 10(2), represented only from volume 8; second: volumes 11–20; third: volumes 21–30. Editorial totals exclude separately listed book reviews. Catalogue and abstract counts are distinct populations.', 'tbl-periods')
-    short=['Conflict / peace','Spending / growth','Terrorism','Industry / procurement','Spending / alliances','Personnel / veterans','Arms trade / races','Geopolitical markets','Equipment costs','Spending / debt']
+          'Papers available for each historical comparison. Review count is the number classified by the editors, excluding separately listed book reviews; catalogue is all available records; the abstracts column counts records with a summary; no topic counts summaries the model left unassigned. The first review covers volumes 1-10 through volume 10, issue 2, but the catalogue starts at volume 8. The second covers volumes 11-20 and the third volumes 21-30.', 'tbl-periods')
+    short=['Conflict / peace','Spending / growth','Terrorism','Industry / purchasing','Spending / alliances','Military staff / veterans','Arms trade / races','Political risk / markets','Equipment costs','Spending / debt']
     # Counts and percentages are computed directly from the retained paper assignments.
     bins=[(1997,1999),(2000,2004),(2005,2009),(2010,2014),(2015,2019),(2020,2024),(2025,2026)]
     trend=[]
@@ -180,7 +180,7 @@ def build():
         vals=[100*b['counts'].get(i,0)/b['abstracts'] for b in trend]
         ax.plot(range(len(bins)),vals,color=colors[i],marker='o',linewidth=1.6,markersize=3.5)
         ax.set_title(short[i],loc='left',fontsize=9,fontweight='bold');ax.set_ylim(0,40);ax.set_yticks([0,20,40]);ax.grid(axis='y',alpha=.18)
-        ax.set_xticks(range(len(bins)),['97–99*','00–04','05–09','10–14','15–19','20–24','25–26*'],rotation=45,ha='right',fontsize=7)
+        ax.set_xticks(range(len(bins)),['1997-99*','2000-04','2005-09','2010-14','2015-19','2020-24','2025-26*'],rotation=45,ha='right',fontsize=7)
     fig.supylabel('Share of abstracts in period (%)',fontsize=10)
     fig.savefig(figs/'topic-trends.png',dpi=240);fig.savefig(figs/'topic-trends.pdf');plt.close(fig)
     # Preserve release coordinates; do not recompute layout or communities.
@@ -192,10 +192,10 @@ def build():
         ax.scatter([n['x'] for n in members],[n['y'] for n in members],s=[5+1.4*n['in_degree'] for n in members],
                    c=colors[i] if 0<=i<12 else ('#A9ADB2' if i==99 else '#D2D5D9'),alpha=.8,linewidths=.2,edgecolors='white',rasterized=True)
     ax.autoscale();ax.set_aspect('equal');ax.axis('off')
-    labels=['Growth','Industry / procurement','Terrorism','Spending demand','Arms / technology','Risk / resources','Debt / budgets','Recruitment','Civil war costs','Intervention / bargaining','Greek–Turkish rivalry','Aircraft / inflation']
+    labels=['Growth','Industry / purchasing','Terrorism','Why governments spend','Arms / technology','Risk / resources','Debt / budgets','Recruitment','Civil war costs','Intervention / negotiation','Greek-Turkish rivalry','Aircraft / price rises']
     from matplotlib.lines import Line2D
     handles=[Line2D([0],[0],marker='o',linestyle='',color=colors[i],markersize=5,label=f'{i+1}. {s}') for i,s in enumerate(labels)]
-    handles += [Line2D([0],[0],marker='o',linestyle='',color='#A9ADB2',markersize=5,label='Other communities'),Line2D([0],[0],marker='o',linestyle='',color='#D2D5D9',markersize=5,label='Isolates')]
+    handles += [Line2D([0],[0],marker='o',linestyle='',color='#A9ADB2',markersize=5,label='Other communities'),Line2D([0],[0],marker='o',linestyle='',color='#D2D5D9',markersize=5,label='No recorded links')]
     fig.legend(handles=handles,loc='lower center',ncol=3,fontsize=7.5,frameon=False)
     fig.subplots_adjust(left=.02,right=.98,top=.99,bottom=.22)
     fig.savefig(figs/'citation-network.png',dpi=260);fig.savefig(figs/'citation-network.pdf');plt.close(fig)
@@ -208,12 +208,12 @@ def build():
     matrix=np.array([[100*z['count']/row['count'] for z in row['cells']] for row in selected])
     fig,ax=plt.subplots(figsize=(8.2,6.5),layout='constrained')
     im=ax.imshow(matrix,vmin=0,vmax=100,cmap='Blues',aspect='auto')
-    ax.set_yticks(range(14),[f'{i+1}. {s} (n={selected[i]["count"]})' for i,s in enumerate(labels)]+[f'Other 24 communities (n={aggregate["count"]})','Isolates (n=188)'],fontsize=8)
-    ax.set_xticks(range(12),short+['Unassigned','No abstract'],rotation=55,ha='right',fontsize=8)
+    ax.set_yticks(range(14),[f'{i+1}. {s} ({selected[i]["count"]} papers)' for i,s in enumerate(labels)]+[f'Other 24 communities ({aggregate["count"]} papers)','No recorded links (188 papers)'],fontsize=8)
+    ax.set_xticks(range(12),short+['No topic assigned','No abstract'],rotation=55,ha='right',fontsize=8)
     for i in range(14):
         for j in range(12):
             if matrix[i,j]>=10:ax.text(j,i,f'{matrix[i,j]:.0f}',ha='center',va='center',fontsize=7,color='white' if matrix[i,j]>55 else '#223344')
-    cb=fig.colorbar(im,ax=ax,shrink=.6,pad=.02);cb.set_label('Within-row share (%)',fontsize=8)
+    cb=fig.colorbar(im,ax=ax,shrink=.6,pad=.02);cb.set_label('Share of papers in the row (%)',fontsize=8)
     fig.savefig(figs/'topic-community.png',dpi=240);fig.savefig(figs/'topic-community.pdf');plt.close(fig)
     stats={'periods':period_stats,'trends':trend,'within_community_edges':sum(x['count'] for x in c['flows'] if x['source']==x['target']),
            'reference_coverage':{k:sum(x[k] for x in c['coverage']) for k in ['eligible','with_references','missing_reference_deposit','unresolved_identities']},

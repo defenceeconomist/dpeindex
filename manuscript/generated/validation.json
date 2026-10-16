@@ -4,7 +4,7 @@
   "figures": 3,
   "tables": 3,
   "crosswalk_rows": 55,
-  "pdf_pages": 11,
+  "pdf_pages": 13,
   "checks": [
     "All citation keys resolve",
     "All HTML internal links resolve",
@@ -14,11 +14,9 @@
     "Crosswalk contains all three periods"
   ],
   "sha256": {
-    "manuscript.qmd": "c3088f72f8c96ba8aa3fc9754a8b6b017c560c6a327a6505a92ed3cbeb94ffe1",
+    "manuscript.qmd": "bf47bf2de235f4829aad55e85d5351d755cefb74d3cb1a273ee7b82aad21f6a8",
     "references.bib": "fdc9d9421e0f80bb1f97d873783b6af0fc5862f403d04009c7f996f759c83c48",
-    "manuscript.html": "8d8711244c8b3d2ebcad8821306a15b4d4ae95bbda7eb4f9ac7de6652ce9d062",
-    "manuscript.pdf": "43c4299cef931dd4ee43fa17302302aeb48ad96dd70d53c6b4e67aa14d21e436"
-  },
-  "visual_review": "All 11 PDF pages reviewed as rendered page images; figures, tables and bibliography have no clipping or overlap.",
-  "html_review": "Chromium: embedded images and all ten references loaded; no page overflow at 1440px desktop or 390px mobile width."
+    "manuscript.html": "e1107dcfe2648a9777d3f1092539332e21622173b00a69fa6a9d7aec634ddea3",
+    "manuscript.pdf": "879f0c2595bfbcdbd3bb0926955ef395b226b8a6dc903ed8427a80bd5feb5c38"
+  }
 }

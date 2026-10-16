@@ -48,4 +48,4 @@ The generator checks snapshot integrity, corpus uniqueness, topic counts, missin
 python3 manuscript/validate.py
 ```
 
-The manuscript is about 3,400 words of main text, plus abstract, tables, captions and references. It is a research note on the frozen analysis, not an independently validated re-estimation. The biggest substantive restrictions are pre-1997 absence, 69 missing abstracts, 60 eligible papers without deposited references, age-dependent citation opportunity, and provisional interpretation of citation communities.
+The manuscript is written for an intelligent general reader, with specialist terms explained when first introduced. Detailed model settings and numerical checks are retained in a separate technical appendix. The table captions and figure labels also use plain English. It remains a research note on the frozen analysis, not an independently validated re-estimation. The biggest substantive restrictions are pre-1997 absence, 69 missing abstracts, 60 eligible papers without deposited references, age-dependent citation opportunity, and provisional interpretation of citation communities.

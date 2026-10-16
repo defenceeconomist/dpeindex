@@ -1,4 +1,4 @@
-| Theme | First E / M | Second E / M | Third E / M |
+| Theme | First decade | Second decade | Third decade |
 |---|---|---|---|
 | Growth | 9 / 10 | 56 / 62 | 65 / 90 |
 | Terrorism | 11 / 0 | 37 / 37 | 55 / 56 |
@@ -7,4 +7,4 @@
 | Industry | 16 / 15 | 25 / 39 | 15 / 22 |
 | Personnel | 14 / 0 | 14 / 19 | 29 / 32 |
 
-: Selected thematic counts: editorial (E) / model (M). Editorial denominators are 207, 331 and 389; model denominators are 45, 330 and 381 abstracts. First-decade model coverage is partial. A dash indicates no separate editorial category. These are scope comparisons, not matched article-level classifications: first-decade terrorism includes guerrilla warfare and insurgencies; model conflict includes peace, alliances includes spending demand, industry includes procurement, and personnel includes veterans. {#tbl-comparison}
+: Selected subjects: each cell shows the review count / model count. The reviews classify 207, 331 and 389 papers; the model uses 45, 330 and 381 abstracts. First-decade coverage is incomplete. A dash means the review has no separate category. The subjects overlap but differ: the first review combines terrorism with guerrilla warfare and armed rebellions; model conflict includes peace, alliances includes reasons for defence spending, industry includes purchasing, and personnel includes veterans. Matching totals do not prove that the same papers were selected. {#tbl-comparison}

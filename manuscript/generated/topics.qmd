@@ -1,4 +1,4 @@
-| Topic | Articles | Share (%) |
+| Topic | Abstracts | Share (%) |
 |---|---|---|
 | Conflict, war and peace | 241 | 20.9 |
 | Military spending and economic growth | 218 | 18.9 |
@@ -10,6 +10,6 @@
 | Geopolitical risk and financial markets | 41 | 3.6 |
 | Military equipment costs | 36 | 3.1 |
 | Military spending and public debt | 25 | 2.2 |
-| Unassigned | 82 | 7.1 |
+| No topic assigned | 82 | 7.1 |
 
-: Topic prevalence among 1,152 abstract-bearing records, including unassigned abstracts in the denominator. The 69 records without abstracts are excluded. {#tbl-topics}
+: How the 1,152 available abstracts are divided among topics. Percentages include abstracts with no assigned topic, but exclude the 69 records without abstracts. {#tbl-topics}
