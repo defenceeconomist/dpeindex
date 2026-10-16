@@ -1,4 +1,5 @@
-export function matchesFilters(article, params, themes) {
+export function matchesFilters(article, params, themes, handles = null) {
+  if (handles && !handles.has(article.handle)) return false;
   const get = (key) => params.get(key);
   if (get("year_from") && get("year_to") && Number(get("year_from")) > Number(get("year_to"))) throw new Error("The first year must not exceed the last year.");
   if (get("year_from") && (!/^\d{4}$/.test(article.year) || Number(article.year) < Number(get("year_from")))) return false;
@@ -11,12 +12,12 @@ export function matchesFilters(article, params, themes) {
   return true;
 }
 
-export function rankArticles(articles, query, params, themes, vector = null, vectors = null) {
+export function rankArticles(articles, query, params, themes, vector = null, vectors = null, handles = null) {
   const text = query.toLowerCase();
   const terms = text.match(/[\p{L}\p{N}_’-]+/gu) || [];
   const scored = [];
   articles.forEach((a, row) => {
-    if (!matchesFilters(a, params, themes)) return;
+    if (!matchesFilters(a, params, themes, handles)) return;
     const title = a.title.toLowerCase(), authors = a.authors.join(" ").toLowerCase();
     const exactTokens = terms.length && terms.every((term) => `${title} ${authors}`.includes(term));
     let score = 0;

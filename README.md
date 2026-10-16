@@ -4,6 +4,9 @@ A static JavaScript site for browsing RePEc articles, exploring BERTopic themes 
 
 The bundled source is `data/defpea.redif`, from [RePEc](https://ideas.repec.org/getdata.html). It contains 1,221 article records. Articles without abstracts remain browsable but are excluded from topic fitting. The unrelated research PDFs and archived retrospective evidence are not published.
 
+The article index also filters verified special issues and the Country Survey series,
+with optional selection of a particular issue or country. See [collection evidence and maintenance](docs/collections.md).
+
 ## Setup
 
 Use Python 3.12 and Node 24. Initial installation and model downloads need internet access.

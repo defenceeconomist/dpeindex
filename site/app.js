@@ -1,7 +1,10 @@
 import {articleCard, attachDetails, escapeHtml} from "./article-ui.js";
 import {dataClient} from "./data-client.js";
+import {collectionTypes, collectionOptions, collectionLabel, collectionHandles} from "./collection-filter.js";
+import {matchesFilters} from "./search-ranking.js";
 
 const state = {
+  collections: null, collectionType: "", collection: "", collectionRequest: null,
   catalog: null, issues: [], nodes: new Map(), loaded: new Set(), pending: new Map(),
   failed: new Set(), observer: null, mode: "browse", active: null, lastBrowse: null,
   sequence: 0, scrollScheduled: false, allIssues: [], themes: null, theme: "all",
@@ -15,6 +18,8 @@ function filterParams() {
   if (state.theme !== "all") { params.set("theme", state.theme); params.set("run", state.themes.model_id || state.themes.run_id); }
   if (state.yearFrom) params.set("year_from", state.yearFrom);
   if (state.yearTo) params.set("year_to", state.yearTo);
+  if (state.collectionType) params.set("collection_type", state.collectionType);
+  if (state.collection) params.set("collection", state.collection);
   return params;
 }
 
@@ -26,14 +31,46 @@ function updateLocation(extras = {}) {
 }
 
 function selectedArticles() {
-  return state.themes?.articles.filter((article) => (state.theme === "all" || article.topic === Number(state.theme)) &&
-    (!state.yearFrom || /^\d{4}$/.test(article.year) && Number(article.year) >= Number(state.yearFrom)) &&
-    (!state.yearTo || /^\d{4}$/.test(article.year) && Number(article.year) <= Number(state.yearTo)));
+  if (!state.catalog) return null;
+  const params = filterParams();
+  const handles = collectionHandles(state.collections, params);
+  return state.catalog.articles.filter((article) => matchesFilters(article, params, state.themes, handles));
+}
+
+function renderCollectionOptions() {
+  const options = collectionOptions(state.collections, state.collectionType);
+  $("#collection-choice").hidden = !state.collectionType;
+  $("#collection-label").textContent = state.collectionType === "country_survey" ? "Country" : "Special issue";
+  $("#collection-filter").innerHTML = `<option value="">${state.collectionType === "country_survey" ? "All countries" : "All special issues"}</option>` + options.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(collectionLabel(item))} (${item.handles.length})</option>`).join("");
+  $("#collection-filter").value = state.collection;
+}
+
+async function loadCollections(params) {
+  $("#retry-collections").hidden = true;
+  try {
+    state.collections = await dataClient.getCollections();
+    const type = params.get("collection_type"), id = params.get("collection");
+    state.collectionType = Object.hasOwn(collectionTypes, type) ? type : "";
+    state.collection = collectionOptions(state.collections, state.collectionType).some((item) => item.id === id) ? id : "";
+    $("#collection-type").disabled = $("#collection-filter").disabled = false;
+    $("#collection-type").value = state.collectionType;
+    renderCollectionOptions();
+    const invalid = (type && !state.collectionType) || (id && !state.collection);
+    $("#collection-note").textContent = (invalid ? "The linked collection is unavailable. Showing all articles in the selected category. " : "") + "Verified collections only; historical coverage is incomplete. Country surveys are articles in the journal’s named series.";
+  } catch {
+    state.collections = null;
+    state.collectionType = state.collection = "";
+    $("#collection-type").disabled = $("#collection-filter").disabled = true;
+    $("#collection-note").textContent = "Collections could not be loaded. Showing articles without collection filtering.";
+    $("#retry-collections").hidden = false;
+  }
 }
 
 function filterDescription() {
   const label = state.theme === "all" ? "All themes" : state.theme === "-1" ? "Unassigned abstracts" : state.themes.topics.find((topic) => topic.id === Number(state.theme)).label;
-  return `${label}${state.yearFrom || state.yearTo ? ` · ${state.yearFrom || "earliest"}–${state.yearTo || "latest"}` : ""}`;
+  const collection = state.collections?.collections.find((item) => item.id === state.collection);
+  const collectionText = collection ? collectionLabel(collection) : collectionTypes[state.collectionType];
+  return `${label}${collectionText ? ` · ${collectionText}` : ""}${state.yearFrom || state.yearTo ? ` · ${state.yearFrom || "earliest"}–${state.yearTo || "latest"}` : ""}`;
 }
 
 function applyIssueFilters() {
@@ -45,10 +82,16 @@ function applyIssueFilters() {
   } else state.issues = state.allIssues;
   const volumes = new Set(state.issues.map((issue) => issue.volume));
   document.querySelectorAll("#volume-list button, #volume-select option").forEach((element) => { element.disabled = !volumes.has(element.dataset.volume || element.value); });
-  $("#reset-filters").hidden = state.theme === "all" && !state.yearFrom && !state.yearTo;
+  $("#reset-filters").hidden = state.theme === "all" && !state.yearFrom && !state.yearTo && !state.collectionType;
 }
 
 function changeFilters() {
+  const type = $("#collection-type").value;
+  if (type !== state.collectionType) {
+    state.collectionType = type;
+    state.collection = "";
+    renderCollectionOptions();
+  } else state.collection = $("#collection-filter").value;
   state.theme = $("#theme-filter").value;
   state.yearFrom = $("#year-from").value;
   state.yearTo = $("#year-to").value;
@@ -175,14 +218,14 @@ function renderBrowse(targetKey = state.lastBrowse) {
   state.active = null;
   applyIssueFilters();
   $("#view-kicker").textContent = "Browse by issue";
-  $("#view-title").textContent = state.theme === "all" ? "All issues" : "Articles by theme";
+  $("#view-title").textContent = state.collectionType ? collectionTypes[state.collectionType] : state.theme === "all" ? "All issues" : "Articles by theme";
   const count = state.issues.reduce((sum, issue) => sum + issue.count, 0);
   $("#view-description").textContent = `${count.toLocaleString()} articles · ${filterDescription()} · newest issues first.`;
   $("#clear-search").hidden = true;
   $("#status").textContent = "";
   $("#results").innerHTML = state.issues.map(issueShell).join("");
   if (!state.issues.length) {
-    $("#results").innerHTML = '<div class="empty">No articles match these filters. Choose a different theme or publication period.</div>';
+    $("#results").innerHTML = '<div class="empty">No articles match these filters. Choose a different collection, theme or publication period.</div>';
     updateLocation();
     return;
   }
@@ -286,9 +329,11 @@ async function init() {
       state.yearTo = years.includes(params.get("year_to")) ? params.get("year_to") : "";
       if (state.yearFrom && state.yearTo && Number(state.yearFrom) > Number(state.yearTo)) state.yearTo = state.yearFrom;
       $("#theme-filter").value = state.theme; $("#year-from").value = state.yearFrom; $("#year-to").value = state.yearTo;
-      document.querySelectorAll(".article-filters select").forEach((select) => { select.disabled = false; });
+      document.querySelectorAll("#theme-filter, #year-from, #year-to").forEach((select) => { select.disabled = false; });
       $("#theme-note").textContent = oldRun ? "The linked theme belongs to an earlier model. Showing all themes; choose a current theme above." : `${themes.stale ? "The catalog has changed since modelling. " : ""}Themes use the last published model. Articles without a model assignment remain available under All themes.`;
     } else $("#theme-note").textContent = themes?.status === "not_built" ? "Theme filtering will be available after the first topic model is built." : "Theme filtering is temporarily unavailable. Issue browsing and search remain available.";
+    state.collectionRequest = new URLSearchParams(params);
+    await loadCollections(params);
     state.focusHandle = state.articleHandle = params.get("article");
     applyIssueFilters();
     const deepLink = keyFor(params.get("volume"), params.get("issue"));
@@ -306,7 +351,13 @@ $("#search-form").addEventListener("submit", (event) => { event.preventDefault()
 $("#clear-search").addEventListener("click", () => { $("#search-input").value = ""; renderBrowse(); });
 document.querySelectorAll(".article-filters select").forEach((select) => select.addEventListener("change", changeFilters));
 $("#reset-filters").addEventListener("click", () => {
+  state.collectionRequest = new URLSearchParams();
+  $("#collection-type").value = ""; $("#collection-filter").value = "";
   $("#theme-filter").value = "all"; $("#year-from").value = $("#year-to").value = ""; changeFilters();
+});
+$("#retry-collections").addEventListener("click", async () => {
+  await loadCollections(state.collectionRequest || new URLSearchParams());
+  changeFilters();
 });
 window.addEventListener("scroll", scheduleScrollCheck, {passive: true});
 window.addEventListener("resize", () => {

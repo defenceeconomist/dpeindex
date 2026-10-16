@@ -7,6 +7,48 @@ async function screenshot(page, testInfo, name) {
   await page.screenshot({path: join(process.env.DPE_SCREENSHOT_DIR, `${testInfo.project.name}-${name}.png`)});
 }
 const prefix = "/dpeindex/";
+test("verified collections combine with years, survive reload and fit mobile screens", async ({page}, info) => {
+  await page.goto(prefix);
+  await page.selectOption("#collection-type", "special_issue");
+  await page.selectOption("#collection-filter", "special-27-2");
+  await expect(page.locator(".article-card")).toHaveCount(6);
+  await expect(page.locator("#view-description")).toContainText("6 articles");
+  await expect(page.locator("#results")).not.toContainText("Walter Oi");
+  await expect(page).toHaveURL(/collection=special-27-2/);
+  await page.reload();
+  await expect(page.locator("#collection-filter")).toHaveValue("special-27-2");
+  await expect(page.locator(".article-card")).toHaveCount(6);
+  await page.selectOption("#year-from", "2026");
+  await expect(page.locator(".empty")).toContainText("No articles match");
+  await page.locator("#reset-filters").click();
+  await expect(page.locator("#collection-choice")).toBeHidden();
+  await expect(page).not.toHaveURL(/collection/);
+  await page.selectOption("#collection-type", "country_survey");
+  await page.selectOption("#collection-filter", "country-taiwan");
+  await expect(page.locator(".article-card")).toHaveCount(1);
+  await expect(page.locator("#results")).toContainText("Military Spending in Taiwan");
+  await page.setViewportSize({width: 375, height: 812});
+  await expect(page.locator("#collection-filter")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.locator("#collection-filter").scrollIntoViewIfNeeded();
+  await screenshot(page, info, "collections-mobile");
+});
+
+test("collection loading recovers and filters work without topic data", async ({page}) => {
+  await page.route("**/data/themes.json", route => route.abort());
+  await page.route("**/data/collections.json", route => route.abort());
+  await page.goto(prefix + "?collection_type=country_survey&collection=country-canada");
+  await expect(page.locator("#collection-type")).toBeDisabled();
+  await expect(page.locator("#retry-collections")).toBeVisible();
+  await expect(page.locator(".article-card").first()).toBeVisible();
+  await page.unroute("**/data/collections.json");
+  await page.locator("#retry-collections").click();
+  await expect(page.locator("#collection-filter")).toHaveValue("country-canada");
+  await expect(page.locator(".article-card")).toHaveCount(1);
+  await expect(page.locator("#results")).toContainText("Canadian Military Expenditure");
+  await expect(page.locator("#theme-filter")).toBeDisabled();
+});
+
 test("bare URL resets an older issue's scroll position and explicit issue links still work", async ({page}) => {
   await page.goto(prefix + "?volume=37&issue=5");
   await expect(page.locator("#issue-37-5 .article-card").first()).toBeVisible();
@@ -106,6 +148,11 @@ test("real WASM inference, repeat search, cache, encoder consistency and rapid q
   expect(consistency.dot).toBeGreaterThan(.995);
   expect(consistency.cacheEntries).toBeGreaterThan(0);
   expect(weightRequests).toBe(beforeCachedEncoder);
+  await page.selectOption("#collection-type", "country_survey");
+  await page.selectOption("#collection-filter", "country-canada");
+  await expect(page.locator(".article-card")).toHaveCount(1);
+  await expect(page.locator("#results")).toContainText("Canadian Military Expenditure");
+  await expect(page.locator("#view-kicker")).toHaveText("Semantic search");
   await info.attach("search-timings", {body: JSON.stringify({first_ms: first, repeat_ms: repeat, initial_inference_bytes: initialBytes, ...consistency}), contentType: "application/json"});
   console.log(`${info.project.name}: first search ${first}ms, repeat ${repeat}ms, initial model/runtime ${(initialBytes / 1e6).toFixed(1)} MB, encoder cosine ${consistency.dot}`);
 });

@@ -7,7 +7,7 @@ const articles = Array.from({length: 45}, (_, i) => ({handle: `paper-${i}`, titl
 const themes = {status: "ready", run_id: "run", topics: [{id: 0}], articles: articles.map((a, i) => ({...a, topic: i === 43 ? null : i === 44 ? -1 : 0}))};
 function fixture(prefix = "/dpeindex/") {
   const requests = [], root = new URL(`https://example.test${prefix}`);
-  const values = {"data/catalog.json": {articles, count: articles.length}, "data/themes.json": themes,
+  const values = {"data/collections.json": {collections: [{id: "special-test", type: "special_issue", title: "Test", handles: ["paper-43", "paper-44"]}]}, "data/catalog.json": {articles, count: articles.length}, "data/themes.json": themes,
     "data/manifest.json": {issues: {"1:1": "data/issues/one.json"}, search: {dimensions: 2}},
     "data/issues/one.json": {volume: "1", issue: "1", articles}, "data/search.json": articles};
   const fetcher = async (url) => {
@@ -59,5 +59,30 @@ test("failed model uses labelled keyword fallback and retry starts a fresh worke
     assert.equal((await client.search(params)).mode, "keyword");
     assert.equal((await client.search(params, {retry: true})).mode, "semantic");
     assert.equal(attempts, 2);
+  } finally { globalThis.Worker = original; }
+});
+
+
+test("collection membership is identical in issue browsing, keyword and semantic search", async () => {
+  const original = globalThis.Worker;
+  let attempts = 0;
+  globalThis.Worker = class {
+    constructor() { this.attempt = ++attempts; }
+    postMessage(data) { queueMicrotask(() => this.onmessage({data: this.attempt === 1 ? {id: data.id, error: "offline"} : {id: data.id, vector: new Float32Array([1, 0])}})); }
+    terminate() {}
+  };
+  try {
+    const {client} = fixture();
+    const params = new URLSearchParams({volume: "1", number: "1", collection_type: "special_issue", collection: "special-test", q: "peace", year_from: "2001"});
+    const expected = ["paper-44"];
+    assert.deepEqual((await client.getIssue(params)).articles.map(a => a.handle), expected);
+    const fallback = await client.search(params);
+    assert.equal(fallback.mode, "keyword");
+    assert.deepEqual(fallback.results.map(a => a.handle), expected);
+    const semantic = await client.search(params, {retry: true});
+    assert.equal(semantic.mode, "semantic");
+    assert.deepEqual(semantic.results.map(a => a.handle), expected);
+    params.set("collection", "missing");
+    await assert.rejects(client.search(params), /Collection not found/);
   } finally { globalThis.Worker = original; }
 });

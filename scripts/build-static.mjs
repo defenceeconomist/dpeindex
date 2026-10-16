@@ -7,6 +7,7 @@ import {parseArgs} from "node:util";
 import {cachedVectors} from "./search-vector-cache.mjs";
 import {SEARCH_MODEL, encodingOptions} from "../site/search-model.js";
 import {validateStatic, hashFiles} from "./validate-static.mjs";
+import {buildCollections} from "./build-collections.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 process.chdir(root);
@@ -45,6 +46,7 @@ for (const file of modelFiles) {
   }
 }
 const search = JSON.parse(await readFile(join(dataset, "data/search.json")));
+const collections = buildCollections(JSON.parse(await readFile("data/collections.json")), search);
 const key = createHash("sha256").update(JSON.stringify({search, model: SEARCH_MODEL})).digest("hex");
 let extractor;
 const {binary, metrics: vectorMetrics} = await cachedVectors(search, SEARCH_MODEL, join(cache, "vectors"), async (text) => {
@@ -61,7 +63,7 @@ console.log(`Search vectors: ${vectorMetrics.encoded} encoded, ${vectorMetrics.c
 manifest.search = {...SEARCH_MODEL, format: "float32-le", handles: search.map((a) => a.handle),
   model_files: await hashFiles(modelDir)};
 // Release identity includes the encoder and index, preventing mixed caches.
-const release = createHash("sha256").update(manifest.release_id + key).digest("hex").slice(0, 20);
+const release = createHash("sha256").update(manifest.release_id + key + JSON.stringify(collections)).digest("hex").slice(0, 20);
 manifest.release_id = release;
 await mkdir(resolve(output, ".."), {recursive: true});
 const staged = await mkdtemp(output + ".building-");
@@ -71,6 +73,7 @@ try {
   await cp(join(dataset, "api"), join(staged, "api"), {recursive: true});
   await rm(join(releaseDir, "api"), {recursive: true});
   await writeFile(join(releaseDir, "data/embeddings.bin"), binary);
+  await writeFile(join(releaseDir, "data/collections.json"), JSON.stringify(collections));
   const referenceQuery = "economic effects of civil war";
   const {env, pipeline} = await import("@huggingface/transformers");
   env.allowRemoteModels = false; env.localModelPath = modelRoot + "/";
