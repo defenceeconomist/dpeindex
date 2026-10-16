@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Getting started &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="DPE Python documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#build-these-docs">Build these docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-and-optional-stacks">Python and optional stacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-the-pure-parser">Use the pure parser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="build-these-docs">
+<h2>Build these docs<a class="headerlink" href="#build-these-docs" title="Link to this heading">¶</a></h2>
+<p>From the repository root, create a separate environment and install only the
+Sphinx dependency:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv-docs
+.venv-docs/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-docs.txt
+.venv-docs/bin/python<span class="w"> </span>-m<span class="w"> </span>sphinx<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>-W<span class="w"> </span>--keep-going<span class="w"> </span>docs/python<span class="w"> </span>docs/python/_build/html
+</pre></div>
+</div>
+<p>Open <code class="docutils literal notranslate"><span class="pre">docs/python/_build/html/index.html</span></code>. The strict build fails on warnings,
+including unresolved internal references and failed API imports. It does not
+fetch RePEc, read a trained release, download encoders or launch the MCP server.
+The optional MCP transport and platform locking dependency are mocked only for
+API inspection. Model dependencies are imported inside analysis functions and
+are not needed to build the documentation.</p>
+<p>With the environment activated, <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">docs/python</span> <span class="pre">html</span></code> provides the same
+strict build. <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">docs/python</span> <span class="pre">doctest</span></code> executes the small read-only examples.</p>
+<p>The website command <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">run</span> <span class="pre">static:build</span></code> also runs a fresh strict Sphinx build
+into <code class="docutils literal notranslate"><span class="pre">dist/python-docs/</span></code>. Publishing the site includes these pages and their
+search and source-view assets on GitHub Pages. The builder uses
+<code class="docutils literal notranslate"><span class="pre">.venv-docs/bin/python</span></code> when available, otherwise <code class="docutils literal notranslate"><span class="pre">python3</span></code>; set
+<code class="docutils literal notranslate"><span class="pre">DPE_DOCS_PYTHON</span></code> to select another Python executable with Sphinx installed.</p>
+</section>
+<section id="python-and-optional-stacks">
+<h2>Python and optional stacks<a class="headerlink" href="#python-and-optional-stacks" title="Link to this heading">¶</a></h2>
+<p>Use Python 3.12 for the pinned analysis environment described in the repository
+README. Orchestration uses POSIX file locks and detached worker processes, so the
+operational workflows target macOS or Linux. Documentation can be built without
+those services or analysis packages.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Dependency files</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></td>
+<td><p>Standard-library parsing, snapshots and orchestration; no third-party pins.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-topics.txt</span></code></p></td>
+<td><p>BERTopic, Qwen embedding inference, dimensionality reduction and clustering.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-citations.txt</span></code></p></td>
+<td><p>NetworkX analysis, NumPy and Matplotlib figure exports.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-mcp.txt</span></code></p></td>
+<td><p>Optional local MCP transport; updating still needs the analysis stacks.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-docs.txt</span></code></p></td>
+<td><p>Sphinx only; independent of the analysis environment.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Website assembly and browser verification additionally require Node 24, the
+repository’s npm dependencies, and Playwright browser installations. The first
+analysis/build can download model weights and other assets. Subsequent builds
+reuse verified local artifacts and text-keyed caches where applicable.</p>
+</section>
+<section id="use-the-pure-parser">
+<h2>Use the pure parser<a class="headerlink" href="#use-the-pure-parser" title="Link to this heading">¶</a></h2>
+<p>The parser returns ordinary dictionaries. It accepts multiline fields, repeated
+authors and HTML entities. Publication fields remain strings, including compound
+issue numbers such as <code class="docutils literal notranslate"><span class="pre">5-6</span></code>.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">app.redif</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_redif</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="s2">"Template-Type: ReDIF-Article 1.0"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"Author-Name: A. Researcher"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"Title: Peace &amp;amp; security"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"Abstract: A short example."</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"Volume: 21"</span><span class="p">,</span> <span class="s2">"Issue: 5-6"</span><span class="p">,</span> <span class="s2">"Year: 2010"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"Handle: RePEc:taf:defpea:v:21:y:2010:i:5-6:p:1-2"</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">article</span> <span class="o">=</span> <span class="n">parse_redif</span><span class="p">(</span><span class="n">source</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">article</span><span class="p">[</span><span class="s1">'title'</span><span class="p">],</span> <span class="n">article</span><span class="p">[</span><span class="s1">'authors'</span><span class="p">],</span> <span class="n">article</span><span class="p">[</span><span class="s1">'issue'</span><span class="p">]</span>
+<span class="go">('Peace &amp; security', ['A. Researcher'], '5-6')</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">app.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalog_for</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">catalog_for</span><span class="p">([</span><span class="n">article</span><span class="p">])[</span><span class="s1">'count'</span><span class="p">]</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">app.repec</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_redif</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">validate_redif</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)))</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="api/redif.html#app.redif.parse_redif" title="app.redif.parse_redif"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.redif.parse_redif()</span></code></a> is deliberately permissive and drops records without
+a title or handle. Use <a class="reference internal" href="api/repec.html#app.repec.validate_redif" title="app.repec.validate_redif"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.repec.validate_redif()</span></code></a> for complete downloaded
+catalogues: it rejects invalid templates, incomplete publication metadata,
+duplicate handles and records from another series. It also enforces the input
+size limit. Neither of the calls above accesses the network.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/getting-started.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

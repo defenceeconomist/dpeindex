@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Topic discovery &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=f6a572b4" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Saved-model training and updates" href="update_topics.html" />
+    <link rel="prev" title="Catalogue helpers" href="store.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="redif.html">ReDIF parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repec.html">RePEc fetching and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="store.html">Catalogue helpers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Topic discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update_topics.html">Saved-model training and updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_labels.html">Reviewed display labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_timeline.html">Topic timelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_store.html">Topic integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citation_data.html">Citation collection and matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citations.html">Citation network analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citation_store.html">Citation integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theme_filter.html">Theme filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="retrospectives.html">Retrospective comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="export_static.html">Static dataset export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">Release orchestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcp_jobs.html">Persistent MCP jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcp_server.html">MCP stdio tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="topic-discovery">
+<h1>Topic discovery<a class="headerlink" href="#topic-discovery" title="Link to this heading">¶</a></h1>
+<p>Embedding, UMAP/HDBSCAN search, keyword representations, quality evaluation and snapshot assembly. Heavy dependencies are imported when the analysis functions are called, not on module import.</p>
+<p id="module-app.topics">Explicit, local-only BERTopic builds. No hosted inference or generative labels.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.log">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/topics.html#log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.log" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.embedding_key">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">embedding_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abstract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/topics.html#embedding_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.embedding_key" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.check_token_coverage">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">check_token_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">articles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/app/topics.html#check_token_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.check_token_coverage" title="Link to this definition">¶</a></dt>
+<dd><p>The exact texts later given to encode(), with special tokens and no truncation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.encode_abstracts">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">encode_abstracts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">articles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/app/topics.html#encode_abstracts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.encode_abstracts" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.topics.FrozenProjection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">FrozenProjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reduced</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#FrozenProjection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.FrozenProjection" title="Link to this definition">¶</a></dt>
+<dd><p>BERTopic adapter: reuse one UMAP fit while retaining original topic embeddings.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.topics.FrozenProjection.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#FrozenProjection.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.FrozenProjection.fit" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.topics.FrozenProjection.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#FrozenProjection.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.FrozenProjection.transform" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.projection">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.projection" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.fit_model">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">fit_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduced</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#fit_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.fit_model" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.topics.Evaluator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">Evaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#Evaluator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.Evaluator" title="Link to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="app.topics.Evaluator.npmi">
+<span class="sig-name descname"><span class="pre">npmi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#Evaluator.npmi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.Evaluator.npmi" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.topics.Evaluator.measure">
+<span class="sig-name descname"><span class="pre">measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#Evaluator.measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.Evaluator.measure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.score">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.score" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.representative_review">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">representative_review</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">articles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#representative_review"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.representative_review" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.preferred_finalists">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">preferred_finalists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#preferred_finalists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.preferred_finalists" title="Link to this definition">¶</a></dt>
+<dd><p>Prefer at least ten topics, falling back only if the grid offers none.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.tune">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#tune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.tune" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.calibrate_outliers">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">calibrate_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#calibrate_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.calibrate_outliers" title="Link to this definition">¶</a></dt>
+<dd><p>Hold out confident members from centroids; require 95% label agreement.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.topic_label">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">topic_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#topic_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.topic_label" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.make_snapshot">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">make_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_projection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#make_snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.make_snapshot" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.topics.write_json">
+<span class="sig-prename descclassname"><span class="pre">app.topics.</span></span><span class="sig-name descname"><span class="pre">write_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/topics.html#write_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.topics.write_json" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/api/topics.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

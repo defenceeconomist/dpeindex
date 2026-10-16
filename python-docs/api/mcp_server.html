@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MCP stdio tools &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=f6a572b4" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Supporting Python utilities" href="../utilities.html" />
+    <link rel="prev" title="Persistent MCP jobs" href="mcp_jobs.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="redif.html">ReDIF parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repec.html">RePEc fetching and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="store.html">Catalogue helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topics.html">Topic discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update_topics.html">Saved-model training and updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_labels.html">Reviewed display labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_timeline.html">Topic timelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_store.html">Topic integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citation_data.html">Citation collection and matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citations.html">Citation network analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citation_store.html">Citation integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theme_filter.html">Theme filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="retrospectives.html">Retrospective comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="export_static.html">Static dataset export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">Release orchestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcp_jobs.html">Persistent MCP jobs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MCP stdio tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="mcp-stdio-tools">
+<h1>MCP stdio tools<a class="headerlink" href="#mcp-stdio-tools" title="Link to this heading">¶</a></h1>
+<p>Expose the four async tools used to fetch, update, inspect and resume the local model. Sphinx mocks the transport dependencies for inspection; the generated signatures and docstrings come from the actual Python source. Importing this module does not run the stdio server; executing it as __main__ does.</p>
+<p id="module-app.mcp_server">DPE RePEc fetch and incremental model tools over MCP stdio.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.mcp_server.dpe_fetch_redif">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.mcp_server.</span></span><span class="sig-name descname"><span class="pre">dpe_fetch_redif</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/mcp_server.html#dpe_fetch_redif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.mcp_server.dpe_fetch_redif" title="Link to this definition">¶</a></dt>
+<dd><p>Download the complete DPE catalogue from RePEc FTP into a new local snapshot.</p>
+<p>Returns snapshot_id, SHA-256, provenance, article count and changes versus the
+current model. Validates all records; never overwrites the bundled source.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.mcp_server.dpe_update_model">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.mcp_server.</span></span><span class="sig-name descname"><span class="pre">dpe_update_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snapshot_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">through</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'auto'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'cpu'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mps'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'cuda'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">without_citations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_removals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/mcp_server.html#dpe_update_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.mcp_server.dpe_update_model" title="Link to this definition">¶</a></dt>
+<dd><p>Start an incremental model update from a fetched snapshot and return workspace_id.</p>
+<p>Includes every issue unless through (e.g. 37:6) is supplied. Preserves model
+identity, labels and historical assignments. Rejects removals unless explicitly
+allowed. Citation review and browser verification precede local activation.
+without_citations explicitly omits citation analysis. Poll dpe_update_status.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.mcp_server.dpe_update_status">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.mcp_server.</span></span><span class="sig-name descname"><span class="pre">dpe_update_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workspace_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/mcp_server.html#dpe_update_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.mcp_server.dpe_update_status" title="Link to this definition">¶</a></dt>
+<dd><p>Read job stages, errors, review/report paths; omit workspace_id for the current model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.mcp_server.dpe_resume_update">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.mcp_server.</span></span><span class="sig-name descname"><span class="pre">dpe_resume_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workspace_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/mcp_server.html#dpe_resume_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.mcp_server.dpe_resume_update" title="Link to this definition">¶</a></dt>
+<dd><p>Resume a failed/interrupted update after resolving errors or citation review.</p>
+<p>Completed stages are hash-verified and reused. To resolve review_required,
+inspect the returned review path, edit that workspace’s inputs/decisions.json,
+then resume. Corrupt completed artifacts require a fresh workspace.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/api/mcp_server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

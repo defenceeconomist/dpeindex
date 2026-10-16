@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Development and documentation maintenance &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python API reference" href="api/index.html" />
+    <link rel="prev" title="Data contracts and artifacts" href="data-contracts.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development and documentation maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-layout">Documentation layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checks">Checks</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="development-and-documentation-maintenance">
+<h1>Development and documentation maintenance<a class="headerlink" href="#development-and-documentation-maintenance" title="Link to this heading">¶</a></h1>
+<section id="documentation-layout">
+<h2>Documentation layout<a class="headerlink" href="#documentation-layout" title="Link to this heading">¶</a></h2>
+<p>Sphinx sources live in <code class="docutils literal notranslate"><span class="pre">docs/python/</span></code> to keep developer documentation separate
+from the research papers and evaluation reports already in <code class="docutils literal notranslate"><span class="pre">docs/</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">_build/</span></code> directory and the documentation environment are ignored by Git.
+The built-in Alabaster theme provides search, module and general indices, and
+source links without adding another theme dependency.</p>
+<p>API pages use <code class="docutils literal notranslate"><span class="pre">automodule</span></code> with public members, including functions whose
+source docstrings have not yet been expanded. Module introductions explain their
+role and important usage constraints. Add parameter, return and exception notes
+to source docstrings as interfaces evolve; Sphinx incorporates them on the next
+build. Keep examples read-only unless clearly labelled as operational commands.</p>
+<p>When adding a module, create its page under <code class="docutils literal notranslate"><span class="pre">api/</span></code> and add it to the API
+contents list. Avoid network requests, model loads and worker launch at import
+time: autodoc imports modules. The optional MCP imports are mocked for inspection,
+so a successful documentation build does not prove that MCP transport is installed
+or functional. Runtime protocol tests remain necessary for MCP changes.</p>
+</section>
+<section id="checks">
+<h2>Checks<a class="headerlink" href="#checks" title="Link to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>.venv-docs/bin/python<span class="w"> </span>-m<span class="w"> </span>sphinx<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>-W<span class="w"> </span>--keep-going<span class="w"> </span>docs/python<span class="w"> </span>docs/python/_build/html
+.venv-docs/bin/python<span class="w"> </span>-m<span class="w"> </span>sphinx<span class="w"> </span>-b<span class="w"> </span>doctest<span class="w"> </span>-W<span class="w"> </span>--keep-going<span class="w"> </span>docs/python<span class="w"> </span>docs/python/_build/doctest
+</pre></div>
+</div>
+<p>Run relevant application checks in the analysis environment when changing code:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>tests<span class="w"> </span>-v
+npm<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>The Python tests cover parsing, fetching, topic labels/timelines, citation
+matching, staged updates, export and MCP jobs/protocols. Full-suite dependencies
+include the relevant optional stacks; the lightweight docs environment is not
+intended to execute model tests. Browser checks and static validation are
+separate commands documented in the repository README.</p>
+<p>Rendering the documentation does not publish it or modify the active release.
+To serve a built copy locally:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>.venv-docs/bin/python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--directory<span class="w"> </span>docs/python/_build/html
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/development.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

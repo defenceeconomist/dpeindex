@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Supporting Python utilities &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="MCP stdio tools" href="api/mcp_server.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Supporting Python utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#static-preview">Static preview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mcp-launcher">MCP launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manuscript-preparation">Manuscript preparation</a></li>
+</ul>
+</li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="supporting-python-utilities">
+<h1>Supporting Python utilities<a class="headerlink" href="#supporting-python-utilities" title="Link to this heading">¶</a></h1>
+<section id="static-preview">
+<h2>Static preview<a class="headerlink" href="#static-preview" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/preview_static.py</span></code> serves a directory at both <code class="docutils literal notranslate"><span class="pre">/</span></code> and <code class="docutils literal notranslate"><span class="pre">/dpeindex/</span></code>.
+The default directory is <code class="docutils literal notranslate"><span class="pre">dist</span></code> and the default port is 8790.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/preview_static.py<span class="w"> </span>--directory<span class="w"> </span>dist<span class="w"> </span>--port<span class="w"> </span><span class="m">8790</span>
+</pre></div>
+</div>
+<p>It uses the standard-library HTTP server for local preview. It does not build
+the website or start an application API.</p>
+</section>
+<section id="mcp-launcher">
+<h2>MCP launcher<a class="headerlink" href="#mcp-launcher" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/run-mcp.py</span></code> inserts the repository root into the import path, imports
+the server from <code class="docutils literal notranslate"><span class="pre">app.mcp_server</span></code>, and starts its stdio transport. It does not
+change the working directory. Use the interpreter from the environment that
+contains the MCP and required analysis dependencies.</p>
+</section>
+<section id="manuscript-preparation">
+<h2>Manuscript preparation<a class="headerlink" href="#manuscript-preparation" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">manuscript/prepare.py</span></code> regenerates tables, figures and the retrospective
+crosswalk from the manuscript’s frozen <code class="docutils literal notranslate"><span class="pre">data/evidence.json</span></code>. NumPy and
+Matplotlib are needed for figure creation. The default command performs
+integrity and count checks but does not train models or fetch live data:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manuscript/prepare.py
+</pre></div>
+</div>
+<p>Its optional <code class="docutils literal notranslate"><span class="pre">--freeze</span> <span class="pre">&lt;release-directory&gt;</span></code> extracts evidence from an explicit
+release, and refuses to overwrite existing frozen evidence. Creating an updated
+edition requires a separate manuscript directory and review of its narrative.
+These scripts are documented as utilities rather than imported as members of
+<code class="docutils literal notranslate"><span class="pre">app</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">manuscript/validate.py</span></code> checks the Quarto source, BibTeX keys, rendered HTML/PDF,
+figure/table references and crosswalk. It uses Poppler’s <code class="docutils literal notranslate"><span class="pre">pdftotext</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pdfinfo</span></code> commands and writes <code class="docutils literal notranslate"><span class="pre">generated/validation.json</span></code>. Run it after
+rendering both formats:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>quarto<span class="w"> </span>render<span class="w"> </span>manuscript/manuscript.qmd<span class="w"> </span>--to<span class="w"> </span>all
+python<span class="w"> </span>manuscript/validate.py
+</pre></div>
+</div>
+<p>See <code class="docutils literal notranslate"><span class="pre">manuscript/README.md</span></code> for the evidence provenance and full reproduction
+instructions. The manuscript and developer API documentation have different
+purposes and separate build processes.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/utilities.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

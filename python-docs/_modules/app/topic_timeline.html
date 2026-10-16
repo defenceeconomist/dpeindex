@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>app.topic_timeline &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=f6a572b4" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for app.topic_timeline</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Offline BERTopic topics-over-time representations for published assignments."""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.topic_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">corpus_fingerprint</span>
+
+<span class="n">WIDTHS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"year"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"five_years"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"decade"</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="publication_year">
+<a class="viewcode-back" href="../../api/topic_timeline.html#app.topic_timeline.publication_year">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">publication_year</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"year"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="mi">1500</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2500</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="build_timeline">
+<a class="viewcode-back" href="../../api/topic_timeline.html#app.topic_timeline.build_timeline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_timeline</span><span class="p">(</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">articles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Restore the final assignment representation, without fitting any clusters or encoder."""</span>
+    <span class="k">if</span> <span class="n">corpus_fingerprint</span><span class="p">(</span><span class="n">articles</span><span class="p">)</span> <span class="o">!=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"corpus_fingerprint"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The canonical corpus differs from the model. Rebuild the model before its timeline."</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">bertopic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BERTopic</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">bertopic.vectorizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassTfidfTransformer</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+    <span class="n">by_handle</span> <span class="o">=</span> <span class="p">{</span><span class="n">article</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]:</span> <span class="n">article</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">articles</span><span class="p">}</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"documents"</span><span class="p">]</span>
+    <span class="n">docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">by_handle</span><span class="p">[</span><span class="n">document</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]][</span><span class="s2">"abstract"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Every modelled document must retain its complete abstract."</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">embedding_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n_words</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c1"># Restore the already published assignments. update_topics only recalculates</span>
+    <span class="c1"># their c-TF-IDF representation; it does not run the encoder, UMAP or HDBSCAN.</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">topics_</span> <span class="o">=</span> <span class="n">labels</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">update_topics</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span> <span class="n">vectorizer_model</span><span class="o">=</span><span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">"english"</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                        <span class="n">ctfidf_model</span><span class="o">=</span><span class="n">ClassTfidfTransformer</span><span class="p">(</span><span class="n">reduce_frequent_words</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"topics"</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="ow">and</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_topic</span><span class="p">(</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">])]</span> <span class="o">!=</span> <span class="p">[</span><span class="n">word</span><span class="p">[</span><span class="s2">"term"</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"keywords"</span><span class="p">]]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Restored keyword representation differs from the published model."</span><span class="p">)</span>
+    <span class="n">dated</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">document</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span> <span class="k">if</span> <span class="n">publication_year</span><span class="p">(</span><span class="n">document</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dated</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The model has no dated abstracts."</span><span class="p">)</span>
+    <span class="c1"># BERTopic indexes global rows by the topics present in the supplied dated</span>
+    <span class="c1"># subset. Keep those rows aligned even if a topic has only undated papers.</span>
+    <span class="n">global_topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="n">dated_topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">labels</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">dated</span><span class="p">})</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">c_tf_idf_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">c_tf_idf_</span><span class="p">[[</span><span class="n">global_topics</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">dated_topics</span><span class="p">]]</span>
+    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">publication_year</span><span class="p">(</span><span class="n">article</span><span class="p">)</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">articles</span> <span class="k">if</span> <span class="n">publication_year</span><span class="p">(</span><span class="n">article</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">first</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">years</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">last</span> <span class="o">-</span> <span class="n">first</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Annual topic analysis supports fewer than 100 publication years."</span><span class="p">)</span>
+    <span class="n">topic_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"topics"</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">WIDTHS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[(</span><span class="n">publication_year</span><span class="p">(</span><span class="n">documents</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">//</span> <span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">dated</span><span class="p">]</span>
+        <span class="n">temporal</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">topics_over_time</span><span class="p">([</span><span class="n">docs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">dated</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">,</span>
+                                          <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">dated</span><span class="p">],</span>
+                                          <span class="n">evolution_tuning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">global_tuning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">representations</span> <span class="o">=</span> <span class="p">{(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">Topic</span><span class="p">)):</span> <span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">temporal</span><span class="o">.</span><span class="n">itertuples</span><span class="p">()}</span>
+        <span class="n">periods</span><span class="p">,</span> <span class="n">cells</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first</span> <span class="o">//</span> <span class="n">width</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="n">last</span> <span class="o">//</span> <span class="n">width</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">article</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">articles</span> <span class="k">if</span> <span class="p">(</span><span class="n">year</span> <span class="o">:=</span> <span class="n">publication_year</span><span class="p">(</span><span class="n">article</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">]</span>
+            <span class="n">abstract_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">article</span><span class="p">[</span><span class="s2">"abstract"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">records</span><span class="p">)</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"start"</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">start</span><span class="p">)</span> <span class="k">if</span> <span class="n">width</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">–</span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                      <span class="s2">"abstract_count"</span><span class="p">:</span> <span class="n">abstract_count</span><span class="p">,</span> <span class="s2">"record_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">),</span>
+                      <span class="s2">"missing_abstract_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span> <span class="o">-</span> <span class="n">abstract_count</span><span class="p">,</span>
+                      <span class="s2">"observed_years"</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">publication_year</span><span class="p">(</span><span class="n">article</span><span class="p">)</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">records</span><span class="p">}),</span>
+                      <span class="s2">"partial"</span><span class="p">:</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="n">last</span><span class="p">}</span>
+            <span class="n">periods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">topic_id</span> <span class="ow">in</span> <span class="n">topic_ids</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">representations</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">topic_id</span><span class="p">))</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">Frequency</span><span class="p">)</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="n">words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">Words</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+                <span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"start"</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span> <span class="s2">"topic"</span><span class="p">:</span> <span class="n">topic_id</span><span class="p">,</span> <span class="s2">"count"</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                              <span class="s2">"share"</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">abstract_count</span> <span class="k">if</span> <span class="n">abstract_count</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"words"</span><span class="p">:</span> <span class="n">words</span><span class="p">})</span>
+        <span class="n">groups</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"width"</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="s2">"periods"</span><span class="p">:</span> <span class="n">periods</span><span class="p">,</span> <span class="s2">"cells"</span><span class="p">:</span> <span class="n">cells</span><span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"ready"</span><span class="p">,</span> <span class="s2">"run_id"</span><span class="p">:</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"run_id"</span><span class="p">],</span>
+              <span class="s2">"corpus_fingerprint"</span><span class="p">:</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"corpus_fingerprint"</span><span class="p">],</span>
+              <span class="s2">"built_at"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> <span class="s2">"first_year"</span><span class="p">:</span> <span class="n">first</span><span class="p">,</span> <span class="s2">"last_year"</span><span class="p">:</span> <span class="n">last</span><span class="p">,</span>
+              <span class="s2">"undated_abstract_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">dated</span><span class="p">),</span>
+              <span class="s2">"undated_missing_count"</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">publication_year</span><span class="p">(</span><span class="n">article</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">article</span><span class="p">[</span><span class="s2">"abstract"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">articles</span><span class="p">),</span>
+              <span class="s2">"method"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"BERTopic topics_over_time"</span><span class="p">,</span> <span class="s2">"global_tuning"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"evolution_tuning"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                         <span class="s2">"denominator"</span><span class="p">:</span> <span class="s2">"All usable abstracts in each period, including unassigned abstracts."</span><span class="p">,</span>
+                         <span class="s2">"keywords"</span><span class="p">:</span> <span class="s2">"Period c-TF-IDF keywords smoothed with the global topic representation. Terms may originate outside the selected period; no smoothing between consecutive periods is applied."</span><span class="p">,</span>
+                         <span class="s2">"assignments"</span><span class="p">:</span> <span class="s2">"Published topic identities and article assignments are fixed across time; clusters are not refitted by year."</span><span class="p">},</span>
+              <span class="s2">"groups"</span><span class="p">:</span> <span class="n">groups</span><span class="p">}</span>
+    <span class="n">validate_timeline</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">snapshot</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="validate_timeline">
+<a class="viewcode-back" href="../../api/topic_timeline.html#app.topic_timeline.validate_timeline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_timeline</span><span class="p">(</span><span class="n">timeline</span><span class="p">,</span> <span class="n">snapshot</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">timeline</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"run_id"</span><span class="p">,</span> <span class="s2">"corpus_fingerprint"</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline belongs to a different model run or corpus."</span><span class="p">)</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"documents"</span><span class="p">]</span>
+    <span class="n">undated</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">publication_year</span><span class="p">(</span><span class="n">document</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">timeline</span><span class="p">[</span><span class="s2">"undated_abstract_count"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">undated</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Undated abstract coverage differs from the model."</span><span class="p">)</span>
+    <span class="n">topic_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"topics"</span><span class="p">]}</span> <span class="o">|</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">WIDTHS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">timeline</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"periods"</span><span class="p">]</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="p">[</span><span class="n">period</span><span class="p">[</span><span class="s2">"start"</span><span class="p">]</span> <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">group</span><span class="p">[</span><span class="s2">"width"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">width</span> <span class="ow">or</span> <span class="n">starts</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">starts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline periods overlap or omit intervals."</span><span class="p">)</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">{(</span><span class="n">cell</span><span class="p">[</span><span class="s2">"start"</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]):</span> <span class="n">cell</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">group</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">]}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">])</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span> <span class="o">!=</span> <span class="p">{(</span><span class="n">start</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span> <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">starts</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">topic_ids</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline needs exactly one cell per period and topic."</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">period</span><span class="p">[</span><span class="s2">"end"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">period</span><span class="p">[</span><span class="s2">"start"</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Incorrect period boundary."</span><span class="p">)</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span> <span class="k">if</span> <span class="p">(</span><span class="n">year</span> <span class="o">:=</span> <span class="n">publication_year</span><span class="p">(</span><span class="n">document</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="ow">and</span> <span class="n">period</span><span class="p">[</span><span class="s2">"start"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">period</span><span class="p">[</span><span class="s2">"end"</span><span class="p">]]</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">document</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">period</span><span class="p">[</span><span class="s2">"abstract_count"</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="ow">or</span> <span class="n">period</span><span class="p">[</span><span class="s2">"missing_abstract_count"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">period</span><span class="p">[</span><span class="s2">"record_count"</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">+</span> <span class="n">period</span><span class="p">[</span><span class="s2">"missing_abstract_count"</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline coverage does not match its denominator."</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">topic_ids</span><span class="p">:</span>
+                <span class="n">cell</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[(</span><span class="n">period</span><span class="p">[</span><span class="s2">"start"</span><span class="p">],</span> <span class="n">topic</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">cell</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">counts</span><span class="p">[</span><span class="n">topic</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline counts differ from published assignments."</span><span class="p">)</span>
+                <span class="n">expected</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">counts</span><span class="p">[</span><span class="n">topic</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="k">if</span> <span class="n">selected</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="s2">"share"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">expected</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">expected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="s2">"share"</span><span class="p">],</span> <span class="n">expected</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline share excludes usable abstracts or has an invalid denominator."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">period</span><span class="p">[</span><span class="s2">"abstract_count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">)</span> <span class="o">+</span> <span class="n">undated</span> <span class="o">!=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"abstract_count"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline omits modelled abstracts."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">period</span><span class="p">[</span><span class="s2">"missing_abstract_count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">)</span> <span class="o">+</span> <span class="n">timeline</span><span class="p">[</span><span class="s2">"undated_missing_count"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"missing_abstract_count"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Timeline omits missing-abstract records."</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

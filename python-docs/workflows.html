@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Operational workflows &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data contracts and artifacts" href="data-contracts.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Operational workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#train-a-baseline">Train a baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#incremental-refresh">Incremental refresh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#review-status-and-resume">Review, status and resume</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export-an-existing-release">Export an existing release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mcp-lifecycle">MCP lifecycle</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="operational-workflows">
+<h1>Operational workflows<a class="headerlink" href="#operational-workflows" title="Link to this heading">¶</a></h1>
+<p>Run commands below from the repository root. Each new operation needs a fresh
+output directory. These examples describe actions; they are not executed by
+Sphinx. Install the topic stack and, unless omitted explicitly, the citation
+stack before running a model workflow.</p>
+<section id="train-a-baseline">
+<h2>Train a baseline<a class="headerlink" href="#train-a-baseline" title="Link to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>train<span class="w"> </span>--source<span class="w"> </span>data/defpea.redif<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--exclude<span class="w"> </span><span class="m">37</span>:5<span class="w"> </span><span class="m">37</span>:6<span class="w"> </span>--labels<span class="w"> </span>data/topic-labels.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>data/local-artifacts/documented-baseline
+</pre></div>
+</div>
+<p>The default training exclusion is <code class="docutils literal notranslate"><span class="pre">37:5</span> <span class="pre">37:6</span></code>. Passing <code class="docutils literal notranslate"><span class="pre">--exclude</span></code> with no
+values requests no exclusions. Training discovers a new model, tunes the
+clustering configuration and creates a new model identity. The supplied label
+manifest is valid only for matching training evidence; omit <code class="docutils literal notranslate"><span class="pre">--labels</span></code> when
+training a different corpus and review the resulting keywords before naming it.
+<code class="docutils literal notranslate"><span class="pre">--labels</span></code> is accepted only for training, not incremental refreshes.</p>
+<p>The grid and scoring logic are implemented in <a class="reference internal" href="api/topics.html#module-app.topics" title="app.topics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">app.topics</span></code></a>. Calibration
+measures agreement with discovered cluster labels, not independently measured
+classification accuracy. Inspect the quality report and representative abstracts
+before interpreting a newly trained structure.</p>
+</section>
+<section id="incremental-refresh">
+<h2>Incremental refresh<a class="headerlink" href="#incremental-refresh" title="Link to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>refresh<span class="w"> </span>--source<span class="w"> </span>data/defpea.redif<span class="w"> </span>--through<span class="w"> </span><span class="m">37</span>:5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--previous<span class="w"> </span>data/local-artifacts/documented-baseline/release<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>data/local-artifacts/documented-issue-5
+</pre></div>
+</div>
+<p>Supply a complete catalogue, not an issue-only file. <code class="docutils literal notranslate"><span class="pre">--through</span></code> caps inclusion
+by volume and issue. Removals fail unless explicitly allowed with
+<code class="docutils literal notranslate"><span class="pre">--allow-removals</span></code>. Corrected abstracts are reclassified; unchanged historical
+assignments, model identity, reviewed labels and map coordinates are retained.
+A frozen model can leave new abstracts unassigned; discovering new clusters
+requires another training run.</p>
+<p>To fetch the fixed complete RePEc catalogue instead of reading a local source:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>refresh<span class="w"> </span>--fetch<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--previous<span class="w"> </span>data/local-artifacts/documented-issue-5/release<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>data/local-artifacts/documented-refresh
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--device</span></code> accepts <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">mps</span></code> and <code class="docutils literal notranslate"><span class="pre">cuda</span></code>. Automatic selection
+uses MPS when available, otherwise CPU; CUDA must be selected explicitly.
+<code class="docutils literal notranslate"><span class="pre">--without-citations</span></code> omits citation analysis and supplies an explanatory
+<code class="docutils literal notranslate"><span class="pre">not_built</span></code> snapshot. <code class="docutils literal notranslate"><span class="pre">--skip-browser-tests</span></code> is a development escape hatch;
+normal runs retain the browser gate. Use <code class="docutils literal notranslate"><span class="pre">--help</span></code> for the authoritative argument
+list and cache locations:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>--help
+python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>train<span class="w"> </span>--help
+python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>refresh<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+<section id="review-status-and-resume">
+<h2>Review, status and resume<a class="headerlink" href="#review-status-and-resume" title="Link to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>status<span class="w"> </span>data/local-artifacts/documented-refresh
+python<span class="w"> </span>-m<span class="w"> </span>app.update<span class="w"> </span>resume<span class="w"> </span>data/local-artifacts/documented-refresh
+</pre></div>
+</div>
+<p>Stages record checksums in <code class="docutils literal notranslate"><span class="pre">state.json</span></code>. Resume verifies completed artifacts
+before reusing them. Damaged completed artifacts require a fresh workspace,
+rather than editing manifests to bypass integrity checks. A failed pipeline does
+not select a new current release. Exact unchanged refreshes can reuse a verified
+release without re-encoding documents.</p>
+<p>For pending citation review, inspect the workspace’s <code class="docutils literal notranslate"><span class="pre">review.json</span></code> and correct
+<code class="docutils literal notranslate"><span class="pre">inputs/decisions.json</span></code> before resuming. Reference records are frozen in
+<code class="docutils literal notranslate"><span class="pre">inputs/records.json</span></code>. Decisions may be edited before the citation stage
+completes; changing an already completed stage requires a fresh workspace.
+Unresolved references are retained as evidence, not promoted automatically to
+citation edges. Reviewed community labels are bound to exact membership hashes.
+<code class="docutils literal notranslate"><span class="pre">CROSSREF_MAILTO</span></code> optionally supplies contact information for collection.</p>
+</section>
+<section id="export-an-existing-release">
+<h2>Export an existing release<a class="headerlink" href="#export-an-existing-release" title="Link to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>app.export_static<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--release<span class="w"> </span>data/local-artifacts/documented-issue-5/release<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>data/local-artifacts/documented-export
+</pre></div>
+</div>
+<p>The output must not already exist. Omitting <code class="docutils literal notranslate"><span class="pre">--release</span></code> uses the current local
+release. Export validates corpus alignment, snapshots, timeline and citation
+download integrity. It does not train models or produce the final JavaScript
+bundle. The website build is a separate step:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>run<span class="w"> </span>static:build<span class="w"> </span>--<span class="w"> </span>--dataset<span class="w"> </span>data/local-artifacts/documented-export
+npm<span class="w"> </span>run<span class="w"> </span>static:validate
+</pre></div>
+</div>
+<p>The build also packages the existing rendered manuscript. After editing that
+manuscript, render both Quarto formats before building the website. Publishing
+remains the explicit <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">run</span> <span class="pre">static:publish</span> <span class="pre">--</span> <span class="pre">&lt;site-directory&gt;</span></code> command.</p>
+</section>
+<section id="mcp-lifecycle">
+<h2>MCP lifecycle<a class="headerlink" href="#mcp-lifecycle" title="Link to this heading">¶</a></h2>
+<p>Launch <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">scripts/run-mcp.py</span></code> with the Python environment containing
+<code class="docutils literal notranslate"><span class="pre">requirements-mcp.txt</span></code>. The launcher can be invoked by absolute path from any
+working directory. It starts stdio transport, not an HTTP server.</p>
+<ol class="arabic simple">
+<li><p>Call <a class="reference internal" href="api/mcp_server.html#app.mcp_server.dpe_fetch_redif" title="app.mcp_server.dpe_fetch_redif"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.mcp_server.dpe_fetch_redif()</span></code></a> to obtain a validated snapshot ID.</p></li>
+<li><p>Pass that ID to <a class="reference internal" href="api/mcp_server.html#app.mcp_server.dpe_update_model" title="app.mcp_server.dpe_update_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.mcp_server.dpe_update_model()</span></code></a>. A trained current
+release must already exist. The call returns a workspace ID while a detached
+worker continues the update.</p></li>
+<li><p>Call <a class="reference internal" href="api/mcp_server.html#app.mcp_server.dpe_update_status" title="app.mcp_server.dpe_update_status"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.mcp_server.dpe_update_status()</span></code></a> with that workspace ID to inspect
+stages, failures, logs and review paths. Omit the ID to inspect the current model.</p></li>
+<li><p>Resolve errors or review decisions and call
+<a class="reference internal" href="api/mcp_server.html#app.mcp_server.dpe_resume_update" title="app.mcp_server.dpe_resume_update"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.mcp_server.dpe_resume_update()</span></code></a> with the same workspace ID.</p></li>
+</ol>
+<p>Workers persist across client disconnects. One MCP update can hold the global
+update slot at a time. If the current release changes before a failed update is
+resumed, start a fresh update. Status can report <code class="docutils literal notranslate"><span class="pre">not_trained</span></code>, <code class="docutils literal notranslate"><span class="pre">queued</span></code>,
+<code class="docutils literal notranslate"><span class="pre">running</span></code>, <code class="docutils literal notranslate"><span class="pre">interrupted</span></code>, <code class="docutils literal notranslate"><span class="pre">review_required</span></code>, <code class="docutils literal notranslate"><span class="pre">failed</span></code> or <code class="docutils literal notranslate"><span class="pre">ready</span></code> depending
+on context. No MCP tool retrains the topic structure or publishes the website.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/workflows.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

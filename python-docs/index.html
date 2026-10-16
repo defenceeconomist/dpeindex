@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DPE Python documentation &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="getting-started.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="dpe-python-documentation">
+<h1>DPE Python documentation<a class="headerlink" href="#dpe-python-documentation" title="Link to this heading">¶</a></h1>
+<p>The Python package prepares the Defence and Peace Economics catalogue, discovers
+and updates research topics, builds citation networks, and exports validated
+releases for a static JavaScript application. Python runs during data preparation;
+the published website does not require a Python process, database or hosted model.</p>
+<p>Start with <a class="reference internal" href="getting-started.html"><span class="doc">Getting started</span></a> to build the documentation or use the parser.
+See <a class="reference internal" href="workflows.html"><span class="doc">Operational workflows</span></a> before training or updating a release, and <a class="reference internal" href="architecture.html"><span class="doc">Architecture</span></a>
+for the boundaries between pure helpers, analysis and orchestration. The
+<a class="reference internal" href="api/index.html"><span class="doc">Python API reference</span></a> links each module to its source and public members.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#build-these-docs">Build these docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#python-and-optional-stacks">Python and optional stacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#use-the-pure-parser">Use the pure parser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-flow">Data flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#module-responsibilities">Module responsibilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#side-effects-and-boundaries">Side effects and boundaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#train-a-baseline">Train a baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#incremental-refresh">Incremental refresh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#review-status-and-resume">Review, status and resume</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#export-an-existing-release">Export an existing release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html#mcp-lifecycle">MCP lifecycle</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data-contracts.html">Data contracts and artifacts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data-contracts.html#article-dictionaries">Article dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-contracts.html#topic-snapshots">Topic snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-contracts.html#citation-snapshots">Citation snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-contracts.html#workspace-layout">Workspace layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-contracts.html#retrospective-comparisons">Retrospective comparisons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#documentation-layout">Documentation layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#checks">Checks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/redif.html">ReDIF parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/repec.html">RePEc fetching and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/store.html">Catalogue helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topics.html">Topic discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/update_topics.html">Saved-model training and updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topic_labels.html">Reviewed display labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topic_timeline.html">Topic timelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topic_store.html">Topic integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/citation_data.html">Citation collection and matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/citations.html">Citation network analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/citation_store.html">Citation integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/theme_filter.html">Theme filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retrospectives.html">Retrospective comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/export_static.html">Static dataset export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/update.html">Release orchestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/mcp_jobs.html">Persistent MCP jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/mcp_server.html">MCP stdio tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html#static-preview">Static preview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html#mcp-launcher">MCP launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html#manuscript-preparation">Manuscript preparation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices">
+<h2>Indices<a class="headerlink" href="#indices" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

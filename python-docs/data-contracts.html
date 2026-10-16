@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data contracts and artifacts &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=f6a572b4" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development and documentation maintenance" href="development.html" />
+    <link rel="prev" title="Operational workflows" href="workflows.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Operational workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data contracts and artifacts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#article-dictionaries">Article dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#topic-snapshots">Topic snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation-snapshots">Citation snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workspace-layout">Workspace layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrospective-comparisons">Retrospective comparisons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="data-contracts-and-artifacts">
+<h1>Data contracts and artifacts<a class="headerlink" href="#data-contracts-and-artifacts" title="Link to this heading">¶</a></h1>
+<section id="article-dictionaries">
+<h2>Article dictionaries<a class="headerlink" href="#article-dictionaries" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="api/redif.html#app.redif.parse_redif" title="app.redif.parse_redif"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.redif.parse_redif()</span></code></a> returns a list of dictionaries. <code class="docutils literal notranslate"><span class="pre">handle</span></code> is the
+stable identity, <code class="docutils literal notranslate"><span class="pre">authors</span></code> is a list, and the remaining parsed fields are
+strings. Missing string values are empty strings, not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Principal fields</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fields</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span></code>, <code class="docutils literal notranslate"><span class="pre">authors</span></code></p></td>
+<td><p>RePEc identity, decoded title and repeated author names.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">abstract</span></code>, <code class="docutils literal notranslate"><span class="pre">keywords</span></code></p></td>
+<td><p>Normalised input text; missing abstracts remain browsable.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">volume</span></code>, <code class="docutils literal notranslate"><span class="pre">issue</span></code>, <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code>, <code class="docutils literal notranslate"><span class="pre">pages</span></code></p></td>
+<td><p>Publication metadata retained as strings, including combined issues.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">doi</span></code>, <code class="docutils literal notranslate"><span class="pre">doi_url</span></code>, <code class="docutils literal notranslate"><span class="pre">repec_url</span></code></p></td>
+<td><p>Identifiers and links derived from the source record.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">journal</span></code>, <code class="docutils literal notranslate"><span class="pre">file_url</span></code>, <code class="docutils literal notranslate"><span class="pre">file_format</span></code>, <code class="docutils literal notranslate"><span class="pre">file_restriction</span></code></p></td>
+<td><p>Source journal and publisher file metadata.</p></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="api/topic_store.html#app.topic_store.corpus_fingerprint" title="app.topic_store.corpus_fingerprint"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.topic_store.corpus_fingerprint()</span></code></a> hashes the sorted article summaries and
+abstracts, binding related artifacts to the same analytical corpus. It is distinct
+from the SHA-256 of the original ReDIF byte stream.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">app.topic_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">corpus_fingerprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'handle'</span><span class="p">:</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Peace'</span><span class="p">,</span> <span class="s1">'abstract'</span><span class="p">:</span> <span class="s1">'Conflict and growth.'</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'handle'</span><span class="p">:</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Defence'</span><span class="p">,</span> <span class="s1">'abstract'</span><span class="p">:</span> <span class="s1">'Public spending.'</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corpus_fingerprint</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span> <span class="o">==</span> <span class="n">corpus_fingerprint</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corpus_fingerprint</span><span class="p">([</span><span class="n">a</span><span class="p">])</span> <span class="o">==</span> <span class="n">corpus_fingerprint</span><span class="p">([{</span><span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="s1">'abstract'</span><span class="p">:</span> <span class="s1">'Corrected.'</span><span class="p">}])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</section>
+<section id="topic-snapshots">
+<h2>Topic snapshots<a class="headerlink" href="#topic-snapshots" title="Link to this heading">¶</a></h2>
+<p>A ready snapshot includes <code class="docutils literal notranslate"><span class="pre">metadata</span></code>, <code class="docutils literal notranslate"><span class="pre">topics</span></code>, <code class="docutils literal notranslate"><span class="pre">documents</span></code>, <code class="docutils literal notranslate"><span class="pre">hierarchy</span></code>
+and training <code class="docutils literal notranslate"><span class="pre">report</span></code> data; release snapshots also include a <code class="docutils literal notranslate"><span class="pre">timeline</span></code>.
+Topic entries contain IDs, labels, keywords, counts and representative handles.
+Document entries include the article summary, topic assignment and map coordinates.
+An assignment of <code class="docutils literal notranslate"><span class="pre">-1</span></code> means unassigned; a record without an abstract has no
+model document entry. Topic shares should state whether their denominator
+includes unassigned abstracts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">metadata.run_id</span></code> identifies a snapshot, whereas <code class="docutils literal notranslate"><span class="pre">metadata.model_id</span></code> tracks
+the trained model across incremental refreshes. Readable labels do not change
+assignments or scores. <a class="reference internal" href="api/topic_store.html#app.topic_store.validate_snapshot" title="app.topic_store.validate_snapshot"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.topic_store.validate_snapshot()</span></code></a> rejects
+inconsistent counts, invalid geometry and other contract violations.
+<a class="reference internal" href="api/topic_timeline.html#app.topic_timeline.validate_timeline" title="app.topic_timeline.validate_timeline"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.topic_timeline.validate_timeline()</span></code></a> checks time-bin consistency.</p>
+</section>
+<section id="citation-snapshots">
+<h2>Citation snapshots<a class="headerlink" href="#citation-snapshots" title="Link to this heading">¶</a></h2>
+<p>A ready citation snapshot includes <code class="docutils literal notranslate"><span class="pre">nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">edges</span></code>, <code class="docutils literal notranslate"><span class="pre">communities</span></code>,
+<code class="docutils literal notranslate"><span class="pre">coverage</span></code>, <code class="docutils literal notranslate"><span class="pre">network</span></code>, <code class="docutils literal notranslate"><span class="pre">baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>, <code class="docutils literal notranslate"><span class="pre">comparison</span></code>, review
+status and download metadata. Edges point from citing source to cited target.
+<code class="docutils literal notranslate"><span class="pre">baseline</span></code> on each edge records whether it is also in the DOI-only graph.
+Node degrees are observed internal degrees, not total citations from all journals.
+Community <code class="docutils literal notranslate"><span class="pre">-1</span></code> denotes an isolate outside the connected-paper partition.</p>
+<p><code class="docutils literal notranslate"><span class="pre">comparison</span></code> cross-tabulates current topic assignments against citation
+communities, including missing and unassigned abstracts. It requires compatible
+corpus fingerprints. A <code class="docutils literal notranslate"><span class="pre">not_built</span></code> snapshot is an explicit absence of analysis,
+not an empty validated network. Validators for ready snapshots should not be
+called on that status-only representation.</p>
+<p><a class="reference internal" href="api/citation_data.html#app.citation_data.build_edges" title="app.citation_data.build_edges"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.citation_data.build_edges()</span></code></a> returns eligible records, edges, audit rows,
+pending review and unmatched references. <a class="reference internal" href="api/citations.html#app.citations.build_snapshot" title="app.citations.build_snapshot"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.citations.build_snapshot()</span></code></a>
+returns the analytical snapshot, evidence and review structures.
+<a class="reference internal" href="api/citations.html#app.citations.exports" title="app.citations.exports"><code class="xref py py-func docutils literal notranslate"><span class="pre">app.citations.exports()</span></code></a> produces the downloadable artifacts defined by
+<code class="docutils literal notranslate"><span class="pre">app.citation_store.DOWNLOADS</span></code>. Exported bytes are checked against the snapshot’s
+recorded hashes and sizes before publication into the static dataset.</p>
+</section>
+<section id="workspace-layout">
+<h2>Workspace layout<a class="headerlink" href="#workspace-layout" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;workspace&gt;/
+  inputs/                  frozen source, corpus, decisions and provenance
+  state.json               completed stages and integrity hashes
+  review.json              citation review, when needed
+  website.log              Node build log
+  browsers.log             browser verification log
+  release/
+    corpus.json, source.json
+    topics.json, coverage.json
+    model/                 centroids, saved map, definition and trials
+    citations.json
+    citations/             evidence, review, graphs and download bundle
+    dataset/               validated JSON and immutable downloads
+    site/                  complete static website
+    update-report.json
+    release-manifest.json
+</pre></div>
+</div>
+<p>MCP workers add job/process metadata and <code class="docutils literal notranslate"><span class="pre">worker.log</span></code>. The global
+<code class="docutils literal notranslate"><span class="pre">data/local-artifacts/current.json</span></code> stores the selected release path. Large
+artifacts are local and ignored by Git; preserve or back them up separately.
+Saved projection files are trusted local model artifacts and should not be
+loaded from untrusted sources.</p>
+<p>The exported dataset manifest maps issues to their hashed filenames and records
+file hashes, corpus identity and model identities. Its <code class="docutils literal notranslate"><span class="pre">api/citations/</span></code> paths
+are static files, despite the <code class="docutils literal notranslate"><span class="pre">api</span></code> directory name. The Node builder adds
+browser-search vectors, model assets and the website-level integrity manifest.</p>
+</section>
+<section id="retrospective-comparisons">
+<h2>Retrospective comparisons<a class="headerlink" href="#retrospective-comparisons" title="Link to this heading">¶</a></h2>
+<p>The comparison in <a class="reference internal" href="api/retrospectives.html#module-app.retrospectives" title="app.retrospectives"><code class="xref py py-mod docutils literal notranslate"><span class="pre">app.retrospectives</span></code></a> is bound to a reviewed historical
+snapshot in <code class="docutils literal notranslate"><span class="pre">data/retrospectives.json</span></code>. A different current run can produce
+<code class="docutils literal notranslate"><span class="pre">review_required</span></code> with links disabled, or <code class="docutils literal notranslate"><span class="pre">unavailable</span></code> if the audited
+snapshot cannot be retrieved. Periods use volumes and issue cutoffs. Editorial
+counts and abstract-based topic counts describe different populations; overlapping
+crosswalk rows must not be summed. The separate manuscript’s reviewed crosswalk
+does not overwrite this application audit.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/data-contracts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

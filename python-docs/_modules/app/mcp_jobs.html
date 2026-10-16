@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>app.mcp_jobs &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=f6a572b4" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for app.mcp_jobs</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Persistent local MCP jobs. Workers survive client disconnects and server restarts."""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fcntl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.citation_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">now</span><span class="p">,</span> <span class="n">write_json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.repec</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_redif</span><span class="p">,</span> <span class="n">validate_redif</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalog_for</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.update</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARTIFACTS</span><span class="p">,</span> <span class="n">ROOT</span><span class="p">,</span> <span class="n">build_parser</span><span class="p">,</span> <span class="n">diff_articles</span><span class="p">,</span> <span class="n">prepare</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">verify_release</span>
+
+
+<div class="viewcode-block" id="new_id">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.new_id">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">new_id</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y%m</span><span class="si">%d</span><span class="s1">T%H%M%SZ-'</span><span class="p">)</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="artifact_path">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.artifact_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">artifact_path</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d</span><span class="si">{8}</span><span class="s1">T\d</span><span class="si">{6}</span><span class="s1">Z-[0-9a-f]</span><span class="si">{8}</span><span class="s1">'</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid snapshot or workspace ID'</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="p">(</span><span class="n">ARTIFACTS</span> <span class="o">/</span> <span class="n">kind</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">identifier</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">root</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Artifact must remain inside its local directory'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span></div>
+
+
+
+<div class="viewcode-block" id="current_release">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.current_release">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">current_release</span><span class="p">():</span>
+    <span class="n">pointer</span> <span class="o">=</span> <span class="n">ARTIFACTS</span> <span class="o">/</span> <span class="s1">'current.json'</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pointer</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'No current model; first train a baseline with python -m app.update train'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">pointer</span><span class="p">)[</span><span class="s1">'release'</span><span class="p">])</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="change_summary">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.change_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">change_summary</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="p">):</span>
+    <span class="n">changes</span> <span class="o">=</span> <span class="n">diff_articles</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">changes</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'added'</span><span class="p">,</span> <span class="s1">'changed'</span><span class="p">,</span> <span class="s1">'removed'</span><span class="p">)},</span>
+            <span class="s1">'unchanged'</span><span class="p">:</span> <span class="n">changes</span><span class="p">[</span><span class="s1">'unchanged'</span><span class="p">],</span>
+            <span class="s1">'sample_handles'</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">changes</span><span class="p">[</span><span class="n">k</span><span class="p">][:</span><span class="mi">20</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'added'</span><span class="p">,</span> <span class="s1">'changed'</span><span class="p">,</span> <span class="s1">'removed'</span><span class="p">)}}</span></div>
+
+
+
+<div class="viewcode-block" id="fetch_snapshot">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.fetch_snapshot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_snapshot</span><span class="p">():</span>
+    <span class="n">raw</span><span class="p">,</span> <span class="n">manifest</span> <span class="o">=</span> <span class="n">fetch_redif</span><span class="p">()</span>
+    <span class="n">articles</span> <span class="o">=</span> <span class="n">validate_redif</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">new_id</span><span class="p">()</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">artifact_path</span><span class="p">(</span><span class="s1">'repec'</span><span class="p">,</span> <span class="n">identifier</span><span class="p">)</span>
+    <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">'source.redif'</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">'manifest.json'</span><span class="p">,</span> <span class="n">manifest</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'snapshot_id'</span><span class="p">:</span> <span class="n">identifier</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">'source.redif'</span><span class="p">),</span> <span class="o">**</span><span class="n">manifest</span><span class="p">,</span>
+              <span class="s1">'latest_volume'</span><span class="p">:</span> <span class="n">catalog_for</span><span class="p">(</span><span class="n">articles</span><span class="p">)[</span><span class="s1">'volumes'</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ARTIFACTS</span> <span class="o">/</span> <span class="s1">'current.json'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">current_release</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">previous_release</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">previous</span><span class="p">),</span> <span class="n">changes</span><span class="o">=</span><span class="n">change_summary</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">previous</span> <span class="o">/</span> <span class="s1">'corpus.json'</span><span class="p">),</span> <span class="n">articles</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="update_slot">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.update_slot">[docs]</a>
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_slot</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Transfer this flock to the worker; closing the parent's FD keeps it held."""</span>
+    <span class="n">ARTIFACTS</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="p">(</span><span class="n">ARTIFACTS</span> <span class="o">/</span> <span class="s1">'.mcp-update.lock'</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">lock</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_EX</span> <span class="o">|</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_NB</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BlockingIOError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'An MCP model update is already running; check its status'</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">yield</span> <span class="n">lock</span></div>
+
+        <span class="c1"># No LOCK_UN: a spawned worker shares the lock until its own FD closes.</span>
+
+
+<div class="viewcode-block" id="launch">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.launch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">launch</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'status'</span><span class="p">:</span> <span class="s1">'queued'</span><span class="p">,</span> <span class="s1">'started_at'</span><span class="p">:</span> <span class="n">now</span><span class="p">()}</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'worker.log'</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">'-m'</span><span class="p">,</span> <span class="s1">'app.mcp_jobs'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">lock</span><span class="o">.</span><span class="n">fileno</span><span class="p">())],</span>
+                <span class="n">cwd</span><span class="o">=</span><span class="n">ROOT</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">log</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+                <span class="n">start_new_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pass_fds</span><span class="o">=</span><span class="p">(</span><span class="n">lock</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">job</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'failed'</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span> <span class="s1">'finished_at'</span><span class="p">:</span> <span class="n">now</span><span class="p">()})</span>
+        <span class="k">raise</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'process.json'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'pid'</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">})</span>
+    <span class="c1"># Reap workers while this server lives. Detached workers also outlive it.</span>
+    <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">'workspace_id'</span><span class="p">:</span> <span class="n">directory</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">'workspace'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'started'</span><span class="p">,</span>
+            <span class="s1">'pid'</span><span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'worker.log'</span><span class="p">),</span>
+            <span class="s1">'next_step'</span><span class="p">:</span> <span class="s1">'Call dpe_update_status with this workspace_id to check progress.'</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="update_model">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.update_model">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_model</span><span class="p">(</span><span class="n">snapshot_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">through</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">'auto'</span><span class="p">,</span> <span class="n">without_citations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_removals</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'auto'</span><span class="p">,</span> <span class="s1">'cpu'</span><span class="p">,</span> <span class="s1">'mps'</span><span class="p">,</span> <span class="s1">'cuda'</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid device'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">through</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d+:\d+(?:-\d+)?'</span><span class="p">,</span> <span class="n">through</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'through must be a volume:issue, for example 37:6'</span><span class="p">)</span>
+    <span class="n">snapshot</span> <span class="o">=</span> <span class="n">artifact_path</span><span class="p">(</span><span class="s1">'repec'</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">)</span>
+    <span class="n">provenance</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">snapshot</span> <span class="o">/</span> <span class="s1">'manifest.json'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">update_slot</span><span class="p">()</span> <span class="k">as</span> <span class="n">lock</span><span class="p">:</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">current_release</span><span class="p">()</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">artifact_path</span><span class="p">(</span><span class="s1">'mcp-updates'</span><span class="p">,</span> <span class="n">new_id</span><span class="p">())</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'refresh'</span><span class="p">,</span> <span class="s1">'--source'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">snapshot</span> <span class="o">/</span> <span class="s1">'source.redif'</span><span class="p">),</span> <span class="s1">'--previous'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">previous</span><span class="p">),</span>
+                <span class="s1">'--output'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="s1">'--device'</span><span class="p">,</span> <span class="n">device</span><span class="p">]</span>
+        <span class="c1"># Reuse the current release's caches, including the pinned encoder cache.</span>
+        <span class="n">prior_state_path</span> <span class="o">=</span> <span class="n">previous</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">'state.json'</span>
+        <span class="k">if</span> <span class="n">prior_state_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">prior</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">prior_state_path</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'topic_cache'</span><span class="p">,</span> <span class="s1">'citation_cache'</span><span class="p">,</span> <span class="s1">'search_cache'</span><span class="p">):</span>
+                <span class="n">argv</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'--'</span> <span class="o">+</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">),</span> <span class="n">prior</span><span class="p">[</span><span class="n">key</span><span class="p">]])</span>
+        <span class="n">argv</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'--decisions'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s1">'data/citation-decisions.json'</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">through</span><span class="p">:</span> <span class="n">argv</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'--through'</span><span class="p">,</span> <span class="n">through</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">without_citations</span><span class="p">:</span> <span class="n">argv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--without-citations'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">allow_removals</span><span class="p">:</span> <span class="n">argv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--allow-removals'</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="n">build_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">),</span> <span class="n">provenance</span><span class="o">=</span><span class="n">provenance</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">launch</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">lock</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'changes'</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_summary</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">previous</span> <span class="o">/</span> <span class="s1">'corpus.json'</span><span class="p">),</span> <span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'inputs/corpus.json'</span><span class="p">))</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'source_sha256'</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s1">'source_sha256'</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="process_alive">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.process_alive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_alive</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">ProcessLookupError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="update_status">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.update_status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_status</span><span class="p">(</span><span class="n">workspace_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">workspace_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ARTIFACTS</span> <span class="o">/</span> <span class="s1">'current.json'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">'status'</span><span class="p">:</span> <span class="s1">'not_trained'</span><span class="p">,</span> <span class="s1">'message'</span><span class="p">:</span> <span class="s1">'Train a baseline with python -m app.update train'</span><span class="p">}</span>
+        <span class="n">release</span> <span class="o">=</span> <span class="n">current_release</span><span class="p">()</span>
+        <span class="n">topics</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">release</span> <span class="o">/</span> <span class="s1">'topics.json'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'status'</span><span class="p">:</span> <span class="s1">'ready'</span><span class="p">,</span> <span class="s1">'release'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">release</span><span class="p">),</span>
+                <span class="s1">'article_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">release</span> <span class="o">/</span> <span class="s1">'corpus.json'</span><span class="p">)),</span>
+                <span class="s1">'model_id'</span><span class="p">:</span> <span class="n">topics</span><span class="p">[</span><span class="s1">'metadata'</span><span class="p">][</span><span class="s1">'model_id'</span><span class="p">],</span> <span class="s1">'source'</span><span class="p">:</span> <span class="n">read</span><span class="p">(</span><span class="n">release</span> <span class="o">/</span> <span class="s1">'source.json'</span><span class="p">)}</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">artifact_path</span><span class="p">(</span><span class="s1">'mcp-updates'</span><span class="p">,</span> <span class="n">workspace_id</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'state.json'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span><span class="s1">'status'</span><span class="p">:</span> <span class="s1">'interrupted'</span><span class="p">}</span>
+    <span class="n">process_file</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="s1">'process.json'</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'pid'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">process_file</span><span class="p">)[</span><span class="s1">'pid'</span><span class="p">]</span> <span class="k">if</span> <span class="n">process_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">job</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'queued'</span><span class="p">,</span> <span class="s1">'running'</span><span class="p">}</span> <span class="ow">and</span> <span class="n">pid</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">process_alive</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">job</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'interrupted'</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">:</span> <span class="s1">'Worker exited before recording a result; resume this workspace'</span><span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">job</span><span class="p">,</span> <span class="s1">'workspace_id'</span><span class="p">:</span> <span class="n">workspace_id</span><span class="p">,</span> <span class="s1">'workspace'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+              <span class="s1">'completed_stages'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">'completed'</span><span class="p">]),</span> <span class="s1">'finished'</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="s1">'log'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'worker.log'</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">'ready'</span><span class="p">,</span> <span class="n">release</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'release'</span><span class="p">),</span>
+                      <span class="n">reused_release</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reused_release'</span><span class="p">))</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'model_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'release/topics.json'</span><span class="p">)[</span><span class="s1">'metadata'</span><span class="p">][</span><span class="s1">'model_id'</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'article_count'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'release/corpus.json'</span><span class="p">))</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'report'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'release/update-report.json'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reused_release'</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">'encoded_count'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'review.json'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'review'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'review.json'</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">'decisions'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'inputs/decisions.json'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="resume_update">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.resume_update">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resume_update</span><span class="p">(</span><span class="n">workspace_id</span><span class="p">):</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">artifact_path</span><span class="p">(</span><span class="s1">'mcp-updates'</span><span class="p">,</span> <span class="n">workspace_id</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">update_slot</span><span class="p">()</span> <span class="k">as</span> <span class="n">lock</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'state.json'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">):</span>
+            <span class="n">verify_release</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'release'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">update_status</span><span class="p">(</span><span class="n">workspace_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">'previous'</span><span class="p">])</span> <span class="o">!=</span> <span class="n">current_release</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The current release has changed; fetch and start a fresh update'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">launch</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">lock</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="worker">
+<a class="viewcode-back" href="../../api/mcp_jobs.html#app.mcp_jobs.worker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">lock_fd</span><span class="p">):</span>
+    <span class="c1"># The inherited descriptor must remain open for the entire worker lifetime.</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'status'</span><span class="p">:</span> <span class="s1">'running'</span><span class="p">,</span> <span class="s1">'pid'</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span> <span class="s1">'started_at'</span><span class="p">:</span> <span class="n">now</span><span class="p">()}</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">run</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'state.json'</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+        <span class="n">review_needed</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'Citation review required:'</span><span class="p">)</span>
+        <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">job</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'review_required'</span> <span class="k">if</span> <span class="n">review_needed</span> <span class="k">else</span> <span class="s1">'failed'</span><span class="p">,</span>
+                   <span class="s1">'error'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span> <span class="s1">'finished_at'</span><span class="p">:</span> <span class="n">now</span><span class="p">()})</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_json</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">'job.json'</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">job</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'ready'</span><span class="p">,</span> <span class="s1">'finished_at'</span><span class="p">:</span> <span class="n">now</span><span class="p">()})</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

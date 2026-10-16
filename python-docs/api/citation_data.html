@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Citation collection and matching &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=f6a572b4" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Citation network analysis" href="citations.html" />
+    <link rel="prev" title="Topic integrity" href="topic_store.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="redif.html">ReDIF parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repec.html">RePEc fetching and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="store.html">Catalogue helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topics.html">Topic discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update_topics.html">Saved-model training and updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_labels.html">Reviewed display labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_timeline.html">Topic timelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topic_store.html">Topic integrity</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Citation collection and matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citations.html">Citation network analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="citation_store.html">Citation integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theme_filter.html">Theme filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="retrospectives.html">Retrospective comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="export_static.html">Static dataset export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">Release orchestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcp_jobs.html">Persistent MCP jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcp_server.html">MCP stdio tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="citation-collection-and-matching">
+<h1>Citation collection and matching<a class="headerlink" href="#citation-collection-and-matching" title="Link to this heading">¶</a></h1>
+<p>Collect cached Crossref deposits, normalise identifiers and conservatively resolve reference targets. Matching retains eligibility, identity and unresolved-reference evidence. Network calls occur in fetch_record and collect.</p>
+<p id="module-app.citation_data">Crossref collection and conservative, evidence-preserving reference matching.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.now">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.now" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.digest">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.digest" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.write_json">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">write_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#write_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.write_json" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.normalize_doi">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">normalize_doi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#normalize_doi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.normalize_doi" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.normalize">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.normalize" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.surname">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">surname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#surname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.surname" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.first_page">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">first_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#first_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.first_page" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.journal_matches">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">journal_matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#journal_matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.journal_matches" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.cache_path">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">cache_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#cache_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.cache_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.fetch_record">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">fetch_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#fetch_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.fetch_record" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.collect">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decisions</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.collect" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.read_records">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">read_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decisions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#read_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.read_records" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.identity_matches">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">identity_matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">article</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#identity_matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.identity_matches" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.eligibility">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">eligibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">article</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decisions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#eligibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.eligibility" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.match_reference">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">match_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doi_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#match_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.match_reference" title="Link to this definition">¶</a></dt>
+<dd><p>Return only unique exact matches; never make a fuzzy identity decision.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.citation_data.build_edges">
+<span class="sig-prename descclassname"><span class="pre">app.citation_data.</span></span><span class="sig-name descname"><span class="pre">build_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">articles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">records</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decisions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/citation_data.html#build_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.citation_data.build_edges" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/api/citation_data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

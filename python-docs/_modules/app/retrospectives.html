@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>app.retrospectives &#8212; DPE Python documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=f6a572b4" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">DPE Python documentation</a></h1>
+
+
+
+<p class="blurb">Offline catalogue, topic and citation pipelines</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Operational workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-contracts.html">Data contracts and artifacts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development and documentation maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Python API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities.html">Supporting Python utilities</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for app.retrospectives</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Read-only comparison of an audited BERTopic run with editorial retrospectives."""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+
+
+<span class="n">REFERENCE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"retrospectives.json"</span>
+<span class="n">RELATIONSHIPS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"close"</span><span class="p">,</span> <span class="s2">"broader"</span><span class="p">,</span> <span class="s2">"narrower"</span><span class="p">,</span> <span class="s2">"partial"</span><span class="p">,</span> <span class="s2">"not_resolved"</span><span class="p">}</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="reference_data">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.reference_data">[docs]</a>
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reference_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">REFERENCE</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+    <span class="n">validate_reference</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="validate_reference">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.validate_reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_reference</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">topics</span> <span class="o">=</span> <span class="p">{</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"audited_topics"</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topics</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"audited_topics"</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Duplicate audited topic IDs"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"periods"</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">category</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">period</span><span class="p">[</span><span class="s2">"categories"</span><span class="p">])</span> <span class="o">!=</span> <span class="n">period</span><span class="p">[</span><span class="s2">"classified_total"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Editorial counts must sum to the original classified-paper total"</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">category</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">period</span><span class="p">[</span><span class="s2">"categories"</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Duplicate editorial categories"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">period</span><span class="p">[</span><span class="s2">"categories"</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">category</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">category</span><span class="p">[</span><span class="s2">"relationship"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">RELATIONSHIPS</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid editorial count or relationship"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="p">[</span><span class="s2">"definition"</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">category</span><span class="p">[</span><span class="s2">"note"</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Crosswalk categories require definitions and interpretation"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">category</span><span class="p">[</span><span class="s2">"topic_ids"</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">topics</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">category</span><span class="p">[</span><span class="s2">"topic_ids"</span><span class="p">]))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">category</span><span class="p">[</span><span class="s2">"topic_ids"</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Crosswalk refers to unknown or duplicate topics"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">category</span><span class="p">[</span><span class="s2">"relationship"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"not_resolved"</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="ow">not</span> <span class="n">category</span><span class="p">[</span><span class="s2">"topic_ids"</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unresolved categories must remain explicit and unmapped"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">period</span><span class="p">[</span><span class="s2">"source"</span><span class="p">][</span><span class="s2">"doi"</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"10."</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid source DOI"</span><span class="p">)</span>
+    <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"missing_abstract_records"</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">handles</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Duplicate missing-abstract records"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="in_period">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.in_period">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">in_period</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Publication volume governs the cohort, not dates mentioned in an abstract."""</span>
+    <span class="n">volume</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"volume"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">volume</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">period</span><span class="p">[</span><span class="s2">"volume_start"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">period</span><span class="p">[</span><span class="s2">"volume_end"</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="o">==</span> <span class="n">period</span><span class="p">[</span><span class="s2">"volume_end"</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">"last_issue"</span> <span class="ow">in</span> <span class="n">period</span><span class="p">:</span>
+        <span class="n">issue</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d+)(?:\s*[-–]\s*(\d+))?"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"issue"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issue</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">issue</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">issue</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="n">issue</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">end</span> <span class="o">&lt;=</span> <span class="n">period</span><span class="p">[</span><span class="s2">"last_issue"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="validate_audited_snapshot">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.validate_audited_snapshot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_audited_snapshot</span><span class="p">(</span><span class="n">snapshot</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">binding</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"audited_model"</span><span class="p">],</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">binding</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"run_id"</span><span class="p">,</span> <span class="s2">"corpus_fingerprint"</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Comparison must use its audited run and corpus"</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]:</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"keywords"</span><span class="p">]</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"audited_topics"</span><span class="p">]}</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="p">{</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]:</span> <span class="p">[</span><span class="n">word</span><span class="p">[</span><span class="s2">"term"</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"keywords"</span><span class="p">]]</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"topics"</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="n">expected</span> <span class="o">!=</span> <span class="n">actual</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Topic meanings differ from the reviewed crosswalk"</span><span class="p">)</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"documents"</span><span class="p">]</span>
+    <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">handles</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="o">!=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"abstract_count"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Audited abstract identities are inconsistent"</span><span class="p">)</span>
+    <span class="n">missing_handles</span> <span class="o">=</span> <span class="p">{</span><span class="n">record</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"missing_abstract_records"</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">missing_handles</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_handles</span><span class="p">)</span> <span class="o">!=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"missing_abstract_count"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Missing-abstract evidence does not match the audited run"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_handles</span><span class="p">)</span> <span class="o">!=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"article_count"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Audited catalog coverage is inconsistent"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="n">document</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">}</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown audited topic assignment"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="period_comparison">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.period_comparison">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">period_comparison</span><span class="p">(</span><span class="n">snapshot</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">[</span><span class="s2">"documents"</span><span class="p">]</span> <span class="k">if</span> <span class="n">in_period</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">period</span><span class="p">)]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">record</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"missing_abstract_records"</span><span class="p">]</span> <span class="k">if</span> <span class="n">in_period</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">period</span><span class="p">)]</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">document</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">)</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+    <span class="n">by_handle</span> <span class="o">=</span> <span class="p">{</span><span class="n">document</span><span class="p">[</span><span class="s2">"handle"</span><span class="p">]:</span> <span class="n">document</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">}</span>
+    <span class="n">model_topics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"audited_topics"</span><span class="p">]:</span>
+        <span class="n">examples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">handle</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"reviewed_examples"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">period</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]),</span> <span class="p">[]):</span>
+            <span class="n">document</span> <span class="o">=</span> <span class="n">by_handle</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">document</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">document</span><span class="p">[</span><span class="s2">"topic"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Reviewed example falls outside its period or topic"</span><span class="p">)</span>
+            <span class="n">examples</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">document</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"handle"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">,</span> <span class="s2">"authors"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">,</span> <span class="s2">"volume"</span><span class="p">,</span> <span class="s2">"issue"</span><span class="p">)})</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]]</span>
+        <span class="n">model_topics</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="s2">"name"</span><span class="p">:</span> <span class="n">topic</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="s2">"count"</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                             <span class="s2">"share"</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">denominator</span> <span class="k">if</span> <span class="n">denominator</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+                             <span class="s2">"examples"</span><span class="p">:</span> <span class="n">examples</span><span class="p">})</span>
+    <span class="c1"># Each editorial row retains its individual overlapping matches. There is</span>
+    <span class="c1"># deliberately no "matched total": the same topic can recur in several rows.</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[{</span><span class="o">**</span><span class="n">category</span><span class="p">,</span> <span class="s2">"share"</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">category</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="o">/</span> <span class="n">period</span><span class="p">[</span><span class="s2">"classified_total"</span><span class="p">]}</span>
+                  <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">period</span><span class="p">[</span><span class="s2">"categories"</span><span class="p">]]</span>
+    <span class="n">volumes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="nb">int</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s2">"volume"</span><span class="p">])</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="n">documents</span><span class="p">,</span> <span class="o">*</span><span class="n">missing</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">period</span><span class="p">,</span> <span class="s2">"categories"</span><span class="p">:</span> <span class="n">categories</span><span class="p">,</span> <span class="s2">"model_topics"</span><span class="p">:</span> <span class="n">model_topics</span><span class="p">,</span>
+            <span class="s2">"coverage"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"record_count"</span><span class="p">:</span> <span class="n">denominator</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">),</span> <span class="s2">"abstract_count"</span><span class="p">:</span> <span class="n">denominator</span><span class="p">,</span>
+                         <span class="s2">"missing_abstract_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">),</span> <span class="s2">"unassigned_count"</span><span class="p">:</span> <span class="n">counts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="s2">"unassigned_share"</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">counts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">denominator</span> <span class="k">if</span> <span class="n">denominator</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+                         <span class="s2">"assigned_count"</span><span class="p">:</span> <span class="n">denominator</span> <span class="o">-</span> <span class="n">counts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"available_volumes"</span><span class="p">:</span> <span class="n">volumes</span><span class="p">}}</span></div>
+
+
+
+<div class="viewcode-block" id="build_comparison">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.build_comparison">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_comparison</span><span class="p">(</span><span class="n">snapshot</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">active</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">validate_reference</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    <span class="n">validate_audited_snapshot</span><span class="p">(</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="n">binding</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"audited_model"</span><span class="p">]</span>
+    <span class="n">same_model</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">active</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">binding</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"run_id"</span><span class="p">,</span> <span class="s2">"corpus_fingerprint"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"ready"</span> <span class="k">if</span> <span class="n">same_model</span> <span class="k">else</span> <span class="s2">"review_required"</span><span class="p">,</span>
+            <span class="s2">"links_enabled"</span><span class="p">:</span> <span class="n">same_model</span><span class="p">,</span>
+            <span class="s2">"audited_model"</span><span class="p">:</span> <span class="n">binding</span><span class="p">,</span> <span class="s2">"active_run_id"</span><span class="p">:</span> <span class="n">active</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">][</span><span class="s2">"run_id"</span><span class="p">],</span>
+            <span class="s2">"method"</span><span class="p">:</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"method"</span><span class="p">],</span>
+            <span class="s2">"periods"</span><span class="p">:</span> <span class="p">[</span><span class="n">period_comparison</span><span class="p">(</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span> <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"periods"</span><span class="p">]]}</span></div>
+
+
+
+<div class="viewcode-block" id="load_comparison">
+<a class="viewcode-back" href="../../api/retrospectives.html#app.retrospectives.load_comparison">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_comparison</span><span class="p">(</span><span class="n">active</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">active</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"status"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"ready"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"not_built"</span><span class="p">,</span> <span class="s2">"links_enabled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">reference_data</span><span class="p">()</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s2">"audited_model"</span><span class="p">]</span>
+        <span class="n">same_model</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">active</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">binding</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"run_id"</span><span class="p">,</span> <span class="s2">"corpus_fingerprint"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">same_model</span><span class="p">:</span>
+            <span class="n">snapshot</span> <span class="o">=</span> <span class="n">active</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"data/topic-artifacts/review"</span><span class="p">)</span> <span class="o">/</span> <span class="n">binding</span><span class="p">[</span><span class="s2">"run_id"</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"snapshot.json"</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dpe:topics:run:"</span> <span class="o">+</span> <span class="n">binding</span><span class="p">[</span><span class="s2">"run_id"</span><span class="p">])</span> <span class="k">if</span> <span class="n">client</span> <span class="k">else</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unavailable"</span><span class="p">,</span> <span class="s2">"links_enabled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"audited_model"</span><span class="p">:</span> <span class="n">binding</span><span class="p">,</span>
+                        <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"The archived model for this comparison is unavailable. The current topic explorer remains available."</span><span class="p">}</span>
+            <span class="n">snapshot</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">build_comparison</span><span class="p">(</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Retrospective comparison evidence could not be validated"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unavailable"</span><span class="p">,</span> <span class="s2">"links_enabled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"The retrospective comparison is temporarily unavailable. The current topic explorer remains available."</span><span class="p">}</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
