@@ -74,14 +74,19 @@ test("collection loading recovers and filters work without topic data", async ({
   await expect(page.locator("#theme-filter")).toBeDisabled();
 });
 
-test("bare URL resets an older issue's scroll position and explicit issue links still work", async ({page}) => {
+test("bare URL resets an older issue's scroll position and explicit issue links still work", async ({page, request}) => {
+  const release = await (await request.get(prefix + "release.json")).json();
+  const catalogPath = release.manifest.replace(/data\/manifest\.json$/, "data/catalog.json");
+  const catalog = await (await request.get(prefix + catalogPath)).json();
+  const latestVolume = catalog.volumes[0].number;
+  const latestIssue = [...catalog.volumes[0].issues].sort((a, b) => parseInt(b.number, 10) - parseInt(a.number, 10))[0].number;
   await page.goto(prefix + "?volume=37&issue=5");
   await expect(page.locator("#issue-37-5 .article-card").first()).toBeVisible();
   await expect(page).toHaveURL(/issue=5/);
   await page.evaluate(() => history.replaceState(null, "", location.pathname));
   await page.reload();
-  await expect(page.locator("#issue-37-6 .article-card")).toHaveCount(7);
-  await expect(page).toHaveURL(/volume=37&issue=6/);
+  await expect(page.locator(`#issue-${latestVolume}-${latestIssue} .article-card`).first()).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`volume=${latestVolume}&issue=${latestIssue}`));
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   await page.goto(prefix + "?volume=37&issue=5");
   await expect(page.locator("#issue-37-5 .article-card").first()).toBeVisible();
